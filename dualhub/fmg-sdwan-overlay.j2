@@ -1,10 +1,10 @@
 {#
  # Initial verison of FMG SDWAN Overlay Jinjia2 scripts for Dual Hub cae
- # {{ loop-back-ip }} i.e.172.18.0.0
- # {{ overlay-network-ip }} i.e. 10.10.0.0
- # {{ hub1-host-name }}
- # {{ hub2-host-name }}
- # {{ branch-grp }}
+ # {{ loop_back_ip }} i.e.172.18.0.0
+ # {{ overlay_network_ip }} i.e. 10.10.0.0
+ # {{ hub1_host_name }}
+ # {{ hub2_host_name }}
+ # {{ branch_grp }}
  #}
 
 {# create sdwan template used in 'sdwan overlay -> sdwan_template' #}
@@ -21,8 +21,8 @@ config adom/template/_sdwan_overlay/sd1
 config sdwan overlay
   set topology dual-active-hub
   set hub-number 2
-  set loopback-ip {{ loop-back-ip }} 255.255.0.0 {# 172.18.0.0 #}
-  set overlay-network {{ overlay-network-ip }} 255.255.0.0 {# 10.10.0.0 #}
+  set loopback-ip {{ loop_back_ip }} 255.255.0.0 {# 172.18.0.0 #}
+  set overlay-network {{ overlay_network_ip }} 255.255.0.0 {# 10.10.0.0 #}
   set advpn version2
   set sdwan_template "sdwan1"
   set sdwan_members enable
@@ -37,7 +37,7 @@ config sdwan overlay
   set route_reflection disable
   config nodes
     edit 1
-      set _scope {{ hub1-host-name }}-"root" {# "fgtvm_01"-"root" #}
+      set _scope {{ hub1_host_name }}-"root" {# "fgtvm_01"-"root" #}
       set role hub
       set hub-role primary
       set cost 0
@@ -53,7 +53,7 @@ config sdwan overlay
       end
     next
     edit 2
-      set _scope {{ hub2-host-name }}-"root" {# "fgtvm_02"-"root" #}
+      set _scope {{ hub2_host_name }}-"root" {# "fgtvm_02"-"root" #}
       set role hub
       set hub-role primary
       set cost 0
@@ -69,7 +69,7 @@ config sdwan overlay
       end
     next
     edit 3
-      set _scope {{ branch-grp }} {# "devgrp_01" #}
+      set _scope {{ branch_grp }} {# "devgrp_01" #}
       set role spoke
       set hub-role standalone
       set cost 0
