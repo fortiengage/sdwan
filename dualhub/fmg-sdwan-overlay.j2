@@ -37,7 +37,7 @@ config sdwan overlay
   set route_reflection disable
   config nodes
     edit 1
-      set _scope {{ hub1_host_name }}-"root" {# "fgtvm_01"-"root" #}
+      set _scope "{{ hub1_host_name }}"-"root" {# "fgtvm_01"-"root" #}
       set role hub
       set hub-role primary
       set cost 0
@@ -53,7 +53,7 @@ config sdwan overlay
       end
     next
     edit 2
-      set _scope {{ hub2_host_name }}-"root" {# "fgtvm_02"-"root" #}
+      set _scope "{{ hub2_host_name }}"-"root" {# "fgtvm_02"-"root" #}
       set role hub
       set hub-role primary
       set cost 0
