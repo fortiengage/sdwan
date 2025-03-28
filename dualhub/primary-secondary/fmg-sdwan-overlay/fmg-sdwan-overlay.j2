@@ -1,7 +1,7 @@
 {# FMG SDWAN Overlay Dual Hub Primary&Secondary #}
 {# Meta Variables:
    - loop_back_ip
-   - overlay-network-ip
+   - overlay_network_ip
    - as_id
    - hub1_host_name
    - hub2_host_name
@@ -23,7 +23,7 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
         set topology dual-hub
         set hub-number 2
         set loopback-ip {{loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
-        set overlay-network {{overlay-network-ip}} 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
+        set overlay-network {{overlay_network_ip}} 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
         set as {{as_id}} {# 65000 #}
         set advpn disable
         set sdwan_members disable
