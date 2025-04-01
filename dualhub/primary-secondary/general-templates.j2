@@ -1,9 +1,15 @@
+{#
+  This is a sample to illustrate how the general adom template works
+  - policy_src_interface
+  - policy_dst_interface
+#}
+
 config adom/pkg/ppkg_hub
     config firewall policy
         edit 1
             set name "allow-all-sample"
-            set srcintf "any"
-            set dstintf "any"
+            set srcintf "{{ policy_src_interface }}"     {# "any" #}
+            set dstintf "{{ policy_dst_interface }}"     {# "any" #}
             set action accept
             set srcaddr "all"
             set dstaddr "all"
