@@ -15,6 +15,7 @@ end
 
 config system interface
     edit "loopback1"
+        set vdom "root"
         set ip "{{ loopback }}"
         set type loopback
     next
@@ -27,17 +28,4 @@ config system interface
     edit "{{isp2_intf_name}}"
         set ip "{{ isp2_ip }}"
     next
-end
-
-
-config user local
-    edit "new_admin"
-        set type password
-        set password "pm1234"
-    next
-end
-
-config log syslogd setting
-    set status enable
-    set server "192.168.1.100"   {# log server IP #}
 end
