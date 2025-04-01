@@ -1,1 +1,19 @@
+{#
+  - fgt_host_name
+#}
 
+config system global
+    set hostname "{{ fgt_host_name }}"
+end
+
+config user local
+    edit "new_admin"
+        set type password
+        set password "pm1234"
+    next
+end
+
+config log syslogd setting
+    set status enable
+    set server "192.168.1.100"   {# log server IP #}
+end
