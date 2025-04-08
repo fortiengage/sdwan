@@ -1,0 +1,31 @@
+{# sample pre-run scripts, it will set up hostname, loopback interfaces and underlay interfaces. 
+  - hostname
+  - loopback
+  - lan_intf_name
+  - lan_ip
+  - isp1_intf_name
+  - isp1_ip
+  - isp2_intf_name
+  - isp2_ip
+#}
+
+config system global
+    set hostname "{{ hostname }}"
+end
+
+config system interface
+    edit "loopback1"
+        set vdom "root"
+        set ip "{{ loopback }}"
+        set type loopback
+    next
+    edit "{{lan_intf_name}}"
+        set ip "{{ lan_ip }}"
+    next
+        edit "{{isp1_intf_name}}"
+        set ip "{{ isp1_ip }}"
+    next
+    edit "{{isp2_intf_name}}"
+        set ip "{{ isp2_ip }}"
+    next
+end
