@@ -1,8 +1,4 @@
-# Multi-Datacenter (Primary/Secondary) Enterprise SD-WAN
-
-[commentqqqqq]: #
-
-### Topology
+# Topology
 
 ### Underlay
 This diagram provides the physical ports used by the topologies, as well as some key IP addresses and networks.
