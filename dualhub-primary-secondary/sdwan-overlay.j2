@@ -17,9 +17,13 @@
       - hub2_underlay_link2_ip  
       - branch_underlay_link1_name
       - branch_underlay_link2_name
+      - policy_hub_src_interface
+      - policy_hub_dst_interface
+      - policy_branch_src_interface
+      - policy_branch_dst_interface
  #}
 
- {# create sdwan template used in 'sdwan overlay -> sdwan_template' #}
+{# create sdwan template used in 'sdwan overlay -> sdwan_template' #}
 config adom/wanprof/sdwan1
 end
  
@@ -27,8 +31,39 @@ end
 config adom/template/_router_static/branches
 end
 
-config adom/template/_sdwan_overlay/sd_dual_hub_ps
-    
+config adom/pkg/ppkg_hub
+    config firewall policy
+        edit 1
+            set name "allow-all-sample"
+            set srcintf "{{ policy_hub_src_interface }}"     {# "any" #}
+            set dstintf "{{ policy_hub_dst_interface }}"     {# "any" #}
+            set action accept
+            set srcaddr "all"
+            set dstaddr "all"
+            set schedule "always"
+            set service "ALL"
+            set nat enable
+        next
+    end
+end
+
+config adom/pkg/ppkg_branch
+    config firewall policy
+        edit 1
+            set name "allow-all-sample"
+            set srcintf "{{ policy_branch_src_interface }}"     {# "any" #}
+            set dstintf "{{ policy_branch_dst_interface }}"     {# "any" #}
+            set action accept
+            set srcaddr "all"
+            set dstaddr "all"
+            set schedule "always"
+            set service "ALL"
+            set nat enable
+        next
+    end
+end
+
+config adom/template/_sdwan_overlay/sd_dual_hub_ps    
     config sdwan overlay
         set topology dual-hub
         set hub-number 2
@@ -40,11 +75,8 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
         set sdwan_members enable
         set sdwan_health_check enable
         set normalized-interface enable
-{#      set hub-package-path "ppkg_hub"
-        set branch-package-path "ppkg_branch"
-        set hub-package 0
-        set branch-package 0
-#}        
+        set hub-package-path "ppkg_hub"
+        set branch-package-path "ppkg_branch"    
         set auto-branch-id-assignment enable
         set authmethod psk
         set segmentation disable
