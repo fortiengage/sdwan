@@ -3,10 +3,13 @@
     - hostname
     - lan_intf_name
     - lan_ip
+    - lan_network_mask
     - isp1_intf_name
-    - isp1_ip
+    - isp1_intf_ip
+    - isp1_intf_network_mask
     - isp2_intf_name
-    - isp2_ip
+    - isp2_intf_ip
+    - isp2_intf_network_mask
 #}
 
 config system global
@@ -15,12 +18,12 @@ end
 
 config system interface
     edit "{{lan_intf_name}}"
-        set ip "{{ lan_ip }}/24"
+        set ip "{{ lan_ip }}/{{ lan_network_mask }}"
     next
         edit "{{isp1_intf_name}}"
-        set ip "{{ isp1_ip }}/24"
+        set ip "{{ isp1_ip }}/{{ isp1_intf_network_mask }}"
     next
     edit "{{isp2_intf_name}}"
-        set ip "{{ isp2_ip }}/24"
+        set ip "{{ isp2_ip }}/{{ isp2_intf_network_mask }}"
     next
 end
