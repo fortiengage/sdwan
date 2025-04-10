@@ -2,7 +2,7 @@
   - Required:
     - hostname
     - lan_intf_name
-    - lan_ip
+    - lan_intf_ip
     - lan_network_mask
     - isp1_intf_name
     - isp1_intf_ip
@@ -18,12 +18,12 @@ end
 
 config system interface
     edit "{{lan_intf_name}}"
-        set ip "{{ lan_ip }}/{{ lan_network_mask }}"
+        set ip "{{ lan_intf_ip }} {{ lan_network_mask }}"
     next
-        edit "{{isp1_intf_name}}"
-        set ip "{{ isp1_ip }}/{{ isp1_intf_network_mask }}"
+    edit "{{isp1_intf_name}}"
+        set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
     next
     edit "{{isp2_intf_name}}"
-        set ip "{{ isp2_ip }}/{{ isp2_intf_network_mask }}"
+        set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
     next
 end
