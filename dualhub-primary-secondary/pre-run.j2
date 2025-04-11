@@ -3,7 +3,7 @@
     - hostname
     - lan_intf_name
     - lan_intf_ip
-    - lan_network_mask
+    - lan_intf_network_mask
     - isp1_intf_name
     - isp1_intf_ip
     - isp1_intf_network_mask
@@ -18,7 +18,7 @@ end
 
 config system interface
     edit "{{lan_intf_name}}"
-        set ip "{{ lan_intf_ip }} {{ lan_network_mask }}"
+        set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
     next
     edit "{{isp1_intf_name}}"
         set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
