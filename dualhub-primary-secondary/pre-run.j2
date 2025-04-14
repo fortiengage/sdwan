@@ -36,7 +36,7 @@ config router static
         set gateway "{{isp1_gateway}}"
         set device "{{isp1_intf_name}}"
     next
-    edit 21
+    edit 22
         set dst "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
         set gateway "{{isp2_gateway}}"
         set device "{{isp2_intf_name}}"
