@@ -29,14 +29,3 @@ config system interface
         set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
     next
 end
-
-config router static
-    edit 21
-        set gateway "{{isp1_gateway}}"
-        set device "{{isp1_intf_name}}"
-    next
-    edit 22
-        set gateway "{{isp2_gateway}}"
-        set device "{{isp2_intf_name}}"
-    next
-end
