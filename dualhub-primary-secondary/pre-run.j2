@@ -32,12 +32,10 @@ end
 
 config router static
     edit 21
-        set dst "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
         set gateway "{{isp1_gateway}}"
         set device "{{isp1_intf_name}}"
     next
     edit 22
-        set dst "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
         set gateway "{{isp2_gateway}}"
         set device "{{isp2_intf_name}}"
     next
