@@ -36,6 +36,7 @@ config router static
         set dst "10.3.135.1/32"
         set gateway "10.3.134.1"
         set device "{{mgmt_port_name}}"
+    next
     edit 21
         set gateway "{{isp1_gateway}}"
         set device "{{isp1_intf_name}}"
