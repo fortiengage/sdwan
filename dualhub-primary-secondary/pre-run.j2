@@ -12,6 +12,7 @@
     - isp2_intf_ip
     - isp2_intf_network_mask
     - isp2_gateway
+    - mgmt_port_name
 #}
 
 config system global
@@ -27,5 +28,20 @@ config system interface
     next
     edit "{{isp2_intf_name}}"
         set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+    next
+end
+
+config router static
+    edit 1
+        set dst "10.3.135.1/32"
+        set gateway "10.3.134.1"
+        set device "{{mgmt_port_name}}"
+    edit 21
+        set gateway "{{isp1_gateway}}"
+        set device "{{isp1_intf_name}}"
+    next
+    edit 22
+        set gateway "{{isp2_gateway}}"
+        set device "{{isp2_intf_name}}"
     next
 end
