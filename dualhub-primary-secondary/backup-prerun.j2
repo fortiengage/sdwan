@@ -1,0 +1,44 @@
+{# sample pre-run scripts, it will set up hostname, loopback interfaces and underlay interfaces. 
+  - Required:
+    - hostname
+    - lan_intf_name
+    - lan_intf_ip
+    - lan_intf_network_mask
+    - isp1_intf_name
+    - isp1_intf_ip
+    - isp1_intf_network_mask
+    - isp1_gateway
+    - isp2_intf_name
+    - isp2_intf_ip
+    - isp2_intf_network_mask
+    - isp2_gateway
+#}
+
+config system global
+    set hostname "{{ hostname }}"
+end
+
+config system interface
+    edit "{{lan_intf_name}}"
+        set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
+    next
+    edit "{{isp1_intf_name}}"
+        set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+    next
+    edit "{{isp2_intf_name}}"
+        set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+    next
+end
+
+config router static
+    edit 21
+        set dst "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+        set gateway "{{isp1_gateway}}"
+        set device "{{isp1_intf_name}}"
+    next
+    edit 22
+        set dst "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+        set gateway "{{isp2_gateway}}"
+        set device "{{isp2_intf_name}}"
+    next
+end
