@@ -1,40 +1,85 @@
-{#
-  This is a sample to illustrate how the other adom template works
-  - Required:
-    - policy_hub_src_interface
-    - policy_hub_dst_interface
-    - policy_branch_src_interface
-    - policy_branch_dst_interface
-#}
-
-config adom/pkg/ppkg_hub
-    config firewall policy
-        edit 1
-            set name "allow-all-sample"
-            set srcintf "{{ policy_hub_src_interface }}"     {# "any" #}
-            set dstintf "{{ policy_hub_dst_interface }}"     {# "any" #}
-            set action accept
-            set srcaddr "all"
-            set dstaddr "all"
-            set schedule "always"
-            set service "ALL"
-            set nat enable
-        next
-    end
+{# create hub ipsec template #}
+config adom/template/_ipsec/demo_hub_ipsec
+{# ..write...logic... #}
 end
-
-config adom/pkg/ppkg_branch
-    config firewall policy
-        edit 1
-            set name "allow-all-sample"
-            set srcintf "{{ policy_branch_src_interface }}"     {# "any" #}
-            set dstintf "{{ policy_branch_dst_interface }}"     {# "any" #}
-            set action accept
-            set srcaddr "all"
-            set dstaddr "all"
-            set schedule "always"
-            set service "ALL"
-            set nat enable
-        next
-    end
+ 
+{# create branch ipsec template #}
+config adom/template/_ipsec/demo_branch_ipsec
+{# ..write...logic... #}
+end
+ 
+{# create hub bgp template #}
+config adom/template/router_bgp/demo_hub_bgp
+{# ..write...logic... #}
+end
+ 
+{# create branch bgp template #}
+config adom/template/router_bgp/demo_branch_bgp
+{# ..write...logic... #}
+end
+ 
+{# create hub static route template #}
+config adom/template/_router_static/demo_hub_static_route
+{# ..write...logic... #}
+end
+ 
+{# create branch static route template #}
+config adom/template/_router_static/demo_branch_static_route
+{# ..write...logic... #}
+end
+ 
+{# create hub system template #}
+config adom/devprof/demo_hub_system
+{# ..write...logic... #}
+end
+ 
+{# create branch system template #}
+config adom/devprof/demo_branch_system
+{# ..write...logic... #}
+end
+ 
+{# create hub policy package #}
+config adom/pkg/demo_hub_policy
+{# ..write...logic... #}
+end
+ 
+{# create hub branch package #}
+config adom/pkg/demo_branch_policy
+{# ..write...logic... #}
+end
+ 
+{# create hub sdwan rules #}
+config adom/wanprof/demo_hub_sdwan
+{# ..write...logic... #}
+end
+ 
+{# create branch sdwan rules #}
+config adom/wanprof/demo_branch_sdwan
+{# ..write...logic... #}
+end
+ 
+{# create hub ips template #}
+config adom/template/_ips_setting/demo_hub_ips
+{# ..write...logic... #}
+end
+ 
+{# create branch ips template #}
+config adom/template/_ips_setting/demo_branch_ips
+{# ..write...logic... #}
+end
+ 
+{# create hub cli template #}
+config cli template
+edit "demo_hub_cli"
+set description "demo_hub"
+set type jinja
+set script "{#demo#}"
+end
+ 
+{# create branch cli template #}
+config cli template
+edit "demo_branch_cli"
+set description "demo_branch"
+set type jinja
+set script "{#demo#}"
 end
