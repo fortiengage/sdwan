@@ -1,3 +1,13 @@
+This directory includes all the scripts, the topology diagram, and the sample CVS files to deploy the Dual hub primary/secondary SDWAN use case. 
+
+Note: User should download and customize it based on their real network, port and IP schemas. 
+1. pre-run.j2: The scirpt will be used to run only once after FortiGate is linked and authorized by FortiManager.
+2. sdwan-overlay.j2: SDWAN overlay scripts, it will be used to create sdwan-overlay templates.
+3. topo.png: topology of this use case.
+4. other-templates.j2: sample and other templates, such as IPsec, BGP, static route, etc.
+5. device_info_sample.csv: device-level information.
+6. sdwan_overlay_info_sample.csv: SDWAN overlay level information.
+   
 # Topology
 
 ### Underlay
