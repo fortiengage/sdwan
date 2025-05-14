@@ -1,4 +1,39 @@
+{# FortiAP Deply Jinjia Templates #}
+{# Meta Variables:
+   - Required:
+      - tobedetermined
+      - tobedetermined
+ #}
 
+config wireless-controller vap
+    edit "Doll-WiFi"
+        set ssid "Doll-WiFi"
+        set security wpa2-only-enterprise
+        set pmf optional
+        set fast-bss-transition enable
+        set auth radius
+        set radius-server "Radius_ISE-PROD"
+        set local-bridging enable
+        set dynamic-vlan enable
+        set alias "b"
+        set multicast-enhance enable
+        set sticky-client-remove enable
+        set sticky-client-threshold-5g "-85"
+        set sticky-client-threshold-2g "-85"
+        set sticky-client-threshold-6g "-85"
+    next
+    edit "1485P393"
+        set fast-roaming disable
+        set ssid "1485P393"
+        set 80211k disable
+        set 80211v disable
+        set passphrase ENC yVGJVGvWn00ma47XHtEBbjKffOIzo0d81BHsV6UdQU99Kf5s8WocYlZce5jSjhzT6OXlWNkTFBWCtn7K2p4mUcUaQtzxgEa/u9SkUVFlE9HSNdQbv+liVAf/7oycurgxBsBYGuVySJYSucvv46wxTFM2Sn0axwhGautV04GWoTdtHD3uuSIDqg6rBH1ne0r5y8vVsllmMjY3dkVA
+        set local-bridging enable
+        set alias "b"
+        set multicast-enhance enable
+        set probe-resp-suppression enable
+    next
+end
 
 config wireless-controller wtp-profile
     edit "FAP231G-default"
