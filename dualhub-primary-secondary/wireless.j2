@@ -3,35 +3,35 @@
    - Required:
       - tobedetermined
       - tobedetermined
+      - WC_FGT_NAME
+      - WC_ADOM_NAME
+      - AP_SN
+      - AP_NAME
+      - AP_TYPE
  #}
 
 config wireless-controller vap
-    edit "Doll-WiFi"
+    edit "Wifi-Staff"
         set ssid "Doll-WiFi"
         set security wpa2-only-enterprise
         set pmf optional
         set fast-bss-transition enable
-        set auth radius
-        set radius-server "Radius_ISE-PROD"
+        set auth usergroup
+        set usergroup "Guest-group"
         set local-bridging enable
         set dynamic-vlan enable
-        set alias "b"
+        set alias "doll-wifi-vap-alias"
         set multicast-enhance enable
         set sticky-client-remove enable
         set sticky-client-threshold-5g "-85"
         set sticky-client-threshold-2g "-85"
         set sticky-client-threshold-6g "-85"
+        set schedule "always"
     next
-    edit "1485P393"
-        set fast-roaming disable
-        set ssid "1485P393"
-        set 80211k disable
-        set 80211v disable
-        set passphrase ENC yVGJVGvWn00ma47XHtEBbjKffOIzo0d81BHsV6UdQU99Kf5s8WocYlZce5jSjhzT6OXlWNkTFBWCtn7K2p4mUcUaQtzxgEa/u9SkUVFlE9HSNdQbv+liVAf/7oycurgxBsBYGuVySJYSucvv46wxTFM2Sn0axwhGautV04GWoTdtHD3uuSIDqg6rBH1ne0r5y8vVsllmMjY3dkVA
+    edit "Wifi-Guest"
+        set ssid "Wifi-Guest"
+        set passphrase "12345678"
         set local-bridging enable
-        set alias "b"
-        set multicast-enhance enable
-        set probe-resp-suppression enable
     next
 end
 
@@ -91,29 +91,14 @@ config wireless-controller wtp-profile
     next
 end
 
-      - WC_FGT_NAME
-      - WC_ADOM_NAME
-      - AP_SN1
-      - AP_SN2
-      - AP_NAME1
-      - AP_NAME2
+
 
 {# config adom/wtp/"fgtvm-02"-"root" #}
 config adom/wtp/"{{ WC_FGT_NAME }}"-"{{ WC_ADOM_NAME }}"
     config wireless-controller wtp
-        edit "{{AP_SN1}}"  {# FP431FTF23099HHQ #}
+        edit "{{AP_SN}}"  {# FP431FTF23099HHQ #}
             set admin enable
-            set name "{{AP_NAME1}}"  {# 0179APFR1 #}
-            set wtp-profile "FAP231G-PROD_v2"
-            set wtp-mode remote
-            config radio-1
-            end
-            config radio-2
-            end
-        next
-        edit "{{AP_SN2}}" {# "FP431FTF23099ZDV" #}
-            set admin enable
-            set name "{{AP_NAME2}}" {# 0179APFR2 #}
+            set name "{{AP_NAME}}"  {# 0179APFR1 #}
             set wtp-profile "FAP231G-PROD_v2"
             set wtp-mode remote
             config radio-1
