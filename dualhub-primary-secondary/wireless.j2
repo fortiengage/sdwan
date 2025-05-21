@@ -91,11 +91,19 @@ config wireless-controller wtp-profile
     next
 end
 
-config adom/wtp/"fgtvm-02"-"root"
+      - WC_FGT_NAME
+      - WC_ADOM_NAME
+      - AP_SN1
+      - AP_SN2
+      - AP_NAME1
+      - AP_NAME2
+
+{# config adom/wtp/"fgtvm-02"-"root" #}
+config adom/wtp/"{{ WC_FGT_NAME }}"-"{{ WC_ADOM_NAME }}"
     config wireless-controller wtp
-        edit "FP231GTF23099CM4"
+        edit "{{AP_SN1}}"  {# FP431FTF23099HHQ #}
             set admin enable
-            set name "0179APFR1"
+            set name "{{AP_NAME1}}"  {# 0179APFR1 #}
             set wtp-profile "FAP231G-PROD_v2"
             set wtp-mode remote
             config radio-1
@@ -103,9 +111,9 @@ config adom/wtp/"fgtvm-02"-"root"
             config radio-2
             end
         next
-        edit "FP231GTF24000476"
+        edit "{{AP_SN2}}" {# "FP431FTF23099ZDV" #}
             set admin enable
-            set name "0179APFR2"
+            set name "{{AP_NAME2}}" {# 0179APFR2 #}
             set wtp-profile "FAP231G-PROD_v2"
             set wtp-mode remote
             config radio-1
