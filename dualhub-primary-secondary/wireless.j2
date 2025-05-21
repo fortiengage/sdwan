@@ -12,14 +12,13 @@
 
 config wireless-controller vap
     edit "Wifi-Staff"
-        set ssid "Doll-WiFi"
+        set ssid "Wifi-Staff"
         set security wpa2-only-enterprise
         set pmf optional
         set fast-bss-transition enable
         set auth usergroup
         set usergroup "Guest-group"
         set local-bridging enable
-        set dynamic-vlan enable
         set alias "doll-wifi-vap-alias"
         set multicast-enhance enable
         set sticky-client-remove enable
@@ -36,41 +35,26 @@ config wireless-controller vap
 end
 
 config wireless-controller wtp-profile
-    edit "FAP231G-default"
+    edit "FAP431F-Profile"
         config platform
-            set type 231G
+            set type 431F
+            set ddscan enable
         end
         set handoff-sta-thresh 55
-        config radio-1
-            set band 802.11g 802.11n-2G 802.11ax-2G
-        end
-        config radio-2
-            set band 802.11a 802.11n-5G 802.11ac-5G 802.11ax-5G
-        end
-        config radio-3
-            set band 802.11ax-6G
-        end
-    next
-    edit "FAP231G-PROD_v2"
-        config platform
-            set type 231G
-        end
-        set handoff-sta-thresh 55
-        set ap-country CA
         set frequency-handoff enable
         config radio-1
-            set band 802.11b 802.11g 802.11n-2G 802.11ax-2G
+            set band 802.11g 802.11n-2G 802.11ax-2G
             set auto-power-level enable
             set auto-power-high 14
             set auto-power-low 5
             set darrp enable
             set arrp-profile "arrp-default"
             set vap-all manual
-            set vaps "Doll-WiFi" "1485P393"
+            set vaps "Wifi-Staff" "Wifi-Guest"
             set channel "1" "6" "11"
         end
         config radio-2
-            set band 802.11n-5G 802.11ac-5G 802.11ax-5G
+            set band 802.11a 802.11n-5G 802.11ac-5G 802.11ax-5G
             set short-guard-interval enable
             set channel-bonding 40MHz
             set auto-power-level enable
@@ -79,9 +63,7 @@ config wireless-controller wtp-profile
             set darrp enable
             set arrp-profile "arrp-default"
             set vap-all manual
-            set vaps "Doll-WiFi" "1485P393"
-            set vap1 "Doll-WiFi"
-            set vap2 "1485P393"
+            set vaps "Wifi-Staff" "Wifi-Guest"
             set channel "36" "44" "52" "60" "100" "108" "132" "140" "149" "157"
         end
         config radio-3
@@ -91,15 +73,13 @@ config wireless-controller wtp-profile
     next
 end
 
-
-
 {# config adom/wtp/"fgtvm-02"-"root" #}
 config adom/wtp/"{{ WC_FGT_NAME }}"-"{{ WC_ADOM_NAME }}"
     config wireless-controller wtp
         edit "{{AP_SN}}"  {# FP431FTF23099HHQ #}
             set admin enable
             set name "{{AP_NAME}}"  {# 0179APFR1 #}
-            set wtp-profile "FAP231G-PROD_v2"
+            set wtp-profile "FAP431F-Profile"
             set wtp-mode remote
             config radio-1
             end
