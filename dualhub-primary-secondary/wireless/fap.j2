@@ -1,1 +1,25 @@
+{# FortiAP Deploy Jinjia Templates #}
+{# Meta Variables:
+   - Required:
+      - WC_FGT_NAME
+      - WC_ADOM_NAME
+      - AP_SN
+      - AP_NAME
+      - AP_TYPE
+ #}
 
+{# config adom/wtp/"fgtvm-02"-"root" #}
+config adom/wtp/"{{ WC_FGT_NAME }}"-"{{ WC_ADOM_NAME }}"
+    config wireless-controller wtp
+        edit "{{AP_SN}}"  {# FP431FTF23099HHQ #}
+            set admin enable
+            set name "{{AP_NAME}}"  {# 0179APFR1 #}
+            set wtp-profile "FAP431F-Profile"
+            set wtp-mode remote
+            config radio-1
+            end
+            config radio-2
+            end
+        next
+    end
+end 
