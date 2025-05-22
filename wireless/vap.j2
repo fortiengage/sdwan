@@ -1,20 +1,4 @@
-{# FortiAP VAP Jinja Templates #}
-{# Meta Variables:
-   - Required:
-      - wifi_ssid_1
-      - wifi_ssid_2
- #}
-
-{#
-1. WIFI Name, 
-2. Security option: wpa2-only-enterprise or wpa2-only-personal
-   1). wpa2-only-enterprise
-   2). wpa2-only-personal
-         set password: xxxxx
-#}
-
-
-{# config wireless-controller vap #}
+config wireless-controller vap
     edit "ssid_template_with_auth_wpa2_enterprice"
         set ssid "ssid_template_with_auth_wpa2_enterprice"
         set security wpa2-only-enterprise
@@ -35,4 +19,4 @@
         set passphrase "12345678"
         set local-bridging enable
     next
-{# end #}
+end
