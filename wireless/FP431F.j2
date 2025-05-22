@@ -21,7 +21,7 @@ config wireless-controller wtp-profile
             set darrp enable
             set arrp-profile "arrp-default"
             set vap-all manual
-            set vaps "{{ wifi_ssid_1 }}" "{{ wifi_ssid_2 }}"
+            set vaps "wifi_name_radio_1"
             set channel "1" "6" "11"
         end
         config radio-2
@@ -34,7 +34,7 @@ config wireless-controller wtp-profile
             set darrp enable
             set arrp-profile "arrp-default"
             set vap-all manual
-            set vaps "{{ wifi_ssid_1 }}" "{{ wifi_ssid_2 }}"
+            set vaps "wifi_name_radio_2"
             set channel "36" "44" "52" "60" "100" "108" "132" "140" "149" "157"
         end
         config radio-3
