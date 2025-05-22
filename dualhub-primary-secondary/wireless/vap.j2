@@ -5,6 +5,15 @@
       - wifi_ssid_2
  #}
 
+{#
+1. WIFI Name, 
+2. Security option: wpa2-only-enterprise or wpa2-only-personal
+   1). wpa2-only-enterprise
+   2). wpa2-only-personal
+         set password: xxxxx
+#}
+
+
 config wireless-controller vap
     edit "{{ wifi_ssid_1 }}"
         set ssid "{{ wifi_ssid_1 }}"
@@ -14,7 +23,6 @@ config wireless-controller vap
         set auth usergroup
         set usergroup "Guest-group"
         set local-bridging enable
-        set alias "doll-wifi-vap-alias"
         set multicast-enhance enable
         set sticky-client-remove enable
         set sticky-client-threshold-5g "-85"
