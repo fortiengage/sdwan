@@ -1,6 +1,13 @@
+{# FortiAP VAP Jinja Templates #}
+{# Meta Variables:
+   - Required:
+      - wifi_ssid_1
+      - wifi_ssid_2
+ #}
+
 config wireless-controller vap
-    edit "Wifi-Staff"
-        set ssid "Wifi-Staff"
+    edit "{{ wifi_ssid_1 }}"
+        set ssid "{{ wifi_ssid_1 }}"
         set security wpa2-only-enterprise
         set pmf optional
         set fast-bss-transition enable
@@ -15,8 +22,8 @@ config wireless-controller vap
         set sticky-client-threshold-6g "-85"
         set schedule "always"
     next
-    edit "Wifi-Guest"
-        set ssid "Wifi-Guest"
+    edit "{{ wifi_ssid_2 }}"
+        set ssid "{{ wifi_ssid_2 }}"
         set passphrase "12345678"
         set local-bridging enable
     next
