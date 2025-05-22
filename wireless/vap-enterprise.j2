@@ -1,6 +1,6 @@
 config wireless-controller vap
-    edit "ssid_template_with_auth_wpa2_enterprice"
-        set ssid "ssid_template_with_auth_wpa2_enterprice"
+    edit "{{ssid_enterprise}}"
+        set ssid "{{ssid_enterprise}}"
         set security wpa2-only-enterprise
         set pmf optional
         set fast-bss-transition enable
@@ -13,10 +13,5 @@ config wireless-controller vap
         set sticky-client-threshold-2g "-85"
         set sticky-client-threshold-6g "-85"
         set schedule "always"
-    next
-    edit "ssid_template_with_auth_wpa2_personal"
-        set ssid "ssid_template_with_auth_wpa2_personal"
-        set passphrase "12345678"
-        set local-bridging enable
     next
 end
