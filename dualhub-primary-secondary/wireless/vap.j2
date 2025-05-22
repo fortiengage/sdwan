@@ -1,1 +1,23 @@
-
+config wireless-controller vap
+    edit "Wifi-Staff"
+        set ssid "Wifi-Staff"
+        set security wpa2-only-enterprise
+        set pmf optional
+        set fast-bss-transition enable
+        set auth usergroup
+        set usergroup "Guest-group"
+        set local-bridging enable
+        set alias "doll-wifi-vap-alias"
+        set multicast-enhance enable
+        set sticky-client-remove enable
+        set sticky-client-threshold-5g "-85"
+        set sticky-client-threshold-2g "-85"
+        set sticky-client-threshold-6g "-85"
+        set schedule "always"
+    next
+    edit "Wifi-Guest"
+        set ssid "Wifi-Guest"
+        set passphrase "12345678"
+        set local-bridging enable
+    next
+end
