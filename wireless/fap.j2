@@ -1,9 +1,9 @@
-config adom/wtp/"{{WC_FGT_NAME}}"-"{{WC_ADOM_NAME}}"
+config adom/wtp/"<WC_FGT_NAME>"-"<WC_ADOM_NAME>"
     config wireless-controller wtp
-        edit "{{AP_SN}}"  {# FP431FTF23099HHQ #}
+        edit "<AP_SN>"  {# FP431FTF23099HHQ #}
             set admin enable
-            set name "{{AP_NAME}}"  {# 0179APFR1 #}
-            set wtp-profile "{{FAP_PROFILE}}"   {# FP431F-Profile #}
+            set name "<AP_NAME>"  {# 0179APFR1 #}
+            set wtp-profile "<FAP_PROFILE>"   {# FP431F-Profile #}
             set wtp-mode remote
             config radio-1
             end
