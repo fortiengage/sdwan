@@ -8,13 +8,13 @@ end
 
 config system dhcp server
     edit 1
-        set default-gateway "<WC_FGT_PORT_IP>"
-        set netmask "<DHCP_SERVER_NETWORK_MASK>"
-        set interface "<WC_FGT_PORT_NAME>"
+        set default-gateway 10.10.9.1
+        set netmask 255.255.255.0
+        set interface "port15"
         config ip-range
             edit 1
-                set start-ip "<DHCP_SERVER_START_IP>"
-                set end-ip "<DHCP_SERVER_END_IP>"
+                set start-ip 10.10.9.2
+                set end-ip 10.10.9.254
             next
         end
     next
