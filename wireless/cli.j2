@@ -1,1 +1,21 @@
+config system interface
+    edit "<WC_FGT_PORT_NAME>"
+        set ip "<WC_FGT_PORT_IP>"
+        set allowaccess ping fabric
+        set ip-managed-by-fortiipam disable
+    next
+end
 
+config system dhcp server
+    edit 1
+        set default-gateway "<WC_FGT_PORT_IP>"
+        set netmask "<DHCP_SERVER_NETWORK_MASK>"
+        set interface "<WC_FGT_PORT_NAME>"
+        config ip-range
+            edit 1
+                set start-ip "<DHCP_SERVER_START_IP>"
+                set end-ip "<DHCP_SERVER_END_IP>"
+            next
+        end
+    next
+end
