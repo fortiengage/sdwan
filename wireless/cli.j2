@@ -1,6 +1,6 @@
 config system interface
     edit "<WC_FGT_PORT_NAME>"
-        set ip "<WC_FGT_PORT_IP>"
+        set ip "<WC_FGT_PORT_IP>" "<WC_FGT_PORT_IP_NETWORK_MASK>"
         set allowaccess ping fabric
         set ip-managed-by-fortiipam disable
     next
@@ -9,13 +9,13 @@ end
 {# 
     The following CLI is to config the DHCP server which is used to provide IP address to FAP which connects to the managing interface.
     1). The default-gateway is the IP address of the managing interface.
-    2). The ip-range will be from the next available IP to 254, e.g. WC_FGT_PORT_IP is 10.10.9.1, the ip-range will be 10.10.9.2 to 10.10.9.254.
-    3). The FortiEngage will dynamic adjust the IP range based on the IP address of the managing interface. 
+    2). The ip-range will be from the next available IP to 254 calculated based on the network mask, e.g. WC_FGT_PORT_IP is 10.10.9.1, the ip-range will be 10.10.9.2 to 10.10.9.254.
+    3). The FortiEngage will dynamically calculate the IP range based on the IP address of the managing interface. 
 #}
 config system dhcp server
     edit 1
         set default-gateway "<WC_FGT_PORT_IP>"
-        set netmask 255.255.255.0
+        set netmask "<WC_FGT_PORT_IP_NETWORK_MASK>"
         set interface "port15"
         config ip-range
             edit 1
