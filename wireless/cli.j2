@@ -6,9 +6,15 @@ config system interface
     next
 end
 
+{# 
+    The following CLI is to config the DHCP server which is used to provide IP address to FAP which connects to the managing interface.
+    1). The default-gateway is the IP address of the managing interface.
+    2). The ip-range will be from the next available IP to 254, e.g. WC_FGT_PORT_IP is 10.10.9.1, the ip-range will be 10.10.9.2 to 10.10.9.254.
+    3). The FortiEngage will dynamic adjust the IP range based on the IP address of the managing interface. 
+#}
 config system dhcp server
     edit 1
-        set default-gateway 10.10.9.1
+        set default-gateway "<WC_FGT_PORT_IP>"
         set netmask 255.255.255.0
         set interface "port15"
         config ip-range
