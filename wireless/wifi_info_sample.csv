@@ -1,0 +1,8 @@
+ssid_name,Security_Option,password,Radio-1,Radio-2
+WIFI_Staff,wpa2-only-enterprise,,Y,Y
+WIFI_Guest,wpa2-only-person,12345678,Y,Y
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
