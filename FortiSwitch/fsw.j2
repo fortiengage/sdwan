@@ -1,0 +1,20 @@
+
+
+
+
+
+config adom/fsp/"branch2_lab130"-"root"
+    config fsp managed-switch
+        edit "branch2_448E"
+            set sn "S448EFTF23018129"
+            set description ""
+            set platform "FortiSwitch-448E-FPOE"
+            set state enable
+            set status idle
+            set vlan-interface "fortilink"
+            set template "448E-FPOE"
+            set type physical (get)
+            set is-model disable
+        next
+    end
+end
