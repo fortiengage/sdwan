@@ -173,6 +173,28 @@ config wireless-controller wtp
 end
 
 config wireless-controller vap
+    edit "WIFI-ACCESS"
+        set ssid "wifi-access"
+        set security wpa2-only-enterprise
+        set pmf optional
+        set auth radius
+        set radius-server "RBAC"
+        set local-bridging enable
+        set schedule "always"
+        set vlanid 2100
+        set dynamic-vlan enable
+        set alias "b"
+        set dhcp-address-enforcement enable
+        config vlan-name
+            edit "quarantine"
+                set vlan-id 3967
+            next
+        end
+        set qos-profile "WMM_CORPORATE_WIRELESS"
+        set rates-11a 12 12-basic 18 24 24-basic 36 48 54
+        set rates-11bg 12 12-basic 18 24 24-basic 36 48 54
+    next
+
     edit "WIFI-Guest"
         set ssid "wifi-guest"
         set security open
