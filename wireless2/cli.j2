@@ -1,0 +1,42 @@
+
+
+
+
+    edit "WIFI_MGMT"
+        set vdom "root"
+        set ip 10.180.35.1 255.255.255.224
+        set allowaccess ping fabric
+        set netflow-sampler both
+        set device-identification enable
+        set monitor-bandwidth enable
+        set role lan
+        set auto-auth-extension-device enable
+        set interface "fortilink"
+        set vlanid 3010
+    next
+    
+    edit "WIFI_Staff"
+        set vdom "root"
+        set ip 172.17.192.1 255.255.240.0
+        set allowaccess ping
+        set vlanforward enable
+        set netflow-sampler both
+        set device-identification enable
+        set monitor-bandwidth enable
+        set role lan
+        set interface "fortilink"
+        set vlanid 3020
+    next
+
+    edit "WIFI_Guest"
+        set vdom "root"
+        set ip 172.21.64.1 255.255.240.0
+        set allowaccess ping
+        set vlanforward enable
+        set netflow-sampler both
+        set alias "GUEST_3966"
+        set device-identification enable
+        set role lan
+        set interface "fortilink"
+        set vlanid 3030
+    next
