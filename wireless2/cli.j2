@@ -1,5 +1,79 @@
 
 
+{#
+    AP_NAME: used in 
+        1. wireless-controller wtp
+        2. The FGT VLAN interface name for the corresponding VLAN
+            IP address, IP mask
+        3. DHCP for all the clients that connect to this SSID
+            start IP and end IP 
+
+#}
+
+              
+config system interface
+    edit "fortilink"
+        set vdom "root"
+        set fortilink enable
+        set ip 10.255.1.1 255.255.255.0
+        set allowaccess ping fabric
+        set type aggregate
+        set member "x3" "x4"
+        set lldp-reception enable
+        set lldp-transmission enable
+        set monitor-bandwidth enable
+        set switch-controller-nac "fortilink"
+        set switch-controller-dynamic "fortilink"
+    next
+    edit "fortilink"
+        set vdom "root"
+        set fortilink enable
+        set ip 10.180.35.177 255.255.255.240
+    next
+
+    edit "WIFI_MGMT"
+        set vdom "root"
+        // set ip 10.180.35.1 255.255.255.224
+        set ip 10.255.2.1 255.255.255.0
+        set allowaccess ping fabric
+        set netflow-sampler both
+        set device-identification enable
+        set monitor-bandwidth enable
+        set role lan
+        set auto-auth-extension-device enable
+        set interface "fortilink"
+        set vlanid 3010
+    next
+    
+    edit "WIFI_Staff"
+        set vdom "root"
+        // set ip 172.17.192.1 255.255.240.0
+        set ip 10.255.3.1 255.255.255.0
+        set allowaccess ping
+        set vlanforward enable
+        set netflow-sampler both
+        set device-identification enable
+        set monitor-bandwidth enable
+        set role lan
+        set interface "fortilink"
+        set vlanid 2100
+    next
+
+    edit "WIFI_Guest"
+        set vdom "root"
+        //set ip 172.21.64.1 255.255.240.0
+        set ip 10.255.3.1 255.255.255.0
+        set allowaccess ping
+        set vlanforward enable
+        set netflow-sampler both
+        set alias "GUEST_3966"
+        set device-identification enable
+        set role lan
+        set interface "fortilink"
+        set vlanid 3966
+    next
+end
+
 config system dhcp server
     edit 999
         set dns-service default
@@ -58,67 +132,6 @@ config system dhcp server
         set dns-server2 172.64.36.2
     next
 end
-
-              
-config system interface
-    edit "fortilink"
-        set vdom "root"
-        set fortilink enable
-        set ip 10.180.35.177 255.255.255.240
-        set allowaccess ping fabric
-        set type aggregate
-        set member "x1" "x2"
-        set lldp-reception enable
-        set lldp-transmission enable
-        set monitor-bandwidth enable
-        set snmp-index 36
-        set auto-auth-extension-device enable
-        set fortilink-split-interface disable
-        set switch-controller-nac "fortilink"
-        set switch-controller-dynamic "fortilink"
-        set swc-first-create 255
-        set lacp-mode static
-    next
-
-    edit "WIFI_MGMT"
-        set vdom "root"
-        set ip 10.180.35.1 255.255.255.224
-        set allowaccess ping fabric
-        set netflow-sampler both
-        set device-identification enable
-        set monitor-bandwidth enable
-        set role lan
-        set auto-auth-extension-device enable
-        set interface "fortilink"
-        set vlanid 3010
-    next
-    
-    edit "WIFI_Staff"
-        set vdom "root"
-        set ip 172.17.192.1 255.255.240.0
-        set allowaccess ping
-        set vlanforward enable
-        set netflow-sampler both
-        set device-identification enable
-        set monitor-bandwidth enable
-        set role lan
-        set interface "fortilink"
-        set vlanid 2100
-    next
-
-    edit "WIFI_Guest"
-        set vdom "root"
-        set ip 172.21.64.1 255.255.240.0
-        set allowaccess ping
-        set vlanforward enable
-        set netflow-sampler both
-        set alias "GUEST_3966"
-        set device-identification enable
-        set role lan
-        set interface "fortilink"
-        set vlanid 3966
-    next
-
 
 config switch-controller managed-switch
     edit "S448EFTF23003446"
