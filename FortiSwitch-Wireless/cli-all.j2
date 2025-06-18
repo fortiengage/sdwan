@@ -1,0 +1,577 @@
+
+              
+config system interface
+    edit "fortilink"
+        set vdom "root"
+        set fortilink enable
+        set ip 10.255.1.1 255.255.255.0
+        set allowaccess ping fabric
+        set type aggregate
+        set member "x3" "x4"
+        set lldp-reception enable
+        set lldp-transmission enable
+        set monitor-bandwidth enable
+        set switch-controller-nac "fortilink"
+        set switch-controller-dynamic "fortilink"
+    next
+    edit "WIFI_MGMT"
+        set vdom "root"
+        set ip 10.255.2.1 255.255.255.0
+        set allowaccess ping fabric
+        set netflow-sampler both
+        set device-identification enable
+        set monitor-bandwidth enable
+        set role lan
+        set auto-auth-extension-device enable
+        set interface "fortilink"
+        set vlanid 3010
+    next
+    edit "WIFI_Staff"
+        set vdom "root"
+        set ip 172.17.192.1 255.255.240.0
+        set allowaccess ping
+        set vlanforward enable
+        set netflow-sampler both
+        set alias "WIFI_ACCESS"
+        set device-identification enable
+        set monitor-bandwidth enable
+        set role lan
+        set interface "fortilink"
+        set vlanid 2100
+    next
+    edit "WIFI_Guest"
+        set vdom "root"
+        set ip 172.21.64.1 255.255.240.0
+        set allowaccess ping
+        set vlanforward enable
+        set netflow-sampler both
+        set alias "GUEST_3966"
+        set device-identification enable
+        set role lan
+        set interface "fortilink"
+        set vlanid 3966
+    next
+end
+
+config system dhcp server
+    edit 999
+        set dns-service default
+        set ntp-service local
+        set default-gateway 10.255.1.1
+        set netmask 255.255.255.0
+        set interface "fortilink"
+        config ip-range
+            edit 1
+                set start-ip 10.255.1.2
+                set end-ip 10.180.35.254
+            next
+        end
+        set vci-match enable
+        set vci-string "FortiSwitch" "FortiExtender"
+    next
+    edit 6
+        set dns-service default
+        set default-gateway 10.255.2.1
+        set netmask 255.255.255.0
+        set interface "WIFI_MGMT"
+        config ip-range
+            edit 1
+                set start-ip 10.255.2.2
+                set end-ip 10.255.2.254
+            next
+        end
+    next
+    edit 7
+        set lease-time 14400
+        set default-gateway 172.21.64.1
+        set netmask 255.255.240.0
+        set interface "WIFI_Staff"
+        config ip-range
+            edit 1
+                set start-ip 172.21.64.11
+                set end-ip 172.21.79.254
+            next
+        end
+    next
+    edit 12
+        set lease-time 14400
+        set wifi-ac-service local
+        set default-gateway 172.17.192.1
+        set netmask 255.255.240.0
+        set interface "WIFI_Guest"
+        config ip-range
+            edit 1
+                set start-ip 172.17.192.11
+                set end-ip 172.17.207.254
+            next
+        end
+    next
+end
+
+config switch-controller managed-switch
+    edit "FortiSwitch-448E-FPOE"
+        set _platform "FortiSwitch-448E-FPOE"
+        set name "FS8129-FAP"
+        set description "FS-448E-FPOE"
+        set fsw-wan1-peer "fortilink"
+        set fsw-wan1-admin enable
+        set poe-detection-type 2
+        set version 1
+        set max-allowed-trunk-members 8
+        set pre-provisioned 1
+        set dynamic-capability 0x00000000000000000410bf7d7dddfdf7
+        config ports
+            edit "port1"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port10"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port11"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port12"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port13"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port14"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port15"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port16"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port17"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port18"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port19"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port2"
+                set port-owner "AP1"
+                set trunk-member 1
+                set speed-mask 207
+                set poe-capable 1
+                set export-to "root"
+            next
+            edit "port20"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port21"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port22"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port23"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port24"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port25"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port26"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port27"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port28"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port29"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port3"
+                set port-owner "AP2"
+                set trunk-member 1
+                set speed-mask 207
+                set poe-capable 1
+                set export-to "root"
+            next
+            edit "port30"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port31"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port32"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port33"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port34"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port35"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port36"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port37"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port38"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port39"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port4"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port40"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port41"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port42"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port43"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port44"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port45"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port46"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port47"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port48"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port49"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port5"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port50"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port51"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port52"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port6"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port7"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port8"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port9"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "AP1"
+                set vlan "WIFI_MGMT"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set type trunk
+                set description "AP_JAKWP8001"
+                set mode lacp-active
+                set mclag enable
+                set members "port2"
+            next
+            edit "port3"
+                set port-owner "AP2"
+                set trunk-member 1
+                set speed-mask 207
+                set poe-capable 1
+                set export-to "root"
+            next
+            edit "AP2"
+                set vlan "WIFI_MGMT"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set type trunk
+                set description "AP_JAKWP8002"
+                set mode lacp-active
+                set mclag enable
+                set members "port3"
+            next
+        end
+    next
+end
+
+config switch-controller managed-switch
+    edit "S448EFTF23018129"
+        set name "FS8129-FAP"
+        set description "FS-448E-FPOE"
+        set fsw-wan1-peer "fortilink"
+        set fsw-wan1-admin enable
+        set poe-detection-type 2
+        set version 1
+        set max-allowed-trunk-members 8
+        set pre-provisioned 1
+        set dynamic-capability 0x00000000000000000410bf7d7dddfdf7
+        config ports
+            edit "port2"
+                set port-owner "AP1"
+                set trunk-member 1
+                set speed-mask 207
+                set poe-capable 1
+                set export-to "root"
+            next
+            edit "AP1"
+                set vlan "WIFI_MGMT"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set type trunk
+                set description "AP_JAKWP8001"
+                set mode lacp-active
+                set mclag enable
+                set members "port2"
+            next
+            edit "port3"
+                set port-owner "AP2"
+                set trunk-member 1
+                set speed-mask 207
+                set poe-capable 1
+                set export-to "root"
+            next
+            edit "AP2"
+                set vlan "WIFI_MGMT"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set type trunk
+                set description "AP_JAKWP8002"
+                set mode lacp-active
+                set mclag enable
+                set members "port3"
+            next
+        end
+    next
+end
+
+
+config adom/fsp/"branch1_lab130"-"root"
+    config fsp managed-switch
+        edit "S448EFTF23018129"   {# S448EFTF23018129 #}
+            set sn "S448EFTF23018129"
+            set description "FW-S448EFTF23018129"
+            set platform "FortiSwitch-448E-FPOE"  {# FortiSwitch-448E-FPOE #}
+            set state enable
+            set status idle
+            set vlan-interface "fortilink"
+            set template "FortiSwitch-448E-FPOE"
+            set type physical (get)
+            set is-model disable
+        next
+    end
+end
+
+config wireless-controller vap
+   edit "WIFI_Staff"
+        set ssid "WIFI_Staff"
+        set security wpa2-only-enterprise
+        set pmf enable
+        set mbo enable
+        set fast-bss-transition enable
+        set ft-over-ds enable
+        set local-bridging enable
+        set auth usergroup
+        set usergroup "Guest-group"
+        set multicast-enhance enable
+        set sticky-client-remove enable
+        set sticky-client-threshold-5g "-85"
+        set sticky-client-threshold-2g "-85"
+        set sticky-client-threshold-6g "-85"
+        set schedule "always"
+        set dhcp-address-enforcement enable
+        set dynamic-vlan enable
+        set vlanid 2100
+    next
+    edit "WIFI_Guest"
+        set ssid "WIFI_Guest"
+        set passphrase "123456789"
+        set local-bridging enable
+        set schedule "always"
+        set vlanid 3966
+        set dhcp-address-enforcement enable
+    next
+end
+
+config wireless-controller wtp-profile
+    edit "FAP431F-Profile"
+        config platform
+            set type 431F
+            set ddscan enable
+        end
+        set handoff-sta-thresh 55
+        set frequency-handoff enable
+        config radio-1
+            set band 802.11g 802.11n-2G 802.11ax-2G
+            set auto-power-level enable
+            set auto-power-high 14
+            set auto-power-low 5
+            set darrp enable
+            set arrp-profile "arrp-default"
+            set vap-all manual
+            set vaps "WIFI_Staff" "WIFI_Guest"
+            set channel "1" "6" "11"
+        end
+        config radio-2
+            set band 802.11a 802.11n-5G 802.11ac-5G 802.11ax-5G
+            set short-guard-interval enable
+            set channel-bonding 40MHz
+            set auto-power-level enable
+            set auto-power-high 20
+            set auto-power-low 14
+            set darrp enable
+            set arrp-profile "arrp-default"
+            set vap-all manual
+            set vaps "WIFI_Staff" "WIFI_Guest"
+            set channel "36" "44" "52" "60" "100" "108" "132" "140" "149" "157"
+        end
+        config radio-3
+            set mode monitor
+            set wids-profile "default-wids-apscan-enabled"
+        end
+    next
+end
+
+config adom/wtp/"branch1_lab1"-"root"
+    config wireless-controller wtp
+        edit "FP431FTF23099HHQ"  {# FP431FTF23099HHQ #}
+            set admin enable
+            set name "AP1"  {# 0179APFR1 #}
+            set wtp-profile "FAP431F-Profile"   {# FAP431F-Profile #}
+            set wtp-mode remote
+            config radio-1
+            end
+            config radio-2
+            end
+        next
+        edit "FP431FTF23099ZDV"  {# FP431FTF23099HHQ #}
+            set admin enable
+            set name "AP2"  {# 0179APFR1 #}
+            set wtp-profile "FAP431F-Profile"   {# FAP431F-Profile #}
+            set wtp-mode remote
+            config radio-1
+            end
+            config radio-2
+            end
+        next
+    end
+end 
+
+
