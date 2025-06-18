@@ -165,13 +165,29 @@ config switch-controller managed-switch
             edit "JAKWP8001"
             //edit "AP1"
                 set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" "WIFI_ACCESS" "GUEST_3966" "QUARANTINE_3967" "INNOVATION_3901" "IOT_INNO_3960" "Test_VLAN"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
                 set type trunk
-                set mac-addr 84:39:8f:91:76:ef
+                //set mac-addr 84:39:8f:91:76:ef
                 set description "AP_JAKWP8001"
                 set mode lacp-active
                 set mclag enable
                 set members "port2"
+            next
+            edit "port3"
+                set port-owner "AP2"
+                set trunk-member 1
+                set speed-mask 207
+                set poe-capable 1
+                set export-to "root"
+            next
+            edit "AP2"
+                set vlan "WIFI_MGMT"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set type trunk
+                set description "AP_AP2"
+                set mode lacp-active
+                set mclag enable
+                set members "port3"
             next
         end
     next
