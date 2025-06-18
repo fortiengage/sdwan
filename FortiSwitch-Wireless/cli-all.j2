@@ -228,11 +228,9 @@ config switch-controller managed-switch
                 set untagged-vlans "quarantine"
             next
             edit "port2"
-                set port-owner "AP1"
-                set trunk-member 1
-                set speed-mask 207
-                set poe-capable 1
-                set export-to "root"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
             next
             edit "port20"
                 set vlan "default"
@@ -285,11 +283,9 @@ config switch-controller managed-switch
                 set untagged-vlans "quarantine"
             next
             edit "port3"
-                set port-owner "AP2"
-                set trunk-member 1
-                set speed-mask 207
-                set poe-capable 1
-                set export-to "root"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
             next
             edit "port30"
                 set vlan "default"
