@@ -1,0 +1,298 @@
+Variable: <AP1>, edited <port2>
+
+config switch-controller managed-switch
+    edit "FortiSwitch-448E-FPOE"
+        set _platform "FortiSwitch-448E-FPOE"
+        set name "FS8129-FAP"
+        set description "FS-448E-FPOE"
+        set fsw-wan1-peer "fortilink"
+        set fsw-wan1-admin enable
+        set poe-detection-type 2
+        set version 1
+        set max-allowed-trunk-members 8
+        set pre-provisioned 1
+        set dynamic-capability 0x00000000000000000410bf7d7dddfdf7
+        config ports
+            edit "port1"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port10"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port11"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port12"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port13"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port14"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port15"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port16"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port17"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port18"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port19"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            //edit "port2"
+            //    set vlan "default"
+           //     set allowed-vlans "quarantine"
+            //    set untagged-vlans "quarantine"
+           // next
+            edit "port2"
+                //set port-owner "JAKWP8001"
+                set port-owner "AP1"
+                set trunk-member 1
+                set speed-mask 207
+                set poe-capable 1
+                set export-to "root"
+            next
+            edit "port20"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port21"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port22"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port23"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port24"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port25"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port26"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port27"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port28"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port29"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port3"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port30"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port31"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port32"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port33"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port34"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port35"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port36"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port37"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port38"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port39"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port4"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port40"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port41"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port42"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port43"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port44"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port45"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port46"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port47"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port48"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port49"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port5"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port50"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port51"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port52"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port6"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port7"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port8"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            edit "port9"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
+            next
+            //edit "JAKWP8001"
+            edit "AP1"
+                set vlan "WIFI_MGMT"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set type trunk
+                //set mac-addr 84:39:8f:91:76:ef
+                //set description "AP_JAKWP8001"
+                set description "AP_AP1"
+                set mode lacp-active
+                set mclag enable
+                set members "port2"
+            next
+        end
+    next
+end
