@@ -1,19 +1,6 @@
 
               
 config system interface
-    edit "fortilink"
-        set vdom "root"
-        set fortilink enable
-        set ip 10.255.1.1 255.255.255.0
-        set allowaccess ping fabric
-        set type aggregate
-        set member "x3" "x4"
-        set lldp-reception enable
-        set lldp-transmission enable
-        set monitor-bandwidth enable
-        set switch-controller-nac "fortilink"
-        set switch-controller-dynamic "fortilink"
-    next
     edit "WIFI_MGMT"
         set vdom "root"
         set ip 10.255.2.1 255.255.255.0
@@ -54,21 +41,6 @@ config system interface
 end
 
 config system dhcp server
-    edit 999
-        set dns-service default
-        set ntp-service local
-        set default-gateway 10.255.1.1
-        set netmask 255.255.255.0
-        set interface "fortilink"
-        config ip-range
-            edit 1
-                set start-ip 10.255.1.2
-                set end-ip 10.255.1.254
-            next
-        end
-        set vci-match enable
-        set vci-string "FortiSwitch" "FortiExtender"
-    next
     edit 6
         set dns-service default
         set default-gateway 10.255.2.1
