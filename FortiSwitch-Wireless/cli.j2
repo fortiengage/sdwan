@@ -47,8 +47,7 @@ config system interface
     
     edit "WIFI_Staff"
         set vdom "root"
-        // set ip 172.17.192.1 255.255.240.0
-        set ip 10.255.3.1 255.255.255.0
+        set ip 172.17.192.1 255.255.240.0
         set allowaccess ping
         set vlanforward enable
         set netflow-sampler both
@@ -61,8 +60,7 @@ config system interface
 
     edit "WIFI_Guest"
         set vdom "root"
-        //set ip 172.21.64.1 255.255.240.0
-        set ip 10.255.3.1 255.255.255.0
+        set ip 172.21.64.1 255.255.240.0
         set allowaccess ping
         set vlanforward enable
         set netflow-sampler both
@@ -78,13 +76,17 @@ config system dhcp server
     edit 999
         set dns-service default
         set ntp-service local
-        set default-gateway 10.180.35.177
-        set netmask 255.255.255.240
+        //set default-gateway 10.180.35.177
+        //set netmask 255.255.255.240
+        set default-gateway 10.255.1.1
+        set netmask 255.255.255.0
         set interface "fortilink"
         config ip-range
             edit 1
-                set start-ip 10.180.35.178
-                set end-ip 10.180.35.190
+                //set start-ip 10.180.35.178
+                //set end-ip 10.180.35.190
+                set start-ip 10.255.1.2
+                set end-ip 10.180.35.254
             next
         end
         set vci-match enable
@@ -92,13 +94,17 @@ config system dhcp server
     next
     edit 6
         set dns-service default
-        set default-gateway 10.180.35.1
-        set netmask 255.255.255.240
+        //set default-gateway 10.180.35.1
+        //set netmask 255.255.255.240
+        set default-gateway 10.255.2.1
+        set netmask 255.255.255.0
         set interface "WIFI_MGMT"
         config ip-range
             edit 1
-                set start-ip 10.180.35.22
-                set end-ip 10.180.35.30
+                //set start-ip 10.180.35.22
+                //set end-ip 10.180.35.30
+                set start-ip 10.255.2.2
+                set end-ip 10.255.2.254
             next
         end
     next
@@ -106,36 +112,39 @@ config system dhcp server
         set lease-time 14400
         set default-gateway 172.21.64.1
         set netmask 255.255.240.0
-        set interface "GUEST_3966"
+        //set interface "GUEST_3966"
+        set interface "WIFI_Staff"
         config ip-range
             edit 1
                 set start-ip 172.21.64.11
                 set end-ip 172.21.79.254
             next
         end
-        set dns-server1 172.64.36.1
-        set dns-server2 172.64.36.2
+        //set dns-server1 172.64.36.1
+        //set dns-server2 172.64.36.2
     next
     edit 12
         set lease-time 14400
         set wifi-ac-service local
         set default-gateway 172.17.192.1
         set netmask 255.255.240.0
-        set interface "WIFI_ACCESS"
+        //set interface "WIFI_ACCESS"
+        set interface "WIFI_Guest"
         config ip-range
             edit 1
                 set start-ip 172.17.192.11
                 set end-ip 172.17.207.254
             next
         end
-        set dns-server1 172.64.36.1
-        set dns-server2 172.64.36.2
+        //set dns-server1 172.64.36.1
+        //set dns-server2 172.64.36.2
     next
 end
 
 config switch-controller managed-switch
-    edit "S448EFTF23003446"
-        set name "JAKSW8011"
+    edit "S448EFTF23018129"
+        //set name "JAKSW8011"
+        set name "FS8129-FAP"
         set description "FS-448E-FPOE"
         set fsw-wan1-peer "fortilink"
         set fsw-wan1-admin enable
@@ -146,13 +155,15 @@ config switch-controller managed-switch
         set dynamic-capability 0x00000000000000000410bf7d7dddfdf7
         config ports
             edit "port2"
-                set port-owner "JAKWP8001"
+                //set port-owner "JAKWP8001"
+                //set port-owner "AP1"
                 set trunk-member 1
                 set speed-mask 207
                 set poe-capable 1
                 set export-to "root"
             next
             edit "JAKWP8001"
+            //edit "AP1"
                 set vlan "WIFI_MGMT"
                 set allowed-vlans "WIFI_MGMT" "WIFI_ACCESS" "GUEST_3966" "QUARANTINE_3967" "INNOVATION_3901" "IOT_INNO_3960" "Test_VLAN"
                 set type trunk
@@ -167,17 +178,16 @@ config switch-controller managed-switch
 end
 
 config wireless-controller wtp
-    edit "FP431FTF23036771"
-        set uuid a2032bb4-5968-51ee-d030-2beb6806da88
+    edit "FP431FTF23099HHQ"
         set admin enable
-        set name "JAKWP8001"  //vlan
-        set region "Floor Map"
-        set region-x "0.1016563012870"
-        set region-y "0.4319852941176"
-        set wtp-profile "431F-MacOS"
+        //set name "JAKWP8001"  //vlan
+        set name "AP1" 
+        //set region "Floor Map"
+        //set region-x "0.1016563012870"
+        //set region-y "0.4319852941176"
+        //set wtp-profile "431F-MacOS"
+        set wtp-profile "FAP431F-Profile"
         set wtp-mode remote
-        set apcfg-profile "AP-AGG"
-        set bonjour-profile "OFFICE_BONJOUR_PROFILE_JAKFW8100"
         config radio-1
         end
         config radio-2
