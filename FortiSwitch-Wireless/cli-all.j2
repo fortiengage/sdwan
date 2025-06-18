@@ -1,4 +1,17 @@
 
+config system interface
+    edit "WIFI_MGMT2"
+        set vdom "root"
+        set ip 172.17.191.1 255.255.255.0
+        set allowaccess ping fabric
+        set device-identification enable
+        set role lan
+        set snmp-index 145
+        set interface "fortilink"
+        set vlanid 3010
+        #WARN: attribute [tc-mode] object not support
+    next
+end
               
 config system interface
     edit "WIFI_MGMT"
