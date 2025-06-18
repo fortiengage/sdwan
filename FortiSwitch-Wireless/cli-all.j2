@@ -83,15 +83,6 @@ end
 config switch-controller managed-switch
     edit "FortiSwitch-448E-FPOE"
         set _platform "FortiSwitch-448E-FPOE"
-        set name "FS8129-FAP"
-        set description "FS-448E-FPOE"
-        set fsw-wan1-peer "fortilink"
-        set fsw-wan1-admin enable
-        set poe-detection-type 2
-        set version 1
-        set max-allowed-trunk-members 8
-        set pre-provisioned 1
-        set dynamic-capability 0x00000000000000000410bf7d7dddfdf7
         config ports
             edit "port1"
                 set vlan "default"
@@ -365,13 +356,6 @@ config switch-controller managed-switch
                 set mode lacp-active
                 set mclag enable
                 set members "port2"
-            next
-            edit "port3"
-                set port-owner "AP2"
-                set trunk-member 1
-                set speed-mask 207
-                set poe-capable 1
-                set export-to "root"
             next
             edit "AP2"
                 set vlan "WIFI_MGMT"
