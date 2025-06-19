@@ -1,17 +1,6 @@
-Variable: <AP1>, edited <port2>
-
 config switch-controller managed-switch
     edit "FortiSwitch-448E-FPOE"
         set _platform "FortiSwitch-448E-FPOE"
-        set name "FS8129-FAP"
-        set description "FS-448E-FPOE"
-        set fsw-wan1-peer "fortilink"
-        set fsw-wan1-admin enable
-        set poe-detection-type 2
-        set version 1
-        set max-allowed-trunk-members 8
-        set pre-provisioned 1
-        set dynamic-capability 0x00000000000000000410bf7d7dddfdf7
         config ports
             edit "port1"
                 set vlan "default"
@@ -68,18 +57,10 @@ config switch-controller managed-switch
                 set allowed-vlans "quarantine"
                 set untagged-vlans "quarantine"
             next
-            //edit "port2"
-            //    set vlan "default"
-           //     set allowed-vlans "quarantine"
-            //    set untagged-vlans "quarantine"
-           // next
             edit "port2"
-                //set port-owner "JAKWP8001"
-                set port-owner "AP1"
-                set trunk-member 1
-                set speed-mask 207
-                set poe-capable 1
-                set export-to "root"
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
             next
             edit "port20"
                 set vlan "default"
@@ -281,17 +262,23 @@ config switch-controller managed-switch
                 set allowed-vlans "quarantine"
                 set untagged-vlans "quarantine"
             next
-            //edit "JAKWP8001"
             edit "AP1"
                 set vlan "WIFI_MGMT"
                 set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
                 set type trunk
-                //set mac-addr 84:39:8f:91:76:ef
-                //set description "AP_JAKWP8001"
-                set description "AP_AP1"
+                set description "AP_JAKWP8001"
                 set mode lacp-active
                 set mclag enable
                 set members "port2"
+            next
+            edit "AP2"
+                set vlan "WIFI_MGMT"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set type trunk
+                set description "AP_JAKWP8002"
+                set mode lacp-active
+                set mclag enable
+                set members "port3"
             next
         end
     next
