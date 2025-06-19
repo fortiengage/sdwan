@@ -1,0 +1,25 @@
+config wireless-controller vap
+    edit "<ssid_enterprise>"
+        set ssid "<ssid_enterprise>"
+        set security wpa2-only-enterprise
+        set pmf enable
+        set mbo enable
+        set fast-bss-transition enable
+        set ft-over-ds enable
+        set local-bridging enable
+        set auth usergroup
+        set usergroup "Guest-group"
+        set multicast-enhance enable
+        set sticky-client-remove enable
+        set sticky-client-threshold-5g "-85"
+        set sticky-client-threshold-2g "-85"
+        set sticky-client-threshold-6g "-85"
+        set schedule "always"
+    next
+    edit "<ssid_personal>"
+        set ssid "<ssid_personal>"
+        set passphrase "<ssid_password>"
+        set local-bridging enable
+        set schedule "always"
+    next
+end
