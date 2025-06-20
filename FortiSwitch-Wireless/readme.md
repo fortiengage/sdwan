@@ -19,3 +19,7 @@ Deploy the FortiSwitch and FortiAP together with SD-WAN solution
 - fsp-vlan-wifi-mgmt.j2: Script to creat the dedicated FAP management VLAN of "WIFI_MGMT". 
 - vap-enterprise.j2: Create enterprise security SSID
 - vap-personal.j2: Create the personal security SSID with a password
+
+#"Management Port on FortiGate: By default, FortiEnage will create WIFI_MGMT VLAN with vlanid=3010 with access of ping and fabric enabled, and DHCP enable to assign IP to FAP"
+#"VLAN interface of WIFI_MGMT default IP is 10.255.2.1/24, the DHCP server IP range is 10.255.2.2-10.255.2.254"
+#WC_FSW_PORT_NAME: For creating the trunk on FortiSwitch for the AP using this port
