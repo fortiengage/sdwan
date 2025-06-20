@@ -1,9 +1,3 @@
 AP_SN,AP_TYPE,AP_NAME,WC_FGT_NAME,WC_FGT_VDOM_NAME,WC_FSW_SN,WC_FSW_PORT_NAME
 FP431FTF23099HHQ,FP431F,AP1,branch1_lab130,root,S448EFTF23018129,port2
 FP431FTF23099ZDV,FP431F,AP2,branch1_lab130,root,S448EFTF23018129,port3
-,,,,,,
-,,,,,,
-,,,,,,
-#"Management Port on FortiGate: By default, FortiEnage will create WIFI_MGMT VLAN with vlanid=3010 with access of ping and fabric enabled, and DHCP enable to assign IP to FAP",,,,,,
-#"VLAN interface of WIFI_MGMT default IP is 10.255.2.1/24, the DHCP server IP range is 10.255.2.2-10.255.2.254",,,,,,
-#WC_FSW_PORT_NAME: For creating the trunk on FortiSwitch for the AP using this port,,,,,,
