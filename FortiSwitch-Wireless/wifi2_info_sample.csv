@@ -1,0 +1,3 @@
+SSID_Name,Security_Option,SSID_Password,VLAN_ID,VLAN_Interface_IP,VLAN_Interface_Network_Mask,Radio-1,Radio-2
+WIFI_Staff,wpa2-only-enterprise,,2100,172.17.192.1,255.255.255.0,Y,Y
+WIFI_Guest,wpa2-only-person,123456789,3966,172.21.64.1,255.255.255.0,Y,Y
