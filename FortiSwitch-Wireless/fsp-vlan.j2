@@ -7,14 +7,12 @@ config fsp vlan
             set allowaccess ping fabric
             set device-identification enable
             set role lan
-            set ip-managed-by-fortiipam disable
             config ipv6
             end
         end
         config dhcp-server
             set default-gateway "<VLAN_Interface_IP>"
             set netmask "<VLAN_Interface_Network_Mask>"
-            set dhcp-settings-from-fortiipam enable
             config ip-range
                 edit 1
                     set start-ip "<VLAN_Interface_DHCP_IP_START>"
