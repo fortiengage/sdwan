@@ -1,0 +1,49 @@
+
+{# FortiAP wtp-profile Jinja Templates #}
+{# Meta Variables:
+   - Required:
+      - wifi_ssid_1
+      - wifi_ssid_2
+ #}
+
+config wireless-controller wtp-profile
+    edit "FAP441K-Profile"
+        config platform
+            set type 441K
+            set ddscan enable
+        end
+        set handoff-sta-thresh 55
+        set frequency-handoff enable
+        config radio-1
+            set band 802.11g 802.11n-2G 802.11ax-2G 802.11be-2G
+            set auto-power-level enable
+            set auto-power-high 14
+            set auto-power-low 5
+            set darrp enable
+            set arrp-profile "arrp-default"
+            set vap-all manual
+            set vaps <wifi_name_radio_1>
+            set channel "1" "6" "11"
+        end
+        config radio-2
+            set band 802.11a 802.11n-5G 802.11ac-5G 802.11ax-5G 802.11be-5G
+            set short-guard-interval enable
+            set channel-bonding 40MHz
+            set auto-power-level enable
+            set auto-power-high 20
+            set auto-power-low 14
+            set darrp enable
+            set arrp-profile "arrp-default"
+            set vap-all manual
+            set vaps <wifi_name_radio_2>
+            set channel "36" "44" "52" "60" "100" "108" "132" "140" "149" "157"
+        end
+        config radio-3
+            set band 802.11ax-6G 802.11be-6G
+            set channel-bonding 160MHz
+        end
+        config radio-4
+            set mode monitor
+        end
+    next
+end
