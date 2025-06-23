@@ -3,7 +3,7 @@ config fsp vlan
         set vlanid <VLAN_ID>
         set _dhcp-status enable
         config interface
-            set ip "<VLAN_Interface_IP>"
+            set ip "<VLAN_Interface_IP>" "<VLAN_Interface_Network_Mask>"
             set allowaccess ping fabric
             set device-identification enable
             set role lan
