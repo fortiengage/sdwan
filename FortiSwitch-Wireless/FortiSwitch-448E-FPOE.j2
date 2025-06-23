@@ -264,7 +264,7 @@ config switch-controller managed-switch
             next
             edit "AP1"
                 set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set allowed-vlans "WIFI_MGMT" <allowed_vlans>
                 set type trunk
                 set description "AP_JAKWP8001"
                 set mode lacp-active
@@ -273,7 +273,7 @@ config switch-controller managed-switch
             next
             edit "AP2"
                 set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set allowed-vlans "WIFI_MGMT" <allowed_vlans>
                 set type trunk
                 set description "AP_JAKWP8002"
                 set mode lacp-active
