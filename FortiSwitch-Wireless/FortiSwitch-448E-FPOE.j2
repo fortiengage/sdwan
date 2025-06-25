@@ -262,23 +262,7 @@ config switch-controller managed-switch
                 set allowed-vlans "quarantine"
                 set untagged-vlans "quarantine"
             next
-            edit "AP1"
-                set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" <allowed_vlans>
-                set type trunk
-                set description "AP_JAKWP8001"
-                set mode lacp-active
-                set mclag enable
-                set members "port2"
-            next
-            edit "AP2"
-                set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" <allowed_vlans>
-                set type trunk
-                set description "AP_JAKWP8002"
-                set mode lacp-active
-                set mclag enable
-                set members "port3"
+<fsw_trunk>
             next
         end
     next
