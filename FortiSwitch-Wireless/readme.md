@@ -1,16 +1,28 @@
 Deploy the FortiSwitch and FortiAP together with SD-WAN solution
 
-1. Add FortiGate model device, i.e. FortiGate with name of "branch1_lab130"
-2. Add the FortiSwitch model device
-   a). Create VLAN first, like FAP management VLAN, SSID related VLAN
-   b). Create the FortiSwitch template according to the platform/model
-   c). Create the FortiSwitch model device
-3. Add the FortiAP model device
-   a). Create VAP/SSID
-   b). Create the FortiAP template according to the FAP model
-   c). Create the FortiAP model device
+1. **Add FortiGate model device**
+   - FortiGate name: `branch1_lab130`
 
+2. **Add the FortiSwitch model device**
 
+   a) Create VLANs:
+      - FortiAP management VLAN: WIFI_MGMT
+      - SSID-related VLANs: using SSID name and VLAN ID in the WIFI CSV file.
+   
+   b) Create the FortiSwitch template:
+      - Based on the FortiSwitch platform/model.
+      - Create one trunk for each FortiAP by using the AP_NAME in the FAP CSV file, and put the port WC_FSW_PORT_NAME as member.
+   
+   c) Create the FortiSwitch model device
+
+4. **Add the FortiAP model device**
+   a) Create VAP/SSID as defined in the WIFI CSV file
+   
+   b) Create the FortiAP template:
+      - According to the FortiAP model
+   
+   c) Create the FortiAP model device
+   
 - fsw.j2: Scripts to create a FortiSwitch model device on FortiManager
   Pre-requisite: VLAN and FortiSwitch template
 - fap.j2: Scripts to create FAP model device on FortiManager
