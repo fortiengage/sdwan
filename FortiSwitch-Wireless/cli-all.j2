@@ -1,98 +1,3 @@
-
-config system interface
-    edit "WIFI_MGMT2"
-        set vdom "root"
-        set ip 172.17.191.1 255.255.255.0
-        set allowaccess ping fabric
-        set device-identification enable
-        set role lan
-        set snmp-index 145
-        set interface "fortilink"
-        set vlanid 3010
-        #WARN: attribute [tc-mode] object not support
-    next
-end
-              
-config system interface
-    edit "WIFI_MGMT"
-        set vdom "root"
-        set ip 10.255.2.1 255.255.255.0
-        set allowaccess ping fabric
-        set netflow-sampler both
-        set device-identification enable
-        set monitor-bandwidth enable
-        set role lan
-        set auto-auth-extension-device enable
-        set interface "fortilink"
-        set vlanid 3010
-    next
-    edit "WIFI_Staff"
-        set vdom "root"
-        set ip 172.17.192.1 255.255.240.0
-        set allowaccess ping
-        set vlanforward enable
-        set netflow-sampler both
-        set alias "WIFI_ACCESS"
-        set device-identification enable
-        set monitor-bandwidth enable
-        set role lan
-        set interface "fortilink"
-        set vlanid 2100
-    next
-    edit "WIFI_Guest"
-        set vdom "root"
-        set ip 172.21.64.1 255.255.240.0
-        set allowaccess ping
-        set vlanforward enable
-        set netflow-sampler both
-        set alias "GUEST_3966"
-        set device-identification enable
-        set role lan
-        set interface "fortilink"
-        set vlanid 3966
-    next
-end
-
-config system dhcp server
-    edit 6
-        set dns-service default
-        set default-gateway 10.255.2.1
-        set netmask 255.255.255.0
-        set interface "WIFI_MGMT"
-        config ip-range
-            edit 1
-                set start-ip 10.255.2.2
-                set end-ip 10.255.2.254
-            next
-        end
-    next
-    edit 7
-        set lease-time 14400
-        set default-gateway 172.21.64.1
-        set netmask 255.255.240.0
-        set interface "WIFI_Staff"
-        config ip-range
-            edit 1
-                set start-ip 172.21.64.11
-                set end-ip 172.21.79.254
-            next
-        end
-    next
-    edit 12
-        set lease-time 14400
-        set wifi-ac-service local
-        set default-gateway 172.17.192.1
-        set netmask 255.255.240.0
-        set interface "WIFI_Guest"
-        config ip-range
-            edit 1
-                set start-ip 172.17.192.11
-                set end-ip 172.17.207.254
-            next
-        end
-    next
-end
-
 config fsp vlan
     edit "WIFI_MGMT"
         set vlanid 3010
@@ -109,7 +14,6 @@ config fsp vlan
         config dhcp-server
             set default-gateway 10.255.2.1
             set netmask 255.255.255.0
-            set dhcp-settings-from-fortiipam enable
             config ip-range
                 edit 1
                     set start-ip 10.255.2.2
@@ -118,7 +22,7 @@ config fsp vlan
             end
         end
     next
-    edit "WIFI_Staff"
+    edit "WIFI_Staff_2100"
         set vlanid 2100
         set _dhcp-status enable
         config interface
@@ -133,7 +37,6 @@ config fsp vlan
         config dhcp-server
             set default-gateway 172.17.192.1
             set netmask 255.255.255.0
-            set dhcp-settings-from-fortiipam enable
             config ip-range
                 edit 1
                     set start-ip 172.17.192.2
@@ -142,7 +45,7 @@ config fsp vlan
             end
         end
     next
-    edit "WIFI_Guest"
+    edit "WIFI_Guest_3966"
         set vlanid 3966
         set _dhcp-status enable
         config interface
@@ -157,7 +60,6 @@ config fsp vlan
         config dhcp-server
             set default-gateway 172.21.64.1
             set netmask 255.255.255.0
-            set dhcp-settings-from-fortiipam enable
             config ip-range
                 edit 1
                     set start-ip 172.21.64.2
@@ -434,18 +336,18 @@ config switch-controller managed-switch
             next
             edit "AP1"
                 set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff_2100" "WIFI_Guest_3966"
                 set type trunk
-                set description "AP_JAKWP8001"
+                set description "AP_AP1"
                 set mode lacp-active
                 set mclag enable
                 set members "port2"
             next
             edit "AP2"
                 set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" "WIFI_Staff" "WIFI_Guest"
+                set allowed-vlans "WIFI_MGMT" "WIFI_Staff_2100" "WIFI_Guest_3966"
                 set type trunk
-                set description "AP_JAKWP8002"
+                set description "AP_AP2"
                 set mode lacp-active
                 set mclag enable
                 set members "port3"
@@ -564,5 +466,3 @@ config adom/wtp/"branch1_lab130"-"root"
         next
     end
 end 
-
-
