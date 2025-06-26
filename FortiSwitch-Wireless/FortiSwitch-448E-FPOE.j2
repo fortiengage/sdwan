@@ -58,8 +58,9 @@ config switch-controller managed-switch
                 set untagged-vlans "quarantine"
             next
             edit "port2"
-                set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" <allowed_vlans>
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
             next
             edit "port20"
                 set vlan "default"
@@ -112,8 +113,9 @@ config switch-controller managed-switch
                 set untagged-vlans "quarantine"
             next
             edit "port3"
-                set vlan "WIFI_MGMT"
-                set allowed-vlans "WIFI_MGMT" <allowed_vlans>
+                set vlan "default"
+                set allowed-vlans "quarantine"
+                set untagged-vlans "quarantine"
             next
             edit "port30"
                 set vlan "default"
