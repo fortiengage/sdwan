@@ -1,0 +1,11 @@
+# FAZ_IP is collected from user on set orchestration page with it's IP together admin/user names
+# - Install global veraible on FortiManager with the FAZ_IP
+# - Assign this CLI to all the FortiGate devices
+
+config log fortianalyzer setting
+    set status enable
+    set server "FAZ_IP"      # replace with your FAZ IP
+    set reliable enable             # enables TCP
+    set upload-option realtime
+    set enc-algorithm high
+end
