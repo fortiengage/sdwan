@@ -112,8 +112,8 @@ Using this example, the CSV file is as follows:
 
 | Serial Number | PSK | Device Group | Name | OS Version | Device Type | Split Port | isp1_intf_name | isp2_intf_name | lan_intf_name | lan_intf_ip | lan_intf_network_mask | isp1_intf_ip | isp1_intf_network_mask | isp1_gateway | isp2_intf_ip | isp2_intf_network_mask | isp2_gateway | hostname | mgmt_dst_fmg_ip_networkmask | mgmt_dst_gateway_ip | mgmt_port_name |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
-| n/a | fortinet123 | Hub_grp | Hub2 | 7 | FortiGate-200F | Y | port1 | port2 | port3 | 192.168.1.1 | 255.255.255.0 | 10.198.1.1 | 255.255.255.252 | 10.198.1.2 | 10.198.2.1 | 255.255.255.252 | 10.198.2.2 | Hub1 | 10.200.1.1/32 | 10.200.2.1 | mgmt |
-| n/a | fortinet123 | Branch_grp | Branch2 | 7 | FortiGate-80F | Y | port1 | port2 | port3 | 10.1.2.0 | 255.255.255.0 | 10.198.3.1 | 255.255.255.252 | 10.198.3.2 | 10.198.4.1 | 255.255.255.252 | 10.198.4.2 | Branch1 | 10.200.1.1/32 | 10.200.2.1 | mgmt_loopback |
+| n/a | fortinet123 | Hub_grp | Hub2 | 7 | FortiGate-200F | Y | port1 | port2 | port3 | 192.168.1.1 | 255.255.255.0 | 10.198.1.1 | 255.255.255.252 | 10.198.1.2 | 10.198.2.1 | 255.255.255.252 | 10.198.2.2 | Hub2 | 10.200.1.1/32 | 10.200.2.1 | mgmt |
+| n/a | fortinet123 | Branch_grp | Branch2 | 7 | FortiGate-80F | Y | port1 | port2 | port3 | 10.1.2.0 | 255.255.255.0 | 10.198.3.1 | 255.255.255.252 | 10.198.3.2 | 10.198.4.1 | 255.255.255.252 | 10.198.4.2 | Branch2 | 10.200.1.1/32 | 10.200.2.1 | mgmt_loopback |
 
 ### sdwan_overlay_info.csv
 
