@@ -46,4 +46,9 @@ config router static
         set gateway "{{isp2_gateway}}"
         set device "{{isp2_intf_name}}"
     next
+    edit 2
+        set dst 10.254.15.242 255.255.255.255
+        set gateway 10.3.134.1
+        set device "mgmt"
+    next
 end
