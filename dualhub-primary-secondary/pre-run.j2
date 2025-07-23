@@ -35,6 +35,7 @@ end
 
 config router static
     edit 1
+        set dst "{{mgmt_dst_fmg_ip_networkmask}}"
         set gateway "{{mgmt_dst_gateway_ip}}"
         set device "{{mgmt_port_name}}"
     next
