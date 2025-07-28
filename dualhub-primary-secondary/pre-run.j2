@@ -50,6 +50,6 @@ config router static
     edit 2
         set dst 10.254.15.242 255.255.255.255
         set gateway 10.3.134.1
-        set device "mgmt"
+        set device "{{mgmt_port_name}}"
     next
 end
