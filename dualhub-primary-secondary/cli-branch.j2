@@ -1,0 +1,135 @@
+{# sample pre-run scripts, it will set up hostname, loopback interfaces and underlay interfaces. 
+  - Required:
+    - hostname
+    - lan_intf_name
+    - lan_intf_ip
+    - lan_intf_network_mask
+    - isp1_intf_name
+    - isp1_intf_ip
+    - isp1_intf_network_mask
+    - isp1_gateway
+    - isp2_intf_name
+    - isp2_intf_ip
+    - isp2_intf_network_mask
+    - isp2_gateway
+    - mgmt_dst_fmg_ip_networkmask
+    - mgmt_dst_gateway_ip
+    - mgmt_port_name
+#}
+
+config system global
+    set hostname "{{ hostname }}"
+end
+
+config system interface
+    edit "{{lan_intf_name}}"
+        set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
+        set allowaccess ping
+    next
+    edit "{{isp1_intf_name}}"
+        set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+        set allowaccess ping
+    next
+    edit "{{isp2_intf_name}}"
+        set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+        set allowaccess ping
+    next
+end
+
+config router static
+    edit 1
+        set dst "{{mgmt_dst_fmg_ip_networkmask}}"
+        set gateway "{{mgmt_dst_gateway_ip}}"
+        set device "{{mgmt_port_name}}"
+    next
+    edit 2
+        set dst 10.254.15.242 255.255.255.255
+        set gateway 10.3.134.1
+        set device "{{mgmt_port_name}}"
+    next
+end
+
+config system sdwan
+    config members
+        edit 1
+            set interface "{{isp1_intf_name}}"
+            set zone "WAN1"
+            set gateway "{{isp1_gateway}}"
+        next
+        edit 2
+            set interface "{{isp2_intf_name}}"
+            set zone "WAN2"
+            set gateway "{{isp2_gateway}}"
+        next
+    end
+    config health-check
+        edit "Default_DNS"
+            set system-dns enable
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_Office_365"
+            set server "www.office.com"
+            set protocol https
+            set interval 120000
+            set probe-timeout 120000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_Gmail"
+            set server "gmail.com"
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 2
+                next
+            end
+        next
+        edit "Default_Google Search"
+            set server "www.google.com"
+            set protocol https
+            set interval 120000
+            set probe-timeout 120000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_FortiGuard"
+            set server "fortiguard.com"
+            set protocol https
+            set interval 120000
+            set probe-timeout 120000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+    end
+end
