@@ -26,10 +26,10 @@ config system interface
         set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
     next
     edit "{{isp1_intf_name}}"
-        set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+        set mode dhcp
     next
     edit "{{isp2_intf_name}}"
-        set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+        set mode dhcp
     next
 end
 
