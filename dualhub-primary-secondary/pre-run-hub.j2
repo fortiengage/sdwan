@@ -1,21 +1,55 @@
-{# sample pre-run scripts, it will set up hostname, loopback interfaces and underlay interfaces. 
+{# sample pre-run scripts for HUB
   - Required:
+    - hostname
+    - lan_intf_name
+    - lan_intf_ip
+    - lan_intf_network_mask
     - isp1_intf_name
     - isp2_intf_name
     - isp1_gateway
     - isp2_gateway
+    - mgmt_dst_fmg_ip_networkmask
+    - mgmt_dst_gateway_ip
+    - mgmt_intf_name
 #}
 
+config system global
+    set hostname "{{ hostname }}"
+end
+
+config system interface
+    edit "{{lan_intf_name}}"
+        set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
+    next
+    edit "{{isp1_intf_name}}"
+        set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+    next
+    edit "{{isp2_intf_name}}"
+        set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+    next
+end
+
 config router static
-    edit 21
+    edit 1
+        set dst "{{mgmt_dst_fmg_ip_networkmask}}"
+        set gateway "{{mgmt_dst_gateway_ip}}"
+        set device "{{mgmt_intf_name}}"
+    next
+    edit 2
+        set dst 10.254.15.242 255.255.255.255
+        set gateway 10.3.134.1
+        set device "{{mgmt_intf_name}}"
+    next
+    edit 3
         set gateway "{{isp1_gateway}}"
         set device "{{isp1_intf_name}}"
     next
-    edit 22
+    edit 4
         set gateway "{{isp2_gateway}}"
         set device "{{isp2_intf_name}}"
     next
 end
+
 config router policy
     edit 1
         set input-device "VPN1"
