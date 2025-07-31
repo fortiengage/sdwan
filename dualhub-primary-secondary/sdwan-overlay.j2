@@ -68,7 +68,6 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                         set interface "{{hub1_underlay_link1_name}}" {# port1 #}
                         set private-link disable
                         set override-ip enable
-                        set ip {{hub1_underlay_link1_ip}} {# 10.1.1.1 #}
                         set cost 0
                         set transport-group 0
                         
@@ -77,7 +76,6 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                         set interface "{{hub1_underlay_link2_name}}" {# port2 #}
                         set private-link disable
                         set override-ip enable
-                        set ip {{hub1_underlay_link2_ip}} {# 10.2.1.1 #} 
                         set cost 0
                         set transport-group 0
                     next
@@ -94,7 +92,6 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                         set interface "{{hub2_underlay_link1_name}}" {# port1 #}
                         set private-link disable
                         set override-ip enable
-                        set ip {{hub2_underlay_link1_ip}} {# 10.3.1.1 #}
                         set cost 0
                         set transport-group 0
                     next
@@ -102,7 +99,6 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                         set interface "{{hub2_underlay_link2_name}}" {# port2 #}
                         set private-link disable
                         set override-ip enable
-                        set ip {{hub2_underlay_link2_ip}} {# 10.4.1.1 #}
                         set cost 0
                         set transport-group 0 
                     next
