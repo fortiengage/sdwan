@@ -26,12 +26,23 @@ config system interface
     edit "{{lan_intf_name}}"
         set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
     next
-    edit "{{isp1_intf_name}}"
-        set mode dhcp
-    next
-    edit "{{isp2_intf_name}}"
-        set mode dhcp
-    next
+    {% if hostname == "hub" %}
+        edit "{{isp1_intf_name}}"
+            set mode dhcp
+        next
+        edit "{{isp2_intf_name}}"
+            set mode dhcp
+        next
+    {% elif hostname == "FortiGate-80F" %}
+    		edit "{{isp1_intf_name}}"
+            set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+        next
+        edit "{{isp2_intf_name}}"
+            set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+        next
+    {%  else %}
+    
+    {% endif %}
 end
 
 config router static
