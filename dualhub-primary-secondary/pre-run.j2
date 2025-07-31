@@ -26,7 +26,6 @@ config system interface
     edit "{{lan_intf_name}}"
         set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
     next
-    
     edit "{{isp1_intf_name}}"
         {% if hub_branch == "branch" %}
             set mode dhcp
