@@ -1,3 +1,4 @@
+
 {# sample pre-run scripts, it will set up hostname, loopback interfaces and underlay interfaces. 
   - Required:
     - hostname
@@ -15,6 +16,7 @@
     - mgmt_dst_fmg_ip_networkmask
     - mgmt_dst_gateway_ip
     - mgmt_port_name
+    - hub_branch
 #}
 
 config system global
@@ -26,33 +28,66 @@ config system interface
         set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
     next
     edit "{{isp1_intf_name}}"
-        set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+        {% if hub_branch == "Branch" %}
+            set mode dhcp
+        {% elif hub_branch == "Hub" %}
+            set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+        {% endif %}
+            set role wan
     next
     edit "{{isp2_intf_name}}"
-        set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+        {% if hub_branch == "Branch" %}
+            set mode dhcp
+        {% elif hub_branch == "Hub" %}
+            set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+        {% endif %}
+            set role wan
     next
 end
 
 config router static
     edit 1
+        set dst "{{mgmt_dst_fmg_ip_networkmask}}"
         set gateway "{{mgmt_dst_gateway_ip}}"
-        set device "{{mgmt_port_name}}"
+        set device "{{mgmt_intf_name}}"
     next
-    edit 21
-        set gateway "{{isp1_gateway}}"
-        set device "{{isp1_intf_name}}"
+    edit 2
+        set dst 10.254.15.242 255.255.255.255
+        set gateway 10.3.134.1
+        set device "{{mgmt_intf_name}}"
     next
-    edit 22
-        set gateway "{{isp2_gateway}}"
-        set device "{{isp2_intf_name}}"
-    next
+    {% if hub_branch == "Hub" %}
+        edit 3
+            set gateway "{{isp1_gateway}}"
+            set device "{{isp1_intf_name}}"
+        next
+        edit 4
+            set gateway "{{isp2_gateway}}"
+            set device "{{isp2_intf_name}}"
+        next
+    {% endif %}
 end
+
+{% if hub_branch == "Hub" %}
+    config router policy
+        edit 1
+            set input-device "VPN1"
+            set output-device "VPN1"
+        next
+        edit 2
+            set input-device "VPN2"
+            set output-device "VPN2"
+        next
+    end
+{% endif %}
+
 config system fortiguard
   set update-server-location automatic
   set fortiguard-anycast disable
   set interface-select-method specify
   set interface "port4"
 end
+
 config system dns
   set protocol cleartext
   set primary 172.17.254.148
