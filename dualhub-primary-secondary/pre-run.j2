@@ -31,6 +31,7 @@ config system interface
         {% if hub_branch == "Branch" %}
             set mode dhcp
         {% elif hub_branch == "Hub" %}
+            set mode static
             set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
         {% endif %}
             set role wan
@@ -39,6 +40,7 @@ config system interface
         {% if hub_branch == "Branch" %}
             set mode dhcp
         {% elif hub_branch == "Hub" %}
+            set mode static
             set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
         {% endif %}
             set role wan
