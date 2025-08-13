@@ -1,3 +1,4 @@
 FSW_SN,FSW_DESCRIPTION,FSW_MODEL,FSW_FGT_NAME,FSW_FGT_VDOM_NAME
-S448EFTF23018129,FortiSwitch connects to all FAPs,FortiSwitch-448E-FPOE,branch1_lab130,root
-S448EFTF23008043,FortiSwitch First Floor,FortiSwitch-448E-FPOE,branch2_lab130,root
+S448EFTF23008043,FortiSwitch connects to all FAPs,FortiSwitch-448E-FPOE,branch1_lab130,root
+S448EFTF23018129,FortiSwitch First Floor,FortiSwitch-448E-FPOE,branch2_lab130,root
+
