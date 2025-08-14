@@ -8,7 +8,7 @@ Note:
 General 
 1). Don't change the title of each field 
 2). Only update based on your device information, such as Serial Number, OS version, Device Type, ISP interface name etc.  
-3). Please delete this "Note" section after you finish updating it and before you upload to the FortiEngage 
+3). Please delete this "Note" section after you finish updating it, leaving only the device information, before you upload to the FortiEngage 
 
 
 Explanation of each field in this CSV file: 
@@ -35,4 +35,5 @@ The following three field is used to config a static route for FortiManager to c
 - mgmt_intf_name: Management interface name to connect to fortiManager 
 - mgmt_dst_fmg_ip_networkmask: used as dst in static route setting 
 - mgmt_dst_gateway_ip: use as "gateway" in static route setting 
+
 
