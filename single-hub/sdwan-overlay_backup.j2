@@ -1,0 +1,65 @@
+
+config sdwan overlay
+    set hub-number 1
+    set loopback-ip 172.16.0.0 255.255.0.0
+    set overlay-network 10.10.0.0 255.255.0.0
+    set advpn version2
+    set sdwan_members enable
+    set sdwan_health_check enable
+    set auto-branch-id-assignment enable
+    set authmethod psk
+    set bgp_on_loopback enable
+    set dynamic_bgp enable
+    config nodes
+        edit 1
+            set advertisement connected
+            config underlay
+                edit 1
+                    set interface "port1"
+                    set private-link disable
+                    set override-ip enable
+                    set ip 10.1.1.1
+                    
+                next
+                edit 2
+                    set interface "port2"
+                    set private-link disable
+                    set override-ip enable
+                    set ip 10.2.1.1
+                    
+                next
+            end
+            
+        next
+        edit 2
+            set role spoke
+            set advertisement connected
+            config underlay
+                edit 1
+                    set interface "port1"
+                    set private-link disable
+                    set override-ip disable
+                    
+                next
+                edit 2
+                    set interface "port2"
+                    set private-link disable
+                    set override-ip disable
+                    
+                next
+            end
+            config neighbor
+                edit 1
+                    set apply-to-all disable
+                    
+                next
+                edit 2
+                    set apply-to-all disable
+                    
+                next
+            end
+            
+        next
+    end
+    
+end
