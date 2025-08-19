@@ -1,4 +1,4 @@
-{# FMG SDWAN Overlay Dual Hub Primary&Secondary #}
+{# FMG SDWAN Overlay Single Hub #}
 {# Meta Variables:
    - Required:
       - loop_back_ip
@@ -35,7 +35,7 @@ end
 config adom/pkg/ppkg_hub
 end
 
-config adom/template/_sdwan_overlay/sd_dual_hub_ps    
+config adom/template/_sdwan_overlay/sd_single_hub_ps    
     config sdwan overlay
         set hub-number 1
         set loopback-ip {{loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
@@ -59,7 +59,6 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
             edit 1
                 set _scope "{{hub1_host_name}}"-"root"
                 set role hub
-                set hub-role primary
                 set cost 0
                 set advertisement connected
                 config underlay
@@ -70,7 +69,6 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                         set ip {{hub1_underlay_link1_ip}} {# 10.1.1.1 #}
                         set cost 0
                         set transport-group 0
-                        
                     next
                     edit 2
                         set interface "{{hub1_underlay_link2_name}}" {# port2 #}
@@ -83,31 +81,6 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                 end 
             next
             edit 2
-                set _scope "{{hub2_host_name}}"-"root"
-                set role hub
-                set hub-role secondary
-                set cost 0
-                set advertisement connected
-                config underlay
-                    edit 1
-                        set interface "{{hub2_underlay_link1_name}}" {# port1 #}
-                        set private-link disable
-                        set override-ip enable
-                        set ip {{hub2_underlay_link1_ip}} {# 10.3.1.1 #}
-                        set cost 0
-                        set transport-group 0
-                    next
-                    edit 2
-                        set interface "{{hub2_underlay_link2_name}}" {# port2 #}
-                        set private-link disable
-                        set override-ip enable
-                        set ip {{hub2_underlay_link2_ip}} {# 10.4.1.1 #}
-                        set cost 0
-                        set transport-group 0 
-                    next
-                end
-            next
-            edit 3
                 set _scope "{{branch_grp_name}}"
                 set role spoke
                 set hub-role standalone
@@ -135,14 +108,6 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                         set apply-to-all disable   
                     next
                     edit 2
-                        set remote-as 0
-                        set apply-to-all disable
-                    next
-                    edit 3
-                        set remote-as 0
-                        set apply-to-all disable
-                    next
-                    edit 4
                         set remote-as 0
                         set apply-to-all disable
                     next
