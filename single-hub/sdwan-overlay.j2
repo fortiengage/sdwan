@@ -4,23 +4,14 @@
       - loop_back_ip
       - overlay_network_ip
       - as_id
-      - hub1_host_name
-      - hub2_host_name
+      - hub_host_name
       - branch_grp_name
-      - hub1_underlay_link1_name
-      - hub1_underlay_link2_name
-      - hub2_underlay_link1_name
-      - hub2_underlay_link2_name
-      - hub1_underlay_link1_ip
-      - hub1_underlay_link2_ip
-      - hub2_underlay_link1_ip
-      - hub2_underlay_link2_ip  
+      - hub_underlay_link1_name
+      - hub_underlay_link2_name
+      - hub_underlay_link1_ip
+      - hub_underlay_link2_ip 
       - branch_underlay_link1_name
       - branch_underlay_link2_name
-      - policy_hub_src_interface
-      - policy_hub_dst_interface
-      - policy_branch_src_interface
-      - policy_branch_dst_interface
  #}
 
 {# create sdwan template used in 'sdwan overlay -> sdwan_template' #}
@@ -142,24 +133,24 @@ config adom/template/_sdwan_overlay/sd_single_hub_ps
         set route_reflection disable
         config nodes
             edit 1
-                set _scope "{{hub1_host_name}}"-"root"
+                set _scope "{{hub_host_name}}"-"root"
                 set role hub
                 set cost 0
                 set advertisement connected
                 config underlay
                     edit 1
-                        set interface "{{hub1_underlay_link1_name}}" {# port1 #}
+                        set interface "{{hub_underlay_link1_name}}" {# port1 #}
                         set private-link disable
                         set override-ip enable
-                        set ip {{hub1_underlay_link1_ip}} {# 10.1.1.1 #}
+                        set ip {{hub_underlay_link1_ip}} {# 10.1.1.1 #}
                         set cost 0
                         set transport-group 0
                     next
                     edit 2
-                        set interface "{{hub1_underlay_link2_name}}" {# port2 #}
+                        set interface "{{hub_underlay_link2_name}}" {# port2 #}
                         set private-link disable
                         set override-ip enable
-                        set ip {{hub1_underlay_link2_ip}} {# 10.2.1.1 #} 
+                        set ip {{hub_underlay_link2_ip}} {# 10.2.1.1 #} 
                         set cost 0
                         set transport-group 0
                     next
