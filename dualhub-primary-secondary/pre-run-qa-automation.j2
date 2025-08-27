@@ -93,3 +93,24 @@ config system dns
   set primary 172.17.254.148
   set secondary 10.59.254.254
 end
+
+config system dns-database
+   edit "fortiguard.net"
+       set domain "fortiguard.net"
+       config dns-entry
+           edit 1
+               set hostname "update.fortiguard.net"
+               set ip 192.168.100.205
+           next
+       end
+   next
+   edit "fortinet.net"
+       set domain "fortinet.net"
+       config dns-entry
+           edit 1
+               set hostname "globalupdate.fortinet.net"
+               set ip 192.168.100.205
+           next
+       end
+   next
+end
