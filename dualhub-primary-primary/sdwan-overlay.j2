@@ -1,4 +1,4 @@
-{# FMG SDWAN Overlay Dual Hub Primary&Primary #}
+{# FMG SDWAN Overlay Dual Hub Primary/Primary #}
 {# Meta Variables:
    - Required:
       - loop_back_ip
@@ -25,6 +25,92 @@
 
 {# create sdwan template used in 'sdwan overlay -> sdwan_template' #}
 config adom/wanprof/sdwan1
+config system sdwan
+    config health-check
+        edit "Default_AWS"
+            set server aws.amazon.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_DNS"
+            set system-dns enable
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_FortiGuard"
+            set server fortiguard.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_Gmail"
+            set server gmail.com
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 2
+                next
+            end
+        next
+        edit "Default_Google Search"
+            set server "www.google.com"
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_Office_365"
+            set server www.office.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+    end
+end
 end
  
 {# create static route template used in 'sdwan overlay -> router_template' #}
@@ -32,35 +118,6 @@ config adom/template/_router_static/branches
 end
 
 config adom/pkg/ppkg_hub
-    config firewall policy
-        edit 1
-            set name "allow-all-sample"
-            set srcintf "{{ policy_hub_src_interface }}"     {# "any" #}
-            set dstintf "{{ policy_hub_dst_interface }}"     {# "any" #}
-            set action accept
-            set srcaddr "all"
-            set dstaddr "all"
-            set schedule "always"
-            set service "ALL"
-            set nat enable
-        next
-    end
-end
-
-config adom/pkg/ppkg_branch
-    config firewall policy
-        edit 1
-            set name "allow-all-sample"
-            set srcintf "{{ policy_branch_src_interface }}"     {# "any" #}
-            set dstintf "{{ policy_branch_dst_interface }}"     {# "any" #}
-            set action accept
-            set srcaddr "all"
-            set dstaddr "all"
-            set schedule "always"
-            set service "ALL"
-            set nat enable
-        next
-    end
 end
 
 config adom/template/_sdwan_overlay/sd_dual_hub_ps    
@@ -79,9 +136,10 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
         set branch-package-path "ppkg_branch"    
         set auto-branch-id-assignment enable
         set authmethod psk
+        set router_template "branches"
         set segmentation disable
         set bgp_on_loopback enable
-        set dynamic_bgp disable
+        set dynamic_bgp enable
         set route_reflection disable
         config nodes
             edit 1
@@ -113,7 +171,7 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
             edit 2
                 set _scope "{{hub2_host_name}}"-"root"
                 set role hub
-                set hub-role primary
+                set hub-role secondary
                 set cost 0
                 set advertisement connected
                 config underlay
