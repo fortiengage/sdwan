@@ -1,0 +1,129 @@
+FMG-200G # exec fmpolicy print-adom-package 169 26 6130 557
+Dump all objects for category [sdwan overlay] in adom [admon-pp] package [6130]:
+---------------
+config sdwan overlay
+set topology dual-active-hub
+set hub-number 2
+set loopback-ip 172.16.0.0 255.255.0.0
+set overlay-network 10.10.0.0 255.255.0.0
+set as 65100
+set advpn version2
+set sdwan_template "sdwan1"
+set sdwan_members enable
+set sdwan_health_check enable
+set normalized-interface enable
+set hub-package 6128
+set branch-package 6149
+set hub-package-path "ppkg_hub"
+set branch-package-path "ppkg_branch"
+set auto-branch-id-assignment enable
+set authmethod psk
+set router_template "branches"
+set segmentation disable
+set bgp_on_loopback enable
+set dynamic_bgp enable
+set route_reflection disable
+config nodes
+edit 1
+set hub-role primary
+set cost 0
+set advertisement connected
+config underlay
+edit 1
+set interface "internal1"
+set private-link disable
+set override-ip enable
+set ip 10.15.1.2
+set cost 0
+set transport-group 0
+
+next
+edit 2
+set interface "internal2"
+set private-link disable
+set override-ip enable
+set ip 10.16.1.2
+set cost 0
+set transport-group 0
+
+next
+end
+
+next
+edit 2
+set hub-role primary
+set cost 0
+set advertisement connected
+config underlay
+edit 1
+set interface "internal1"
+set private-link disable
+set override-ip enable
+set ip 10.17.1.2
+set cost 0
+set transport-group 0
+
+next
+edit 2
+set interface "internal2"
+set private-link disable
+set override-ip enable
+set ip 10.18.1.2
+set cost 0
+set transport-group 0
+
+next
+end
+
+next
+edit 3
+set role spoke
+set cost 0
+set advertisement connected
+config underlay
+edit 1
+set interface "port1"
+set private-link disable
+set override-ip disable
+set cost 0
+set transport-group 0
+
+next
+edit 2
+set interface "port2"
+set private-link disable
+set override-ip disable
+set cost 0
+set transport-group 0
+
+next
+end
+config neighbor
+edit 1
+set remote-as "0"
+set apply-to-all disable
+
+next
+edit 2
+set remote-as "0"
+set apply-to-all disable
+
+next
+edit 3
+set remote-as "0"
+set apply-to-all disable
+
+next
+edit 4
+set remote-as "0"
+set apply-to-all disable
+
+next
+end
+
+next
+end
+
+end
+
+FMG-200G # 
