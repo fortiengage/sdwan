@@ -122,7 +122,7 @@ end
 
 config adom/template/_sdwan_overlay/sd_dual_hub_ps    
     config sdwan overlay
-        set topology dual-hub
+        set topology dual-active-hub
         set hub-number 2
         set loopback-ip {{loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
         set overlay-network {{overlay_network_ip}} 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
