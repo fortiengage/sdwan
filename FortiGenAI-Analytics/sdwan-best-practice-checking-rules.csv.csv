@@ -1,0 +1,166 @@
+ID,Rule,Goal,Inputs,Logic,Confidence Score
+1,Device Information Extraction Rule (v1),"Extract general device information such as hostname, FortiOS version, and build number from the configuration file.","1. config system global (set hostname)
+2. top-level header lines (show full-configuration output includes #config-version line)
+3. FortiOS release string (e.g., #config-version, #build number)","1) Parse config system global for 'set hostname <name>' to extract hostname.
+2) Look for top-level header lines such as '#config-version' or '#version' to extract FortiOS release version and build number.
+3) Output fields:
+3.1 hostname = <string>
+3.2 fortios_version = <version string>
+3.3 build_number = <build identifier>
+4) If any field is missing, mark as unknown.","1. High (0.9 - 1.0): explicit hostname + config-version line present.
+2. Medium (0.6 - 0.8): only hostname found or only partial version/build information.
+3. Low (<0.6): no clear hostname or version information in config."
+2,FortiManager Central Management Detection Rule (v1),"Determine whether FortiManager is configured and enabled for central management on the FortiGate, and validate basic usability.","1. config system central-management (type, fmg address/FQDN, fmg-source-ip, use-management-vdom)
+2. config system interface (allowaccess includes fgfm on at least one reachable interface)
+3. (Optional) config router/static to confirm mgmt reachability path (if fmg-source-ip is set)","A. Detect FortiManager configuration:
+1) central-management block exists
+2) set type fortimanager (or presence of 'set fmg <addr>' / 'set fmg-source-ip')
+B. Validate enablement/usability:
+1) At least one interface has 'set allowaccess ... fgfm ...'
+2) If 'set fmg-source-ip' is configured, ensure that IP belongs to an existing interface
+C. Output fields:
+1) fortimanager_configured = true/false
+2) fmg_endpoints = [values from 'set fmg']
+3) fmg_source_ip = <ip or none>
+4) interfaces_with_fgfm = [ifnames]
+5) issues = [missing type, missing fmg addr, no interface with fgfm, invalid source-ip]","1. High (0.9 - 1.0): central-management shows type fortimanager and fmg endpoint defined, and at least one interface allows fgfm
+2. Medium (0.6 - 0.8): central-management present with partial fields (e.g., fmg set but no fgfm on interfaces)
+3. Low (<0.6): only fgfm on an interface without central-management config, or only naming hints"
+3,SD-WAN Presence Detection Rule (v1),Determine whether SD-WAN is configured in a FortiGate configuration.,"1. config system sdwan block
+2. config system virtual-wan-link block
+3. config router static routes with device set to ""virtual-wan-link""
+4. optionally, config system zone when used with SD-WAN members","1) Search for config system sdwan or config system virtual-wan-link.
+2) If found, mark SD-WAN as enabled.
+3) Additionally, check if static routes reference virtual-wan-link.
+4) Optionally check config system zone members linked to SD-WAN.
+5) Output: sdwan_present = true/false with evidence.","1. High (0.9 - 1.0): config system sdwan or virtual-wan-link found.
+2.Medium (0.6 - 0.8): static routes reference virtual-wan-link only.
+3. Low (<0.6): no SD-WAN config evidence."
+4,SD-WAN Branch vs Hub Role Detection Rule (v1.1),Determine whether a FortiGate is acting as an SD-WAN Branch or Hub.,"1. config vpn ipsec phase1-interface (type, remote-gw, auto-discovery-sender, receiver, forwarder)
+2. optional: config system interface tunnel names/aliases/comments","1) Branch: Phase1 with remote-gw => branch.
+2) Hub: Phase1 with type dynamic + auto-discovery-sender enable => hub.
+3) Hybrid: both branch and hub signals present.
+4) Output: sdwan_role = branch|hub|hybrid with evidence.","1. High (0.9 - 1.0): clear remote-gw (branch) or dynamic+auto-discovery-sender (hub).
+2. Medium (0.6 - 0.8): only one hub indicator or indirect hints.
+3. Low (<0.6): no Phase1 evidence."
+5,SD-WAN Hub Counting Rule (v1),Detect how many distinct SD-WAN hubs are configured on a branch and group Phase1 tunnels.,"1. config vpn ipsec phase1-interface (remote-gw, alias, comments)
+2. config system interface tunnel entries","1) Collect Phase1s with remote-gw => spoke tunnels.
+2) Group by remote-gw value.
+3) Normalize hub labels using name/alias/comment prefixes.
+4) Count tunnels per hub.
+5) Output: hub_count, per_hub_tunnels, evidence.","1. High (0.9 - 1.0): remote-gw values + consistent hub labels.
+2. Medium (0.6 - 0.8): grouping inferred by naming.
+3. Low (<0.6): incomplete config."
+6,Dynamic BGP Detection Rule (v1),"Determine if dynamic BGP is used by checking neighbor-range, dynamic-neighbor, or listen-range.","1.config router bgp
+2.config neighbor-range
+3.neighbor-group with set dynamic-neighbor enable
+4.set listen-range","1) Locate config router bgp.
+2) Search for neighbor-range, dynamic-neighbor enable, or listen-range.
+3) If found => dynamic_bgp_used = true.
+4) Else => false.","1. High (0.9 - 1.0): explicit dynamic BGP command.
+2. Medium (0.6 - 0.8): partial/indirect signals.
+3. Low (<0.6): static-only neighbors."
+7,BGP on Loopback Detection Rule (v1),"Determine whether BGP neighbors are configured to use loopback interfaces as update-source, improving session stability across underlays.","1. config router bgp (neighbor definitions)
+2. neighbor settings: set update-source <interface>
+3. config system interface to confirm if update-source is loopback type","1) Parse config router bgp for 'set update-source <ifname>'.
+2) Cross-check <ifname> in config system interface.
+3) If type=loopback or alias indicates loopback => mark as loopback-based BGP.
+4) Output fields:
+4.1) neighbors_on_loopback = [neighbor, update-source]
+4.2) neighbors_not_on_loopback = [neighbor]
+4.3) summary: bgp_on_loopback = true/false","1. High (0.9 - 1.0): update-source explicitly loopback.
+2. Medium (0.6 - 0.8): update-source set but unclear if loopback.
+3. Low (<0.6): no update-source set; defaults to physical interface."
+8,SD-WAN Zones Used in Static Route Detection Rule (v1.1),Determine whether static routes explicitly bind to SD-WAN zones.,"1. config system sdwan > config zone (zones + members)
+2. config router static (device, zone-binding keys)","1) Collect all defined zones.
+2) Scan static routes for set sdwan-zone/zone/output-zone.
+3) Match against defined zones.
+4) Output: sdwan_zones_used_in_static, zones_detected, zones_referenced_in_static, unused_zones, evidence.","1. High (0.9 - 1.0): explicit zone binding present.
+2. Medium (0.6 - 0.8): interface name matches a zone but no explicit key.
+3. Low (<0.6): zones exist but not referenced in static routes."
+9,ADVPN Version Detection Rule (v1),Detect whether ADVPN 1.0 or 2.0 is configured.,"1. config vpn ipsec phase1-interface (auto-discovery-sender, receiver, forwarder)
+2. config router bgp (neighbor-range, dynamic-neighbor enable, listen-range)","1) If any auto-discovery-* enable => ADVPN present.
+2) If ADVPN present + dynamic BGP present => ADVPN 2.0.
+3) If ADVPN present but no dynamic BGP => ADVPN 1.0.
+4) If no auto-discovery => none.","1. High (0.9 - 1.0): clear ADVPN + dynamic BGP evidence.
+2. Medium (0.6 - 0.8): ADVPN present but BGP ambiguous.
+3. Low (<0.6): only hints without config evidence."
+10,Number of VPN Tunnels per Hub Detection Rule (v1),Count IPsec VPN tunnels from branch to each hub.,"1. config vpn ipsec phase1-interface (remote-gw, alias, comments)
+2. config system interface (naming conventions)
+3. optional: config vpn ipsec phase2-interface","1) Collect Phase1s with remote-gw.
+2) Group by remote-gw.
+3) Normalize hub labels.
+4) Count tunnels per hub.
+5) Output: per_hub_tunnels, total_tunnels, number_of_hubs.","1. High (0.9 - 1.0): clear remote-gw values + consistent naming.
+2. Medium (0.6 - 0.8): grouped only by name similarity.
+3. Low (<0.6): incomplete config."
+11,Underlay Connection Type Detection Rule (v1),"Identify underlay interfaces and classify them as MPLS, broadband, or 4G/5G.","1.config system interface (type, alias, description, comments)
+2.config system sdwan > config members
+3.optional: router static / bgp for confirmation","1) Collect SD-WAN members.
+2) Inspect interface type (physical/aggregate valid, vlan/loopback not underlay).
+3) Classify:
+3.1) MPLS: alias/naming MPLS, private IPs
+3.2) Broadband: WAN1, ISP, broadband, public IPs
+3.3) 4G/5G: wwan type or alias LTE/5G
+4) Output: underlay_interfaces, underlay_types {MPLS, Broadband, 4G/5G}, total_underlay.","1. High (0.9 - 1.0): alias/description clearly indicates type.
+2. Medium (0.6 - 0.8): inferred only by naming.
+3. Low (<0.6): weak hints only."
+12,SD-WAN Health-Check Definition & Usage Rule (v1),Confirm that SD-WAN health checks/performance SLAs are defined and referenced by SD-WAN rules so path selection and failover work correctly.,"1. config system sdwan > config health-check or config performance-sla (targets, protocol, thresholds)
+2. config system sdwan > config service (rules using sla/health-check)
+3. (Legacy) config system virtual-wan-link with same sub-blocks","A. Detect definitions:
+1) Collect health-check/performance-sla entries (name, targets, protocol, thresholds).
+2) Valid if includes target + probe params/thresholds.
+B. Verify usage in services:
+1) Check config service for set sla or set health-check references.
+2) Proper if strategy = sla and references existing checks.
+3) Cross-validate: missing references ⇒ error; unused checks ⇒ warning.
+C. Output:
+1) health_checks_defined
+2) rules_using_checks
+3) unused_checks
+4) broken_references
+5) weak_thresholds","1. High (0.9 - 1.0): checks defined + thresholds + services reference them with SLA strategy.
+2. Medium (0.6 - 0.8): checks defined but thresholds minimal/unclear usage.
+3. Low (<0.6): no checks found or services never reference them."
+13,SD-WAN Application & Traffic Steering Rule (v1),"Verify SD-WAN rules are configured with application/ISDB selectors and explicit steering logic (SLA, priority, preferred member, tie-breaker, etc.).","1. config system sdwan > config service (application/ISDB selectors, sla, priority-members, preferred-member, mode, tie-breaker)
+2. config system sdwan > config performance-sla / config health-check
+3. (Legacy) config system virtual-wan-link equivalents","A. Identify application/ISDB-aware rules:
+1) internet-service enable + ids/custom
+2) application/app-category/app-group fields
+B. Verify steering defined:
+1) mode sla + sla references, or
+2) priority-members, preferred-member, or
+3) load-balance with tie-breaker/link-cost
+C. Cross-checks:
+1) SLA references exist
+2) Members referenced are valid SD-WAN members
+3) Flag app-aware rules lacking steering
+4) Flag unused SLAs/members
+D. Output:
+1) app_aware_rules with selectors & steering
+2) rules_missing_steering
+3) broken_references (sla/member)
+4) unused_slas, unused_members","1. High (0.9 - 1.0): app/ISDB selectors + valid steering + resolvable references
+2. Medium (0.6 - 0.8): app selectors but partial steering or ambiguous references
+3. Low (<0.6): no app selectors and no explicit steering"
+14,"Wireless (FortiAP) Presence, Model, Port Attachment & SSID Detection Rule (v1)","Detect whether FortiAP-based wireless is configured on the FortiGate and, if so, report: 1) each FortiAP model (best-effort), 2) the exact switch access port (or upstream FortiLink members), and 3) the broadcast SSID(s).","1. config wireless-controller vap -> set ssid <name>
+2. config wireless-controller ssid -> set ssid <name>
+3. config wireless-controller wtp / wtp-profile (serial/model/profile/vap bindings)
+4. config system interface (type vap-switch; SSID/VAP indicators; FortiLink interface)
+5. config switch-controller managed-switch -> config ports (description/LLDP showing FAP attachment)
+","1) Presence: wireless present if any of (wireless-controller vap/ssid/wtp exists OR an interface with type vap-switch exists).
+2) SSIDs: prefer wireless-controller vap/ssid; fallback to interface(type vap-switch) names/alias when matching SSID patterns; map via wtp-profile vaps/vap-group if available.
+3) AP model: from wireless-controller wtp (model/serial/profile); else from wtp-profile (platform or model-like profile name, e.g., FAP-231F);
+fallback 'unknown' if not discoverable.
+4) AP port: (P1) managed-switch ports where description/LLDP indicates FAP -> emit exact access port; (P2) wireless-controller wtp fields (switch-id/port/fortilink-interface) if present; (P3) fallback to fortilink members as upstream path; else 'unknown'.
+5) Result string: 'Wireless configured' if presence true, else 'Wireless not configured'.
+6) Edge cases: multiple switches (prefer wtp.switch-id); SSIDs without APs still considered configured with note; mesh/VAP-switch-only deployments treated as configured with medium confidence.","1. High (0.85 - 1.00): wireless-controller wtp found AND exact access port (managed-switch) or explicit switch-port fields, plus SSIDs from vap/ssid blocks.
+2. Medium (0.60 - 0.84): SSIDs from vap/ssid (or inferred via vap-switch) and FortiLink members known but no exact port.
+3. Low (<0.60): Only vap-switch inference; no AP model/port evidence."
+15,FortiAnalyzer Logging Configuration Detection Rule (v1),"Detect whether FortiGate is configured to send logs to FortiAnalyzer (on-prem or FortiAnalyzer Cloud). If configured, extract key parameters (server/FQDN, port, upload mode, reliable logging, encryption/certificate, source IP).","1. config log fortianalyzer setting -> set status enable, set server <FQDN/IP>, set port, set upload-option, set reliable, set enc-algorithm, set certificate, set source-ip
+2. config log fortianalyzer-cloud setting -> set status enable (plus any cloud parameters available in the FortiOS version)","1) Presence: Configured if either 'log fortianalyzer setting' or 'log fortianalyzer-cloud setting' exists with 'set status enable'. Otherwise, Not configured.
+2) Details (if configured): For on-prem, extract server/FQDN, port, upload-option (realtime|store-and-upload), reliable (enable|disable), enc-algorithm (high|low|disable), certificate, and source-ip. For cloud, note cloud logging enabled and any visible parameters.
+3) Disambiguation: If both on-prem and cloud are enabled, list both and flag in Notes. If 'status enable' is present but server is missing (on-prem), mark 'Configured (incomplete)' and note the gap. If only indirect hints exist (e.g., FMG central-management without FAZ log), mark Not configured.
+4) Result: 'FortiAnalyzer logging configured' or 'Not configured'. Evidence should include exact matching lines ('set status enable', 'set server ...', etc.).","1. High (0.85 - 1.00): 'status enable' found with valid server (on-prem) or cloud setting enabled, plus ≥1 of (upload-option/reliable/encryption/port/source-ip).
+2. Medium (0.60 - 0.84): 'status enable' found but missing server or only minimal parameters.
+3. Low (<0.60): Only indirect hints; no enabled FAZ logging block."
