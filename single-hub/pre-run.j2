@@ -48,6 +48,7 @@ config system interface
 end
 
 config router static
+    {% if mgmt_intf_name != "false" or mgmt_dst_fmg_ip_networkmask != "false" and mgmt_dst_gateway_ip != "false" %}
     edit 1
         set dst "{{mgmt_dst_fmg_ip_networkmask}}"
         set gateway "{{mgmt_dst_gateway_ip}}"
@@ -58,6 +59,8 @@ config router static
         set gateway 10.3.134.1
         set device "{{mgmt_intf_name}}"
     next
+    {% endif %}
+    
     {% if hub_branch == "Hub" %}
         edit 3
             set gateway "{{isp1_gateway}}"
