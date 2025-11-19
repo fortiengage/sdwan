@@ -1,0 +1,15 @@
+{#
+    Those CLI includes all the security hardening collected from Advanced Service team, i.e FortiConan tool. 
+    And the PS team's checking rules, which is manual. 
+#}
+
+{# enforce admin possword policy #}
+config system password-policy
+    set status enable
+    set min-lower-case-letter 1
+    set min-upper-case-letter 1
+    set min-non-alphanumeric 1
+    set min-number 1
+    set reuse-password disable
+end
+
