@@ -36,6 +36,7 @@ end
 
 {# IPsec ciphers #}
 {# for all the phase1-interface  and phase2-interface #} 
+{% if hub_branch == "Hub" %}
 config vpn ipsec phase1-interface
     edit "HUB1-VPN1"
         unselect dhgrp 5
@@ -76,6 +77,7 @@ config vpn ipsec phase2-interface
         unselect dhgrp 5
     next
 end
+{% endif %}
 
 {# Private encryption key #}
 config system global
