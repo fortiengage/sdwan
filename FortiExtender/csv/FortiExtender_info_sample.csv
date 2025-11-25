@@ -1,3 +1,3 @@
-Extender_Name,Extender_SN,Extender_Model,Extender_Mode,Extender_FGT_Name,Extender_FGT_Intf
-FXE21F_1st_floor,FXE21FTQ22002954,FXE21F,lan_extension,branch1_lab130,port8
-FXE21F_2st_floor,FXE21FTQ22002955,FXE21F,wan_extension,branch2_lab130,port8
+Extender_Name,Extender_SN,Extender_Model,Extender_Mode,Extender_FGT_Name,Extender_FGT_Intf,EXTENDER_FGT_INTF_IP,EXTENDER_FGT_INTF_MASK
+FXE21F_1st_floor,FXE21FTQ22002954,FXE21F,lan_extension,branch1_lab130,port8,10.10.10.1,255.255.255.0
+FXE21F_2st_floor,FXE21FTQ22002955,FXE21F,wan_extension,branch2_lab130,port8,10.10.10.1,255.255.255.0
