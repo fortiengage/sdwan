@@ -10,7 +10,7 @@ config system dhcp server
     edit 1
         set default-gateway "<WC_FGT_PORT_IP>"
         set netmask "<WC_FGT_PORT_IP_NETWORK_MASK>"
-        set interface "port15"
+        set interface "<WC_FGT_PORT_NAME>"
         config ip-range
             edit 1
                 set start-ip <WC_FG_DHCP_IP_START>
