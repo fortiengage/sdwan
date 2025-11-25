@@ -1,5 +1,21 @@
 config system interface
     edit "<EXTENDER_FGT_INTF>"
-        set allowaccess fabric
+        set ip "<EXTENDER_FGT_INTF_IP>" "<EXTENDER_FGT_INTF_MASK>"
+        set allowaccess ping fabric
+        set ip-managed-by-fortiipam disable
+    next
+end
+
+config system dhcp server
+    edit 1
+        set default-gateway "<EXTENDER_FGT_INTF_IP>"
+        set netmask "<EXTENDER_FGT_INTF_MASK>"
+        set interface "<EXTENDER_FGT_INTF>"
+        config ip-range
+            edit 1
+                set start-ip <EXTENDER_FGT_INTF_IP_START>
+                set end-ip <EXTENDER_FGT_INTF_IP_END>
+            next
+        end
     next
 end
