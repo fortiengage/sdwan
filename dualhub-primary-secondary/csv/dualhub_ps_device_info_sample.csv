@@ -58,8 +58,8 @@ Different types of underlay interfaces:
    Static: { "name": "agg1", "type": "aggregate", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "mode": "static", "vdom": "root", "role": "wan" }
      dhcp: { "name": "agg1", "type": "aggregate", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
 3. redundant interface
-   Static: { "name": "agg1", "type": "aggregate", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "mode": "static", "vdom": "root", "role": "wan" }
-     dhcp: { "name": "agg1", "type": "aggregate", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
+   Static: { "name": "red1", "type": "redundant", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "mode": "static", "vdom": "root", "role": "wan" }
+     dhcp: { "name": "red1", "type": "redundant", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
 4. VLAN interface
    static: { "name": "vlan1", "type": "vlan", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "mode": "static", "vdom": "root", "vlan_id": "100", "role": "wan" }
      dhcp: { "name": "vlan1", "type": "vlan", "ports": ["port1"], "mode": "dhcp", "vdom": "root", "vlan_id": "100", "role": "wan" }
