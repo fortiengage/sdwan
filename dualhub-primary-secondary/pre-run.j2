@@ -1,81 +1,63 @@
-{# sample pre-run scripts, it will set up hostname, loopback interfaces and underlay interfaces. 
-  - Required:
-    - hostname
-    - lan_intf_name
-    - lan_intf_ip
-    - lan_intf_network_mask
-    - isp1_intf_name
-    - isp1_intf_ip
-    - isp1_intf_network_mask
-    - isp1_gateway
-    - isp2_intf_name
-    - isp2_intf_ip
-    - isp2_intf_network_mask
-    - isp2_gateway
-    - mgmt_dst_fmg_ip_networkmask
-    - mgmt_dst_gateway_ip
-    - mgmt_port_name
-    - hub_branch
-#}
-
+{% set device = device_data[Name]%}
+ 
 config system global
-    set hostname "{{ hostname }}"
-    #set alias "By FENG UTC <date_time>"
+    set hostname "{{ device.Name }}"
+    #set alias "By FENG UTC {{date_time}}"
 end
-
+ 
 config system interface
-    edit "{{lan_intf_name}}"
-        set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
-    next
-    edit "{{isp1_intf_name}}"
-        {% if hub_branch == "Branch" %}
-            set mode dhcp
-        {% elif hub_branch == "Hub" %}
-            set mode static
-            set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+    {% for intf in device.isp_intf %}
+        {% set ns = namespace(port_str = "") %}
+        {% if intf.ports is defined %}
+            {% for port in intf.ports %}
+                {% set ns.port_str = ns.port_str + port + " " %}
+            {% endfor %}
         {% endif %}
-            set role wan
-    next
-    edit "{{isp2_intf_name}}"
-        {% if hub_branch == "Branch" %}
-            set mode dhcp
-        {% elif hub_branch == "Hub" %}
-            set mode static
-            set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
-        {% endif %}
-            set role wan
-    next
+        edit "{{intf.name}}"
+            set vdom "{{intf.vdom | default('root')}}"
+            set type {{intf.type}}
+            {% if ns.port_str != "" %}
+            set member {{ns.port_str | trim}}
+            {% endif %}
+            set mode {{intf.mode}}
+            {% if intf.mode == 'static' %}
+            set ip "{{intf.ip}} {{intf.network_mask}}"
+            {% endif %}
+            set role {{intf.role | default('wan')}}
+            {% if intf.type == 'vlan' %}
+            set interface "{{intf.interface}}"
+            set vlanid {{intf.vlan_id}}
+            {% endif %}
+        next
+    {% endfor %}
 end
-
+ 
 config router static
-    {% if mgmt_intf_name != "false" or mgmt_dst_fmg_ip_networkmask != "false" and mgmt_dst_gateway_ip != "false" %}
-    edit 1
-        set dst "{{mgmt_dst_fmg_ip_networkmask}}"
-        set gateway "{{mgmt_dst_gateway_ip}}"
-        set device "{{mgmt_intf_name}}"
-    next
-    {% endif %}
-    {% if hub_branch == "Hub" %}
-        edit 3
-            set gateway "{{isp1_gateway}}"
-            set device "{{isp1_intf_name}}"
-        next
-        edit 4
-            set gateway "{{isp2_gateway}}"
-            set device "{{isp2_intf_name}}"
-        next
-    {% endif %}
-end
-
-{% if hub_branch == "Hub" %}
-    config router policy
+    {% if device.mgmt_intf_name is defined %}
         edit 1
-            set input-device "VPN1"
-            set output-device "VPN1"
+            set dst "{{device.mgmt_dst_fmg_ip_networkmask}}"
+            set gateway "{{device.mgmt_dst_gateway_ip}}"
+            set device "{{device.mgmt_intf_name}}"
         next
-        edit 2
-            set input-device "VPN2"
-            set output-device "VPN2"
+    {% endif %}
+    {% set ns = namespace(router_index = 2) %}
+    {% for intf in device.isp_intf %}
+        {% if intf.gateway is defined %}
+            edit {{ns.router_index}}
+                set gateway "{{intf.gateway}}"
+                set device "{{intf.name}}"
+            next
+            {% set ns.router_index = ns.router_index + 1 %}
+        {% endif %}
+    {% endfor %}
+end
+ 
+{% if device.hub_branch == "Hub" %}
+    config router policy
+    {% for intf in device.isp_intf %}
+        edit {{loop.index}}
+            set input-device "VPN{{loop.index}}"
+            set output-device "VPN{{loop.index}}"
         next
-    end
+    {% endfor %}
 {% endif %}
