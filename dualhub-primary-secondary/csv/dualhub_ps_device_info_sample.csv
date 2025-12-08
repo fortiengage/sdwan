@@ -1,1 +1,63 @@
-
+Serial Number,PSK,hub_branch,Device Group,Name,OS Version,Device Type,Split Port,HA,HA_Cluster_ID,HA_Cluster_Name,HA_Password,HA_Primary_Priority,HA_Secondary_SN,HA_Priority,HA_Monitoring_Intf,HA_HB_Intf,isp_intf,mgmt_intf_name,mgmt_dst_gateway_ip,mgmt_dst_fmg_ip_networkmask
+FGT80FTK23024584,,Hub,hub_grp,hub1_lab130,7.6.4,FortiGate-80F,Y,N,,,,,,,,,"[{
+  ""name"":""internal1"",
+  ""type"":""physical"",
+  ""ip"":""10.15.1.2"",
+  ""network_mask"":""255.255.255.0"",
+  ""mode"":""static"",
+  ""gateway"": ""10.15.1.1""
+},
+{
+  ""name"":""internal2"",
+  ""type"":""physical"",
+  ""ip"":""10.16.1.2"",
+  ""network_mask"":""255.255.255.0"",
+  ""mode"":""static"",
+  ""gateway"": ""10.16.1.1""
+}]",wan1,10.3.134.1,10.3.135.1/32
+FGT80FTK23021851,,Hub,hub_grp,hub2_lab130,7.6.4,FortiGate-80F,Y,N,,,,,,,,,"[{
+  ""name"":""internal1"",
+  ""type"":""physical"",
+  ""ip"":""10.17.1.2"",
+  ""network_mask"":""255.255.255.0"",
+  ""mode"": ""static"",
+  ""gateway"": ""10.17.1.1""
+},
+{
+  ""name"":""internal2"",
+  ""type"":""physical"",
+  ""ip"":""10.18.1.2"",
+  ""network_mask"":""255.255.255.0"",
+  ""mode"": ""static"",
+  ""gateway"": ""10.18.1.1""
+}]",wan1,10.3.134.1,10.3.135.1/32
+FG200FT922952477,,Branch,branch_grp,branch1_lab130,7.6.4,FortiGate-200F,Y,N,,,,,,,,,"[{
+  ""name"":""port1"",
+  ""type"":""physical"",
+  ""mode"": ""dhcp""
+},
+{
+  ""name"":""port2"",
+  ""type"":""physical"",
+  ""mode"": ""dhcp""
+}]",mgmt,10.3.134.1,10.3.135.1/32
+FG200FT922952594,,Branch,branch_grp,branch2_lab130,7.6.4,FortiGate-200F,Y,N,,,,,,,,,"[{
+  ""name"":""port1"",
+  ""type"":""physical"",
+  ""mode"": ""dhcp""
+},
+{
+  ""name"":""port2"",
+  ""type"":""physical"",
+  ""mode"": ""dhcp""
+}]",mgmt,10.3.134.1,10.3.135.1/32
+FG200FT000000001,,Branch,branch_grp,branch_dummy,7.6.4,FortiGate-200F,Y,Y,100,branch_dummy,123456,20,FG200FT000000002,10,"port4,port5","port6,0;port7,0","[{
+  ""name"":""port1"",
+  ""type"":""physical"",
+  ""mode"": ""dhcp""
+},
+{
+  ""name"":""port2"",
+  ""type"":""physical"",
+  ""mode"": ""dhcp""
+}]",mgmt,10.3.134.1,10.3.135.1/32
