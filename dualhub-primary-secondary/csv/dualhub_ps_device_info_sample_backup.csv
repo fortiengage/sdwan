@@ -52,16 +52,16 @@ The following three field is used to config a static route for FortiManager to c
 
 Different types of underlay interfaces:
 1. Physical Interface
-   Static: { "name": "port1", "type": "physical", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "mode": "static", "vdom": "root", "role": "wan" }
+   Static: { "name": "port1", "type": "physical", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "gateway": "10.15.1.1", "mode": "static", "vdom": "root", "role": "wan" }
      DHCP: { "name": "port1", "type": "physical", "mode": "dhcp", "vdom": "root", "role": "wan" }
 2. Aggregate/LACP interface
-   Static: { "name": "agg1", "type": "aggregate", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "mode": "static", "vdom": "root", "role": "wan" }
+   Static: { "name": "agg1", "type": "aggregate", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "role": "wan" }
      dhcp: { "name": "agg1", "type": "aggregate", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
 3. redundant interface
-   Static: { "name": "red1", "type": "redundant", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "mode": "static", "vdom": "root", "role": "wan" }
+   Static: { "name": "red1", "type": "redundant", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "role": "wan" }
      dhcp: { "name": "red1", "type": "redundant", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
 4. VLAN interface
-   static: { "name": "vlan1", "type": "vlan", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "mode": "static", "vdom": "root", "vlan_id": "100", "role": "wan" }
+   static: { "name": "vlan1", "type": "vlan", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "vlan_id": "100", "role": "wan" }
      dhcp: { "name": "vlan1", "type": "vlan", "ports": ["port1"], "mode": "dhcp", "vdom": "root", "vlan_id": "100", "role": "wan" }
 
 
