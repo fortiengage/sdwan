@@ -1,28 +1,3 @@
-{# FMG SDWAN Overlay Dual Hub Primary&Secondary #}
-{# Meta Variables:
-   - Required:
-      - loop_back_ip
-      - overlay_network_ip
-      - as_id
-      - hub1_host_name
-      - hub2_host_name
-      - branch_grp_name
-      - hub1_underlay_link1_name
-      - hub1_underlay_link2_name
-      - hub2_underlay_link1_name
-      - hub2_underlay_link2_name
-      - hub1_underlay_link1_ip
-      - hub1_underlay_link2_ip
-      - hub2_underlay_link1_ip
-      - hub2_underlay_link2_ip  
-      - branch_underlay_link1_name
-      - branch_underlay_link2_name
-      - policy_hub_src_interface
-      - policy_hub_dst_interface
-      - policy_branch_src_interface
-      - policy_branch_dst_interface
- #}
-
 {# create sdwan template used in 'sdwan overlay -> sdwan_template' #}
 config adom/wanprof/sdwan1
 config system sdwan
@@ -112,21 +87,34 @@ config system sdwan
     end
 end
 end
- 
 {# create static route template used in 'sdwan overlay -> router_template' #}
 config adom/template/_router_static/branches
 end
-
+ 
 config adom/pkg/ppkg_hub
 end
-
+ 
+{% set ns = namespace(number_of_hubs=0, topology='', hub_primary_flag=true) %}
+{% for device in device_data %}
+    {% if device.hub_branch == 'Hub' %}
+        {% set ns.number_of_hubs = ns.number_of_hubs + 1 %}
+    {% endif %}
+{% endfor %}
+{% if overlay_variables.use_case == 'SD-WAN - Dual HUB <Primary & Secondary>' %}
+    {% set ns.topology = 'dual-hub' %}
+{% elif overlay_variables.use_case == 'SD-WAN - Dual HUB <Primary & Primary>' %}
+    {% set ns.topology = 'dual-active-hub' %}
+{% endif %}
+ 
 config adom/template/_sdwan_overlay/sd_dual_hub_ps    
     config sdwan overlay
-        set topology dual-hub
-        set hub-number 2
-        set loopback-ip {{loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
-        set overlay-network {{overlay_network_ip}} 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
-        set as {{as_id}} {# 65000 #}
+        {% if ns.topology != "" %}
+        set topology {{ns.topology}}
+        {% endif %}
+        set hub-number {{ns.number_of_hubs}}
+        set loopback-ip {{overlay_variables.loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
+        set overlay-network {{overlay_variables.overlay_network_ip}} 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
+        set as {{overlay_variables.as_id}} {# 65000 #}
         set advpn version2
         set sdwan_template "sdwan1"
         set sdwan_members enable
@@ -142,98 +130,66 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
         set dynamic_bgp enable
         set route_reflection disable
         config nodes
-            edit 1
-                set _scope "{{hub1_host_name}}"-"root"
-                set role hub
-                set hub-role primary
+        {% for device in device_data %}
+            {% set ns2 = namespace(role='',hub_role='',underlay_index=1) %}
+            {% if device.hub_branch == 'Hub' %}
+                {% set ns2.role = 'hub' %}
+            {% else %}
+                {% set ns2.role = 'spoke' %}
+            {% endif %}
+            {% if ns.topology == "dual-hub" and device.hub_branch == 'Hub' %}
+                {% if ns.hub_primary_flag == true %}
+                    {% set ns2.hub_role = 'primary' %}
+                    {% set ns.hub_primary_flag = false %}
+                {% else %}
+                    {% set ns2.hub_role = 'secondary' %}
+                {% endif %}
+            {% elif ns.topology == "dual-active-hub" and device.hub_branch == 'Hub' %}
+                {% set ns2.hub_role = 'primary' %}
+            {% elif (ns.topology == "dual-active-hub" or ns.topology == "dual-hub") and device.hub_branch == 'Branch' %}
+                {% set ns2.hub_role = 'standalone' %}
+            {% endif %}
+            edit {{loop.index}}
+                {% if device.hub_branch == 'Hub' %}
+                set _scope "{{device.Name}}"-"{{device.vdom | default('root')}}"
+                {% else %}
+                set _scope "{{device['Device Group']}}"
+                {% endif %}
+                set role {{ns2.role}}
+                {% if ns2.hub_role != "" %}
+                set hub-role {{ns2.hub_role}}
+                {% endif %}
                 set cost 0
                 set advertisement connected
                 config underlay
-                    edit 1
-                        set interface "{{hub1_underlay_link1_name}}" {# port1 #}
-                        set private-link disable
-                        set override-ip enable
-                        set ip {{hub1_underlay_link1_ip}} {# 10.1.1.1 #}
-                        set cost 0
-                        set transport-group 0
-                        
-                    next
-                    edit 2
-                        set interface "{{hub1_underlay_link2_name}}" {# port2 #}
-                        set private-link disable
-                        set override-ip enable
-                        set ip {{hub1_underlay_link2_ip}} {# 10.2.1.1 #} 
-                        set cost 0
-                        set transport-group 0
-                    next
-                end 
-            next
-            edit 2
-                set _scope "{{hub2_host_name}}"-"root"
-                set role hub
-                set hub-role secondary
-                set cost 0
-                set advertisement connected
-                config underlay
-                    edit 1
-                        set interface "{{hub2_underlay_link1_name}}" {# port1 #}
-                        set private-link disable
-                        set override-ip enable
-                        set ip {{hub2_underlay_link1_ip}} {# 10.3.1.1 #}
-                        set cost 0
-                        set transport-group 0
-                    next
-                    edit 2
-                        set interface "{{hub2_underlay_link2_name}}" {# port2 #}
-                        set private-link disable
-                        set override-ip enable
-                        set ip {{hub2_underlay_link2_ip}} {# 10.4.1.1 #}
-                        set cost 0
-                        set transport-group 0 
-                    next
+                    {% for intf in device.isp_intf %}
+                        edit {{ns2.underlay_index}}
+                            set interface "{{intf.name}}"
+                            set private-link disable
+                            {% if intf.ip is defined %}
+                                set override-ip enable
+                                set ip {{intf.ip}}
+                            {% else %}
+                                set override-ip disable
+                            {% endif %}
+                            set cost 0
+                            set transport-group 0
+                        next
+                        {% set ns2.underlay_index = ns2.underlay_index + 1 %}
+                    {% endfor %}
                 end
+                {% if device.hub_branch == 'Branch' and ns2.underlay_index >=2 %}
+                    config neighbor
+                    {% for i in range(0, ns.number_of_hubs * (ns2.underlay_index - 1)) %}
+                        edit {{i + 1}}
+                            set remote-as 0
+                            set apply-to-all disable   
+                        next
+                    {% endfor %}
+                    end
+                {% endif %}
             next
-            edit 3
-                set _scope "{{branch_grp_name}}"
-                set role spoke
-                set hub-role standalone
-                set cost 0
-                set advertisement connected
-                config underlay
-                    edit 1
-                        set interface "{{branch_underlay_link1_name}}" {# "port1" #}
-                        set private-link disable
-                        set override-ip disable
-                        set cost 0
-                        set transport-group 0  
-                    next
-                    edit 2
-                        set interface "{{branch_underlay_link2_name}}" {# "port2" #}
-                        set private-link disable
-                        set override-ip disable
-                        set cost 0
-                        set transport-group 0   
-                    next
-                end
-                config neighbor
-                    edit 1
-                        set remote-as 0
-                        set apply-to-all disable   
-                    next
-                    edit 2
-                        set remote-as 0
-                        set apply-to-all disable
-                    next
-                    edit 3
-                        set remote-as 0
-                        set apply-to-all disable
-                    next
-                    edit 4
-                        set remote-as 0
-                        set apply-to-all disable
-                    next
-                end
-            next
+        {% endfor %}
         end
     end
 end
