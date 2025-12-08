@@ -6,6 +6,15 @@ config system global
 end
  
 config system interface
+    {% if device.mgmt_intf_name is defined %}
+        edit "{{device.mgmt_intf_name}}"
+            set vdom root
+            set ip "{{device.mgmt_dst_gateway_ip}}" "{{device.mgmt_dst_fmg_ip_networkmask}}"
+            set allowaccess ping https ssh fgfm
+            set role wan
+        next
+    {% endif %}
+    
     {% for intf in device.isp_intf %}
         {% set ns = namespace(port_str = "") %}
         {% if intf.ports is defined %}
