@@ -3,6 +3,10 @@
 config system global
     set hostname "{{ device.Name }}"
     #set alias "By FENG UTC {{date_time}}"
+    {% if device.longitude is defined %}
+    set latitude "{{ device.longitude }}"
+    set longitude "{{ device.latitude }}"
+    {% endif %}
 end
  
 config system interface
