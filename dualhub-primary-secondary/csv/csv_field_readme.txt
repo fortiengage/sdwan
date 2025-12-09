@@ -11,24 +11,32 @@ General
 5). The field names that starts with "HA" are HA-related fields; Please leave them empty if it's a non-HA branch
 
 Explanation of each field in this CSV file: 
-- Serial Number: FortiGate's Serial Number. 
-- PSK: Private Security Key, or Password to connect to FortiGate. If Serial Number is available, leave this field blank. 
+- Serial Number: FortiGate's Serial Number, please always use SN to do the deployment. 
+- PSK: Private Security Key, or Password to connect to FortiGate. If the Serial Number is available, leave this field blank. 
 - hub_branch: Indicator if this is a Hub or a Branch FortiGate. Please use exactly "Hub" or "Branch".  
-- Device Group: Inidator if this FortiGate belongs to Hub or Branch Group, please use exactly "hub_grp" or "branch_grp" 
-- Name: FortiGate name, no blank, I.e. branch_vancouver_1st_floor 
-- OS Version: FortiOS GA build release number, I.e. 7.6.4, 8.0.1 
-- Split Port: Indicator to split the port from the virtual switch 
-- isp1_intf_name: the interface name that is connected to the internet, it's needed for the Hub.  
-- isp1_intf_ip: the IP address 
-- isp1_gateway: the IP address of the gateway 
-- isp2_intf_name: the interface name that is connected to the internet, it's needed for the Hub.  
-- isp2_intf_ip: the IP address 
-- isp1_gateway: the IP address of the gateway 
-- lan_intf_name: Local LAN interface name 
-- lan_intf_ip: Local LAN interface IP 
-- isp1_intf_ip: the IP address 
-- lan_intf_network_mask: Local LAN interface network mask 
-- hostname: FortiGate hostname, make it the same as "name" 
+- Device Group: Indicator if the Hub or Branch Group name that the FortiGate belongs to. 
+               All branches with the same type FortiGate, and same type/number of underlay interfaces should be grouped. 
+               i.e. branch_grp_internetx2
+                    branch_grp_internet+5G
+- Name: FortiGate name, no blank, I.e. branch_vancouver 
+- OS Version: FortiOS GA build release number, please always use three-digit release number,  i.e. 7.6.4, 8.0.1 
+- Split Port: Indicator to split the port from the virtual switch, usually it needs to split the port
+- isp_intf: This is a combined underlay interface name field. It can support up to 4 different kinds of interfaces.
+            It's in JSON format. It provided the flexibility to support two to four different types of underlay interfaces. 
+            It supports four type of underlay interfaces: physical, aggregate/LACP, redundant and VLAN interfaces. 
+1. Physical Interface
+   Static: { "name": "port1", "type": "physical", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "gateway": "10.15.1.1", "mode": "static", "vdom": "root", "role": "wan" }
+     DHCP: { "name": "port1", "type": "physical", "mode": "dhcp", "vdom": "root", "role": "wan" }
+2. Aggregate/LACP interface
+   Static: { "name": "agg1", "type": "aggregate", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "role": "wan" }
+     dhcp: { "name": "agg1", "type": "aggregate", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
+3. redundant interface
+   Static: { "name": "red1", "type": "redundant", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "role": "wan" }
+     dhcp: { "name": "red1", "type": "redundant", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
+4. VLAN interface
+   static: { "name": "vlan1", "type": "vlan", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "vlan_id": "100", "role": "wan" }
+     dhcp: { "name": "vlan1", "type": "vlan", "ports": ["port1"], "mode": "dhcp", "vdom": "root", "vlan_id": "100", "role": "wan" }
+
 
 The following field is for support HA Branch or Hub only:
 - HA: Y or N; Please set to N if it's not HA. 
@@ -47,15 +55,4 @@ The following three field is used to config a static route for FortiManager to c
 - mgmt_dst_gateway_ip: use as "gateway" in static route setting 
 
 Different types of underlay interfaces:
-1. Physical Interface
-   Static: { "name": "port1", "type": "physical", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "gateway": "10.15.1.1", "mode": "static", "vdom": "root", "role": "wan" }
-     DHCP: { "name": "port1", "type": "physical", "mode": "dhcp", "vdom": "root", "role": "wan" }
-2. Aggregate/LACP interface
-   Static: { "name": "agg1", "type": "aggregate", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "role": "wan" }
-     dhcp: { "name": "agg1", "type": "aggregate", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
-3. redundant interface
-   Static: { "name": "red1", "type": "redundant", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "role": "wan" }
-     dhcp: { "name": "red1", "type": "redundant", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
-4. VLAN interface
-   static: { "name": "vlan1", "type": "vlan", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "vlan_id": "100", "role": "wan" }
-     dhcp: { "name": "vlan1", "type": "vlan", "ports": ["port1"], "mode": "dhcp", "vdom": "root", "vlan_id": "100", "role": "wan" }
+
