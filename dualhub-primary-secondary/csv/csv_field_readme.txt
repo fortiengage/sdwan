@@ -50,10 +50,16 @@ The following field is for support HA Branch or Hub only:
 - HA_Monitoring_Intf: HA monitoring interface, i.e. "port4,port5"
 - HA_HB_Intf: HA heart-beat interface, {port,priority; port,priority}, i.e. "port6,0;port7,0"
 
-The following three fields is used to config a static route for FortiManager to connect to the fortiGates. 
-- mgmt_intf_name: Management interface name to connect to fortiManager 
+The following optional fields are used to configure the management interfaces' IP address and static route for FortiManager to connect to the FortiGates:
+- mgmt_intf_name: Management interface name
+- mgmt_intf_ip: Management interface ip
 - mgmt_dst_fmg_ip_networkmask: used as dst in static route setting 
 - mgmt_dst_gateway_ip: use as "gateway" in static route setting 
 
-Different types of underlay interfaces:
+The following optional fields are used to identify the location of each FortiGate/Branch.
+Please use google map to find the city's longitude and altitude where the FortiGate is located. 
+FortiManager will use these info to display the FortiGate/Branch on a map on the SD-WAN monitoring page.
+- longitude 
+- latitude
+
 
