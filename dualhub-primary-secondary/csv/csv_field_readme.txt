@@ -24,18 +24,19 @@ Explanation of each field in this CSV file:
 - isp_intf: This is a combined underlay interface name field. It can support up to 4 different kinds of interfaces.
             It's in JSON format. It provided the flexibility to support two to four different types of underlay interfaces. 
             It supports four type of underlay interfaces: physical, aggregate/LACP, redundant and VLAN interfaces. 
-1. Physical Interface
-   Static: { "name": "port1", "type": "physical", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "gateway": "10.15.1.1", "mode": "static", "vdom": "root", "role": "wan" }
-     DHCP: { "name": "port1", "type": "physical", "mode": "dhcp", "vdom": "root", "role": "wan" }
-2. Aggregate/LACP interface
-   Static: { "name": "agg1", "type": "aggregate", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "role": "wan" }
-     dhcp: { "name": "agg1", "type": "aggregate", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
-3. redundant interface
-   Static: { "name": "red1", "type": "redundant", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "role": "wan" }
-     dhcp: { "name": "red1", "type": "redundant", "ports": ["port1", "port2"], "mode": "dhcp", "vdom": "root", "role": "wan" }
-4. VLAN interface
-   static: { "name": "vlan1", "type": "vlan", "ip": "10.17.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "gateway": "10.17.1.1", "mode": "static", "vdom": "root", "vlan_id": "100", "role": "wan" }
-     dhcp: { "name": "vlan1", "type": "vlan", "ports": ["port1"], "mode": "dhcp", "vdom": "root", "vlan_id": "100", "role": "wan" }
+    The following are examples; please copy and modify accordingly. 
+    1. Physical Interface
+       Static: { "name": "port1", "type": "physical", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "gateway": "10.15.1.1" }
+         DHCP: { "name": "port1", "type": "physical", "mode": "dhcp" }
+    2. Aggregate/LACP interface
+       Static: { "name": "agg1", "type": "aggregate", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.15.1.1" }
+         dhcp: { "name": "agg1", "type": "aggregate", "mode": "dhcp", "ports": ["port1", "port2"] }
+    3. redundant interface
+       Static: { "name": "red1", "type": "redundant", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.15.1.1" }
+         dhcp: { "name": "red1", "type": "redundant", "mode": "dhcp", "ports": ["port1", "port2"] }
+    4. VLAN interface
+       static: { "name": "vlan1", "type": "vlan", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "gateway": "10.15.1.1", "vlan_id": "100" }
+         dhcp: { "name": "vlan1", "type": "vlan", "mode": "dhcp", "ports": ["port1"], "vlan_id": "100" }
 
 
 The following field is for support HA Branch or Hub only:
@@ -49,7 +50,7 @@ The following field is for support HA Branch or Hub only:
 - HA_Monitoring_Intf: HA monitoring interface, i.e. "port4,port5"
 - HA_HB_Intf: HA heart-beat interface, {port,priority; port,priority}, i.e. "port6,0;port7,0"
 
-The following three field is used to config a static route for FortiManager to connect to the fortiGates. 
+The following three fields is used to config a static route for FortiManager to connect to the fortiGates. 
 - mgmt_intf_name: Management interface name to connect to fortiManager 
 - mgmt_dst_fmg_ip_networkmask: used as dst in static route setting 
 - mgmt_dst_gateway_ip: use as "gateway" in static route setting 
