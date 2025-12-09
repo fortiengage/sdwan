@@ -1,4 +1,4 @@
-Serial Number,PSK,hub_branch,Device Group,Name,OS Version,Device Type,Split Port,HA,HA_Cluster_ID,HA_Cluster_Name,HA_Password,HA_Primary_Priority,HA_Secondary_SN,HA_Priority,HA_Monitoring_Intf,HA_HB_Intf,isp_intf,mgmt_intf_name,mgmt_dst_gateway_ip,mgmt_dst_fmg_ip_networkmask
+Serial Number,PSK,hub_branch,Device Group,Name,OS Version,Device Type,Split Port,HA,HA_Cluster_ID,HA_Cluster_Name,HA_Password,HA_Primary_Priority,HA_Secondary_SN,HA_Priority,HA_Monitoring_Intf,HA_HB_Intf,isp_intf,mgmt_intf_name,mgmt_intf_ip,mgmt_dst_gateway_ip,mgmt_dst_fmg_ip_networkmask,longitude,latitude
 FGT80FTK23024584,,Hub,hub_grp,hub1_lab130,7.6.4,FortiGate-80F,Y,N,,,,,,,,,"[{
   ""name"":""internal1"",
   ""type"":""physical"",
@@ -14,7 +14,7 @@ FGT80FTK23024584,,Hub,hub_grp,hub1_lab130,7.6.4,FortiGate-80F,Y,N,,,,,,,,,"[{
   ""network_mask"":""255.255.255.0"",
   ""mode"":""static"",
   ""gateway"": ""10.16.1.1""
-}]",wan1,10.3.134.1,10.3.135.1/32
+}]",wan1,10.3.134.64/24,10.3.134.1,10.3.135.1/32,-122.9805,49.2488
 FGT80FTK23021851,,Hub,hub_grp,hub2_lab130,7.6.4,FortiGate-80F,Y,N,,,,,,,,,"[{
   ""name"":""internal1"",
   ""type"":""physical"",
@@ -30,7 +30,7 @@ FGT80FTK23021851,,Hub,hub_grp,hub2_lab130,7.6.4,FortiGate-80F,Y,N,,,,,,,,,"[{
   ""network_mask"":""255.255.255.0"",
   ""mode"": ""static"",
   ""gateway"": ""10.18.1.1""
-}]",wan1,10.3.134.1,10.3.135.1/32
+}]",wan1,10.3.134.65/24,10.3.134.1,10.3.135.1/32,-79.3832,43.6532
 FG200FT922952477,,Branch,branch_grp,branch1_lab130,7.6.4,FortiGate-200F,Y,N,,,,,,,,,"[{
   ""name"":""port1"",
   ""type"":""physical"",
@@ -40,7 +40,7 @@ FG200FT922952477,,Branch,branch_grp,branch1_lab130,7.6.4,FortiGate-200F,Y,N,,,,,
   ""name"":""port2"",
   ""type"":""physical"",
   ""mode"": ""dhcp""
-}]",mgmt,10.3.134.1,10.3.135.1/32
+}]",mgmt,10.3.134.63/24,10.3.134.1,10.3.135.1/32,-87.6298,41.8781
 FG200FT922952594,,Branch,branch_grp,branch2_lab130,7.6.4,FortiGate-200F,Y,N,,,,,,,,,"[{
   ""name"":""port1"",
   ""type"":""physical"",
@@ -50,7 +50,7 @@ FG200FT922952594,,Branch,branch_grp,branch2_lab130,7.6.4,FortiGate-200F,Y,N,,,,,
   ""name"":""port2"",
   ""type"":""physical"",
   ""mode"": ""dhcp""
-}]",mgmt,10.3.134.1,10.3.135.1/32
+}]",mgmt,10.3.134.62/24,10.3.134.1,10.3.135.1/32,-111.891,40.7608
 FG200FT000000001,,Branch,branch_grp,branch_dummy,7.6.4,FortiGate-200F,Y,Y,100,branch_dummy,123456,20,FG200FT000000002,10,"port4,port5","port6,0;port7,0","[{
   ""name"":""port1"",
   ""type"":""physical"",
@@ -60,4 +60,4 @@ FG200FT000000001,,Branch,branch_grp,branch_dummy,7.6.4,FortiGate-200F,Y,Y,100,br
   ""name"":""port2"",
   ""type"":""physical"",
   ""mode"": ""dhcp""
-}]",mgmt,10.3.134.1,10.3.135.1/32
+}]",mgmt,1.1.1.1/24,10.3.134.1,10.3.135.1/32,,
