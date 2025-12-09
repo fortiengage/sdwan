@@ -9,6 +9,7 @@ config system interface
     {% if device.mgmt_intf_name is defined %}
         edit "{{device.mgmt_intf_name}}"
             set vdom root
+            set mode static
             set ip "{{device.mgmt_intf_ip}}"
             set allowaccess ping https ssh fgfm
             set role wan
