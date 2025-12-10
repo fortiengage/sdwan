@@ -107,14 +107,10 @@ end
 {% endif %}
  
 config adom/template/_sdwan_overlay/sd_dual_hub_ps    
+    set description "Created by FortiEngage on UTC {{ date_time }}"
     config sdwan overlay
         {% if ns.topology != "" %}
         set topology {{ns.topology}}
-        {% endif %}
-        {% if date_time is defined %}
-            set description "Created by FortiEngage on UTC {{ date_time }}"
-        {% else %}
-            set description "Created by FortiEngage"
         {% endif %}
         set hub-number {{ns.number_of_hubs}}
         set loopback-ip {{overlay_variables.loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
