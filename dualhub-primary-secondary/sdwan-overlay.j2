@@ -107,7 +107,9 @@ end
 {% endif %}
  
 config adom/template/_sdwan_overlay/sd_dual_hub_ps    
-    set description "Created by FortiEngage on UTC {{ date_time }}"
+    config template setting
+        set description "Created by FortiEngage on UTC {{ date_time }}"
+    end
     config sdwan overlay
         {% if ns.topology != "" %}
         set topology {{ns.topology}}
