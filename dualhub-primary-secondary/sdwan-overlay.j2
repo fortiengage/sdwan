@@ -138,7 +138,11 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
         set router_template "branches"
         set segmentation disable
         set bgp_on_loopback enable
-        set dynamic_bgp enable
+        {% if overlay_variables.dynamic_bgp == 'YES' %}
+            set dynamic_bgp enable
+        {% else %}
+            set dynamic_bgp disable
+        {% endif %}
         set route_reflection disable
         config nodes
         {% for device in device_data %}
