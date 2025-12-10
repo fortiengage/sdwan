@@ -23,18 +23,20 @@ Explanation of each field in this CSV file:
             It supports four type of underlay interfaces: physical, aggregate/LACP, redundant and VLAN interfaces. 
     The following are examples; please copy and modify accordingly. 
     1. Physical Interface
-       Static: { "name": "port1", "type": "physical", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "gateway": "10.15.1.1" }
-         DHCP: { "name": "port1", "type": "physical", "mode": "dhcp" }
+       Static P1: { "name": "port1", "type": "physical", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "gateway": "10.15.1.1" }
+         DHCP P2: { "name": "port1", "type": "physical", "mode": "dhcp" }
     2. Aggregate/LACP interface
-       Static: { "name": "agg1", "type": "aggregate", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.15.1.1" }
-         dhcp: { "name": "agg1", "type": "aggregate", "mode": "dhcp", "ports": ["port1", "port2"] }
-    3. redundant interface
-       Static: { "name": "red1", "type": "redundant", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.15.1.1" }
-         dhcp: { "name": "red1", "type": "redundant", "mode": "dhcp", "ports": ["port1", "port2"] }
+       Static A1: { "name": "agg1", "type": "aggregate", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.15.1.1" }
+         dhcp A2: { "name": "agg1", "type": "aggregate", "mode": "dhcp", "ports": ["port1", "port2"] }
+    3. Redundant interface
+       Static R1: { "name": "red1", "type": "redundant", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.15.1.1" }
+         dhcp R2: { "name": "red1", "type": "redundant", "mode": "dhcp", "ports": ["port1", "port2"] }
     4. VLAN interface
-       static: { "name": "vlan1", "type": "vlan", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "gateway": "10.15.1.1", "vlan_id": "100" }
-         dhcp: { "name": "vlan1", "type": "vlan", "mode": "dhcp", "ports": ["port1"], "vlan_id": "100" }
+       static V1: { "name": "vlan1", "type": "vlan", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "gateway": "10.15.1.1", "vlan_id": "100" }
+         dhcp V2: { "name": "vlan1", "type": "vlan", "mode": "dhcp", "ports": ["port1"], "vlan_id": "100" }
 
+     The complete JSON array for branch/ForitGate have 4 underlay, by using the substitute code of above example
+     [ P1, P1, A1, A2 ]
 
 The following field is for support HA Branch or Hub only:
 - HA: Y or N; Please set to N if it's not HA. 
