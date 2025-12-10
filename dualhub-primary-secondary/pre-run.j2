@@ -2,7 +2,7 @@
  
 config system global
     set hostname "{{ device.Name }}"
-    #set alias "By FENG UTC {{date_time}}"
+    set alias "{{ device.Name }}"
     {% if device.longitude is defined %}
         set gui-device-longitude "{{ device.longitude }}"
         set gui-device-latitude "{{ device.latitude }}"
@@ -42,6 +42,7 @@ config system interface
             set interface "{{intf.interface}}"
             set vlanid {{intf.vlan_id}}
             {% endif %}
+            set description "Underlay Interface by FENG on UTC {{ date_time }}
         next
     {% endfor %}
 end
