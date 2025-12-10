@@ -111,11 +111,22 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
         {% if ns.topology != "" %}
         set topology {{ns.topology}}
         {% endif %}
+        {% if date_time is defined %}
+            set description "Created by FortiEngage on UTC {{ date_time }}"
+        {% else %}
+            set description "Created by FortiEngage"
+        {% endif %}
         set hub-number {{ns.number_of_hubs}}
         set loopback-ip {{overlay_variables.loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
         set overlay-network {{overlay_variables.overlay_network_ip}} 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
         set as {{overlay_variables.as_id}} {# 65000 #}
-        set advpn version2
+        {% if overlay_variables.advpn_version == 'advpn2.0' %}
+            set advpn version2
+        {% elif overlay_variables.advpn_version == 'advpn1.0' %}
+            set advpn enable
+        {% else %}
+            set advpn disable
+        {% endif %}
         set sdwan_template "sdwan1"
         set sdwan_members enable
         set sdwan_health_check enable
