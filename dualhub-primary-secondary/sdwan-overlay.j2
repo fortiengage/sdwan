@@ -93,7 +93,9 @@ end
  
 config adom/pkg/ppkg_hub
 end
- 
+config adom/pkg/ppkg_branch
+end
+
 {% set ns = namespace(number_of_hubs=0, topology='', hub_primary_flag=true) %}
 {% for device in device_data %}
     {% if device.hub_branch == 'Hub' %}
