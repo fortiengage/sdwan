@@ -32,8 +32,8 @@ Explanation of each field in this CSV file:
        Static R1: { "name": "red1", "type": "redundant", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1", "port2"], "gateway": "10.15.1.1" }
          dhcp R2: { "name": "red1", "type": "redundant", "mode": "dhcp", "ports": ["port1", "port2"] }
     4. VLAN interface
-       static V1: { "name": "vlan1", "type": "vlan", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "ports": ["port1"], "gateway": "10.15.1.1", "vlan_id": "100" }
-         dhcp V2: { "name": "vlan1", "type": "vlan", "mode": "dhcp", "ports": ["port1"], "vlan_id": "100" }
+       static V1: { "name": "vlan1", "type": "vlan", "mode": "static", "ip": "10.15.1.2", "network_mask": "255.255.255.0", "interface": "port1", "gateway": "10.15.1.1", "vlan_id": "100" }
+         dhcp V2: { "name": "vlan1", "type": "vlan", "mode": "dhcp", "interface": "port1", "vlan_id": "200" }
 
      The complete JSON array for branch/ForitGate have 4 underlay, by using the substitute code of above example
      [ P1, P1, A1, A2 ]
