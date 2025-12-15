@@ -1,0 +1,82 @@
+{# sample pre-run scripts, it will set up hostname, loopback interfaces and underlay interfaces. 
+  - Required:
+    - hostname
+    - lan_intf_name
+    - lan_intf_ip
+    - lan_intf_network_mask
+    - isp1_intf_name
+    - isp1_intf_ip
+    - isp1_intf_network_mask
+    - isp1_gateway
+    - isp2_intf_name
+    - isp2_intf_ip
+    - isp2_intf_network_mask
+    - isp2_gateway
+    - mgmt_dst_fmg_ip_networkmask
+    - mgmt_dst_gateway_ip
+    - mgmt_port_name
+    - hub_branch
+#}
+
+config system global
+    set hostname "{{ hostname }}"
+    #set alias "By FENG UTC <date_time>"
+end
+
+config system interface
+    edit "{{lan_intf_name}}"
+        set ip "{{ lan_intf_ip }} {{ lan_intf_network_mask }}"
+    next
+    edit "{{isp1_intf_name}}"
+        {% if hub_branch == "Branch" %}
+            set mode dhcp
+        {% elif hub_branch == "Hub" %}
+            set mode static
+            set ip "{{ isp1_intf_ip }} {{ isp1_intf_network_mask }}"
+        {% endif %}
+            set role wan
+    next
+    edit "{{isp2_intf_name}}"
+        {% if hub_branch == "Branch" %}
+            set mode dhcp
+        {% elif hub_branch == "Hub" %}
+            set mode static
+            set ip "{{ isp2_intf_ip }} {{ isp2_intf_network_mask }}"
+        {% endif %}
+            set role wan
+    next
+end
+
+config router static
+    {% if mgmt_intf_name != "false" or mgmt_dst_fmg_ip_networkmask != "false" and mgmt_dst_gateway_ip != "false" %}
+    edit 1
+        set dst "{{mgmt_dst_fmg_ip_networkmask}}"
+        set gateway "{{mgmt_dst_gateway_ip}}"
+        set device "{{mgmt_intf_name}}"
+    next
+    {% endif %}
+    
+    {% if hub_branch == "Hub" %}
+        edit 3
+            set gateway "{{isp1_gateway}}"
+            set device "{{isp1_intf_name}}"
+        next
+        edit 4
+            set gateway "{{isp2_gateway}}"
+            set device "{{isp2_intf_name}}"
+        next
+    {% endif %}
+end
+
+{% if hub_branch == "Hub" %}
+    config router policy
+        edit 1
+            set input-device "VPN1"
+            set output-device "VPN1"
+        next
+        edit 2
+            set input-device "VPN2"
+            set output-device "VPN2"
+        next
+    end
+{% endif %}
