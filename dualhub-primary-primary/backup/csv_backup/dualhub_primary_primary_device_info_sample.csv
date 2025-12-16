@@ -1,0 +1,51 @@
+Serial Number,PSK,hub_branch,Device Group,Name,OS Version,Device Type,Split Port,HA,HA_Cluster_ID,HA_Cluster_Name,HA_Password,HA_Primary_Priority,HA_Secondary_SN,HA_Priority,HA_Monitoring_Intf,HA_HB_Intf,isp1_intf_name,isp2_intf_name,lan_intf_name,lan_intf_ip,lan_intf_network_mask,isp1_intf_ip,isp1_intf_network_mask,isp1_gateway,isp2_intf_ip,isp2_intf_network_mask,isp2_gateway,hostname,mgmt_intf_name,mgmt_dst_fmg_ip_networkmask,mgmt_dst_gateway_ip
+FGT80FTK23024584,,Hub,hub_grp,hub1_lab130,7.6.4,FortiGate-80F,Y,N,,,,,,,,,internal1,internal2,internal3,192.168.1.1,255.255.255.0,10.15.1.2,255.255.255.0,10.15.1.1,10.16.1.2,255.255.255.0,10.16.1.1,hub1_lab130,wan1,10.3.135.1/32,10.3.134.1
+FGT80FTK23021851,,Hub,hub_grp,hub2_lab130,7.6.4,FortiGate-80F,Y,N,,,,,,,,,internal1,internal2,internal3,192.168.1.2,255.255.255.0,10.17.1.2,255.255.255.0,10.17.1.1,10.18.1.2,255.255.255.0,10.18.1.1,hub2_lab130,wan1,10.3.135.1/32,10.3.134.1
+FG200FT922952477,,Branch,branch_grp,branch1_lab130,7.6.4,FortiGate-200F,Y,N,,,,,,,,,port1,port2,port3,10.1.3.1,255.255.255.0,,,,,,,branch1_lab130,mgmt,10.3.135.1/32,10.3.134.1
+FG200FT922952594,,Branch,branch_grp,branch2_lab130,7.6.4,FortiGate-200F,Y,N,,,,,,,,,port1,port2,port3,10.1.4.1,255.255.255.0,,,,,,,branch2_lab130,mgmt,10.3.135.1/32,10.3.134.1
+FG200FT000000001,,Branch,branch_grp,branch_dummy,7.6.4,FortiGate-200F,Y,Y,100,branch_dummy,123456,20,FG200FT000000002,10,"port4,port5","port6,0;port7,0",port1,port2,port3,10.1.5.1,255.255.255.0,,,,,,,branch_dummy,mgmt,10.3.135.1/32,10.3.134.1
+
+
+
+Note: 
+General 
+1). Don't change the title of each field 
+2). Only update based on your device information, such as Serial Number, OS version, Device Type, ISP interface name etc.  
+3). Please delete this "Note" section after you finish updating it, leaving only the device information, before you upload to the FortiEngage
+4). The CSV file supports deploying mixed HA and non-HA Branch and Hub. 
+
+Explanation of each field in this CSV file: 
+- Serial Number: FortiGate's Serial Number. 
+- PSK: Private Security Key, or Password to connect to FortiGate. If Serial Number is available, leave this field blank. 
+- hub_branch: Indicator if this is a Hub or a Branch FortiGate. Please use exactly "Hub" or "Branch".  
+- Device Group: Inidator if this FortiGate belongs to Hub or Branch Group, please use exactly "hub_grp" or "branch_grp" 
+- Name: FortiGate name, no blank, I.e. branch_vancouver_1st_floor 
+- OS Version: FortiOS GA build release number, I.e. 7.6.4, 8.0.1 
+- Split Port: Indicator to split the port from the virtual switch 
+- isp1_intf_name: the interface name that is connected to the internet, it's needed for the Hub.  
+- isp1_intf_ip: the IP address 
+- isp1_gateway: the IP address of the gateway 
+- isp2_intf_name: the interface name that is connected to the internet, it's needed for the Hub.  
+- isp2_intf_ip: the IP address 
+- isp1_gateway: the IP address of the gateway 
+- lan_intf_name: Local LAN interface name 
+- lan_intf_ip: Local LAN interface IP 
+- isp1_intf_ip: the IP address 
+- lan_intf_network_mask: Local LAN interface network mask 
+- hostname: FortiGate hostname, make it the same as "name" 
+
+The following field is for support HA Branch or Hub only:
+- HA: Y or N; Please set to N if it's not HA. 
+- HA_Cluster_ID: HA cluster ID
+- HA_Cluster_Name: HA cluster Name
+- HA_Password: HA password
+- HA_Primary_Priority: HA primary priority
+- HA_Secondary_SN: HA Secondary series number 
+- HA_Priority: HA Secondary Priority
+- HA_Monitoring_Intf: HA monitoring interface, i.e. "port4,port5"
+- HA_HB_Intf: HA heart-beat interface, {port,priority; port,priority}, i.e. "port6,0;port7,0"
+
+The following three field is used to config a static route for FortiManager to connect to the fortiGates. 
+- mgmt_intf_name: Management interface name to connect to fortiManager 
+- mgmt_dst_fmg_ip_networkmask: used as dst in static route setting 
+- mgmt_dst_gateway_ip: use as "gateway" in static route setting 
