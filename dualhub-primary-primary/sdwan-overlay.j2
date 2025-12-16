@@ -179,7 +179,11 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                 config underlay
                     {% for intf in device.isp_intf %}
                         edit {{ns2.underlay_index}}
-                            set interface "$(isp_intf_name_{{ns2.underlay_index}})"
+                            {% if device.hub_branch == 'Hub' %}
+                                set interface "{{device.isp_intf.name}}"
+                            {% else %}
+                                set interface "$(isp_intf_name_{{ns2.underlay_index}})"
+                            {% endif %}
                             set private-link disable
                             {% if intf.ip is defined %}
                                 set override-ip enable
