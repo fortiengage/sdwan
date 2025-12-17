@@ -180,7 +180,7 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                     {% for intf in device.isp_intf %}
                         edit {{ns2.underlay_index}}
                             {% if device.hub_branch == 'Hub' %}
-                                set interface "{{device.isp_intf.name}}"
+                                set interface "{{intf.name}}"
                             {% else %}
                                 set interface "$(isp_intf_name_{{ns2.underlay_index}})"
                             {% endif %}
