@@ -1,0 +1,227 @@
+{# create sdwan template used in 'sdwan overlay -> sdwan_template' #}
+config adom/wanprof/sdwan1
+config system sdwan
+    config health-check
+        edit "Default_AWS"
+            set server aws.amazon.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_DNS"
+            set system-dns enable
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_FortiGuard"
+            set server fortiguard.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_Gmail"
+            set server gmail.com
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 2
+                next
+            end
+        next
+        edit "Default_Google Search"
+            set server "www.google.com"
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_Office_365"
+            set server www.office.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+    end
+end
+end
+{# create static route template used in 'sdwan overlay -> router_template' #}
+config adom/template/_router_static/branches
+end
+config adom/pkg/ppkg_hub
+end
+config adom/pkg/ppkg_branch
+end
+ 
+{% set ns = namespace(number_of_hubs=0, topology='', hub_primary_flag=true) %}
+{% for device in device_data %}
+    {% if device.hub_branch == 'Hub' %}
+        {% set ns.number_of_hubs = ns.number_of_hubs + 1 %}
+    {% endif %}
+{% endfor %}
+{% if overlay_variables.use_case == 'SD-WAN - Dual HUB <Primary & Secondary>' %}
+    {% set ns.topology = 'dual-hub' %}
+{% elif overlay_variables.use_case == 'SD-WAN - Dual HUB <Primary & Primary>' %}
+    {% set ns.topology = 'dual-active-hub' %}
+{% endif %}
+config adom/template/_sdwan_overlay/sd_dual_hub_ps    
+    config template setting
+        set description "Created by FortiEngage on UTC {{ date_time }}"
+    end
+    config sdwan overlay
+        {% if ns.topology != "" %}
+        set topology {{ns.topology}}
+        {% endif %}
+        set hub-number {{ns.number_of_hubs}}
+        set loopback-ip {{overlay_variables.loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
+        set overlay-network {{overlay_variables.overlay_network_ip}} 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
+        set as {{overlay_variables.as_id}} {# 65000 #}
+        {% if overlay_variables.advpn_version == 'advpn2.0' %}
+            set advpn version2
+        {% elif overlay_variables.advpn_version == 'advpn1.0' %}
+            set advpn enable
+        {% else %}
+            set advpn disable
+        {% endif %}
+        set sdwan_template "sdwan1"
+        set sdwan_members enable
+        set sdwan_health_check enable
+        set normalized-interface enable
+        set hub-package-path "ppkg_hub"
+        set branch-package-path "ppkg_branch"    
+        set auto-branch-id-assignment enable
+        set authmethod psk
+        set router_template "branches"
+        set segmentation disable
+        set bgp_on_loopback enable
+        {% if overlay_variables.dynamic_bgp == 'YES' %}
+            set dynamic_bgp enable
+        {% else %}
+            set dynamic_bgp disable
+        {% endif %}
+        set route_reflection disable
+        config nodes
+        {% for device in device_data %}
+            {% set ns2 = namespace(role='',hub_role='',underlay_index=1, advertisement_value='') %}
+            {% if device.hub_branch == 'Hub' %}
+                {% set ns2.role = 'hub' %}
+            {% else %}
+                {% set ns2.role = 'spoke' %}
+            {% endif %}
+            {% if ns.topology == "dual-hub" and device.hub_branch == 'Hub' %}
+                {% if ns.hub_primary_flag == true %}
+                    {% set ns2.hub_role = 'primary' %}
+                    {% set ns.hub_primary_flag = false %}
+                {% else %}
+                    {% set ns2.hub_role = 'secondary' %}
+                {% endif %}
+            {% elif ns.topology == "dual-active-hub" and device.hub_branch == 'Hub' %}
+                {% set ns2.hub_role = 'primary' %}
+            {% elif (ns.topology == "dual-active-hub" or ns.topology == "dual-hub") and device.hub_branch == 'Branch' %}
+                {% set ns2.hub_role = 'standalone' %}
+            {% endif %}
+            edit {{loop.index}}
+                {% if device.hub_branch == 'Hub' %}
+                set _scope "{{device.Name}}"-"{{device.vdom | default('root')}}"
+                {% else %}
+                set _scope "{{device['Device Group']}}"
+                {% endif %}
+                set role {{ns2.role}}
+                {% if ns2.hub_role != "" %}
+                set hub-role {{ns2.hub_role}}
+                {% endif %}
+                set cost 0
+                {% if device.network_advertisement == "" %}
+                set advertisement connected
+                {% else %}
+                set advertisement {{device.network_advertisement.type | default('connected')}}
+                    {% if device.network_advertisement.type == 'static' %}
+                        {% for item in device.network_advertisement.network_prefix %}
+                            {% set ns2.advertisement_value = ns2.advertisement_value + '"$(network_prefix_' + loop.index | string + ')" '%}
+                        {% endfor %}
+                    set prefix {{ns2.advertisement_value | trim}}
+                    {% elif device.network_advertisement.type == 'connected' %}
+                        {% for item in device.network_advertisement.interface %}
+                            {% set ns2.advertisement_value = ns2.advertisement_value + '"$(interface_' + loop.index | string + ')" '%}
+                        {% endfor %}
+                    set interface {{ns2.advertisement_value | trim}}
+                    {% endif %}
+                {% endif %}
+                config underlay
+                    {% for intf in device.isp_intf %}
+                        edit {{ns2.underlay_index}}
+                            {% if device.hub_branch == 'Hub' %}
+                                set interface "{{intf.name}}"
+                            {% else %}
+                                set interface "$(isp_intf_name_{{ns2.underlay_index}})"
+                            {% endif %}
+                            set private-link disable
+                            {% if intf.ip is defined %}
+                                set override-ip enable
+                                set ip {{intf.ip}}
+                            {% else %}
+                                set override-ip disable
+                            {% endif %}
+                            set cost 0
+                            set transport-group 0
+                        next
+                        {% set ns2.underlay_index = ns2.underlay_index + 1 %}
+                    {% endfor %}
+                end
+                {% if device.hub_branch == 'Branch' and ns2.underlay_index >=2 %}
+                    config neighbor
+                    {% for i in range(0, ns.number_of_hubs * (ns2.underlay_index - 1)) %}
+                        edit {{i + 1}}
+                            set remote-as 0
+                            set apply-to-all disable   
+                        next
+                    {% endfor %}
+                    end
+                {% endif %}
+            next
+        {% endfor %}
+        end
+    end
+end
