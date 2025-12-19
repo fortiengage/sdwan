@@ -90,12 +90,11 @@ end
 {# create static route template used in 'sdwan overlay -> router_template' #}
 config adom/template/_router_static/branches
 end
- 
 config adom/pkg/ppkg_hub
 end
 config adom/pkg/ppkg_branch
 end
-
+ 
 {% set ns = namespace(number_of_hubs=0, topology='', hub_primary_flag=true) %}
 {% for device in device_data %}
     {% if device.hub_branch == 'Hub' %}
@@ -107,7 +106,6 @@ end
 {% elif overlay_variables.use_case == 'SD-WAN - Dual HUB <Primary & Primary>' %}
     {% set ns.topology = 'dual-active-hub' %}
 {% endif %}
- 
 config adom/template/_sdwan_overlay/sd_dual_hub_ps    
     config template setting
         set description "Created by FortiEngage on UTC {{ date_time }}"
@@ -146,7 +144,7 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
         set route_reflection disable
         config nodes
         {% for device in device_data %}
-            {% set ns2 = namespace(role='',hub_role='',underlay_index=1) %}
+            {% set ns2 = namespace(role='',hub_role='',underlay_index=1, advertisement_value='') %}
             {% if device.hub_branch == 'Hub' %}
                 {% set ns2.role = 'hub' %}
             {% else %}
@@ -175,7 +173,22 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
                 set hub-role {{ns2.hub_role}}
                 {% endif %}
                 set cost 0
+                {% if device.network_advertisement == "" %}
                 set advertisement connected
+                {% else %}
+                set advertisement {{device.network_advertisement.type | default('connected')}}
+                    {% if device.network_advertisement.type == 'static' %}
+                        {% for item in device.network_advertisement.network_prefix %}
+                            {% set ns2.advertisement_value = ns2.advertisement_value + '"$(network_prefix_' + loop.index | string + ')" '%}
+                        {% endfor %}
+                    set prefix {{ns2.advertisement_value | trim}}
+                    {% elif device.network_advertisement.type == 'connected' %}
+                        {% for item in device.network_advertisement.interface %}
+                            {% set ns2.advertisement_value = ns2.advertisement_value + '"$(interface_' + loop.index | string + ')" '%}
+                        {% endfor %}
+                    set interface {{ns2.advertisement_value | trim}}
+                    {% endif %}
+                {% endif %}
                 config underlay
                     {% for intf in device.isp_intf %}
                         edit {{ns2.underlay_index}}
