@@ -55,18 +55,19 @@ config router static
             set device "{{device.mgmt_intf_name}}"
         next
     {% endif %}
-    {#
-    {% set ns = namespace(router_index = 2) %}
-    {% for intf in device.isp_intf %}
-        {% if intf.gateway is defined %}
-            edit {{ns.router_index}}
-                set gateway "{{intf.gateway}}"
-                set device "{{intf.name}}"
-            next
-            {% set ns.router_index = ns.router_index + 1 %}
-        {% endif %}
-    {% endfor %}
-    #}
+    
+    {% if device.hub_branch == "Hub" %}
+      {% set ns = namespace(router_index = 2) %}
+      {% for intf in device.isp_intf %}
+          {% if intf.gateway is defined %}
+              edit {{ns.router_index}}
+                  set gateway "{{intf.gateway}}"
+                  set device "{{intf.name}}"
+              next
+              {% set ns.router_index = ns.router_index + 1 %}
+          {% endif %}
+      {% endfor %}
+    {% endif %}
 end
  
 {% if device.hub_branch == "Hub" %}
