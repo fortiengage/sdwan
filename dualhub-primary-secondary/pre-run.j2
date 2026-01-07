@@ -57,6 +57,7 @@ config router static
     {% endif %}
     
       {% set ns2 = namespace(router_index = 2) %}
+    {% if device.hub_branch == "Hub" %}
       {% for intf in device.isp_intf %}
           {% if intf.gateway is defined %}
               edit {{ns2.router_index}}
@@ -66,7 +67,7 @@ config router static
               {% set ns2.router_index = ns2.router_index + 1 %}
           {% endif %}
       {% endfor %}
-
+    {% endif %}
 end
  
 {% if device.hub_branch == "Hub" %}
