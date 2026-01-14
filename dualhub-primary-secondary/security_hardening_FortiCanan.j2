@@ -29,30 +29,24 @@ config system global
     set admin-ssh-port 2345
 end
 
-{# Failed login attempts #}
+{# Failed login attempts, change it to recommended admin lockout duration #}
 config system global
     set admin-lockout-duration 1800
 end
 
-{# IPsec ciphers #}
+{# Severity High: IPsec ciphers #}
 {# for all the phase1-interface  and phase2-interface #} 
 {% if hub_branch == "Branch" %}
 config vpn ipsec phase1-interface
     edit "HUB1-VPN1"
         unselect dhgrp 5
     next
-end
-config vpn ipsec phase1-interface
     edit "HUB1-VPN2"
         unselect dhgrp 5
     next
-end
-config vpn ipsec phase1-interface
     edit "HUB2-VPN1"
         unselect dhgrp 5
     next
-end
-config vpn ipsec phase1-interface
     edit "HUB2-VPN2"
         unselect dhgrp 5
     next
@@ -61,18 +55,12 @@ config vpn ipsec phase2-interface
     edit "HUB1-VPN1"
         unselect dhgrp 5
     next
-end
-config vpn ipsec phase2-interface
     edit "HUB1-VPN2"
         unselect dhgrp 5
     next
-end
-config vpn ipsec phase2-interface
     edit "HUB2-VPN1"
         unselect dhgrp 5
     next
-end
-config vpn ipsec phase2-interface
     edit "HUB2-VPN2"
         unselect dhgrp 5
     next
@@ -98,7 +86,7 @@ end
 {% endif %}
 
 
-{# Private encryption key #}
+{# Severity High: Private encryption key #}
 config system global
     set private-data-encryption enable
 end
@@ -114,7 +102,7 @@ config system global
     set dh-params 8192
 end
 
-{# Trusted hosts #}
+{# Medium: Trusted hosts #}
 {#
 config system admin
     edit "admin"
