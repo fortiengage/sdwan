@@ -1,9 +1,11 @@
 {#
     Those CLI includes all the security hardening collected from Advanced Service team, i.e FortiConan tool. 
     And the PS team's checking rules, which is manual. 
+
+    All changes need to be added to the deployment report to inform the customer. 
 #}
 
-{# enforce admin possword policy #}
+{# enforce admin password policy #}
 config system password-policy
     set status enable
     set min-lower-case-letter 1
@@ -12,6 +14,7 @@ config system password-policy
     set min-number 1
     set reuse-password disable
 end
+
 {# Administrator disclaimers #}
 config system global
     set pre-login-banner enable
@@ -19,8 +22,9 @@ config system global
 end
 
 {# Default admin account #}
+{# Add one suggestion in the deployment report to rename the admin name #}
 config system admin
-    rename admin to othername
+    #rename admin to othername
 end
 
 {# Default management ports #}
@@ -127,12 +131,11 @@ end
 //////////////////////////////////////////
 For all unused interface, set status=down. 
 {# Unused interfaces #}
+{#
 config system interface
     edit "ha"        
         set status down
     next
 end
+#}
 
-{#  #}
-
-{#  #}
