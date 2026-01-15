@@ -115,8 +115,8 @@ config adom/template/_sdwan_overlay/sd_dual_hub_ps
         set topology {{ns.topology}}
         {% endif %}
         set hub-number {{ns.number_of_hubs}}
-        set loopback-ip {{overlay_variables.loop_back_ip}} 255.255.0.0  {# 172.16.0.0 255.255.0.0 #}
-        set overlay-network {{overlay_variables.overlay_network_ip}} 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
+        set loopback-ip {{overlay_variables.loopback_ip}} {{overlay_variables.loopback_network_mask}}  {# 172.16.0.0 255.255.0.0 #}
+        set overlay-network 10.10.0.0 255.255.0.0 {# 10.10.0.0 255.255.0.0 #}
         set as {{overlay_variables.as_id}} {# 65000 #}
         {% if overlay_variables.advpn_version == 'advpn2.0' %}
             set advpn version2
