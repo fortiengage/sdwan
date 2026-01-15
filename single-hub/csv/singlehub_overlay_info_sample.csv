@@ -1,4 +1,5 @@
-loop_back_ip,overlay_network_ip,as_id,hub_host_name,branch_grp_name,hub_underlay_link1_name,hub_underlay_link2_name,hub_underlay_link1_ip,hub_underlay_link2_ip,branch_underlay_link1_name,branch_underlay_link2_name
-172.16.0.0,10.10.0.0,65100,hub_lab130,branch_grp,internal1,internal2,10.15.1.2,10.16.1.2,port1,port2
+loopback_ip,loopback_network_mask,as_id,dynamic_bgp,advpn_version
+172.16.0.0,255.255.0.0,65100,YES,advpn2.0
+
 
 
