@@ -110,7 +110,8 @@ config system global
 end
 
 {# Medium: Trusted hosts #}
-{# add to next step #}
+{# add to next step: suggest configuring a trusted host for the administrator "admin" if it needs to prevent administrative login attempts from untrusted networks.} 
+ #}
 {#
 config system admin
     edit "admin"
@@ -120,7 +121,7 @@ end
 #}
 
 {# Two-factor authentication #}
-{# add to next step #}
+{# add to next step, suggest adding two-factor authentication for all admin users #}
 config system admin
     edit "admin"
         set two-factor enable
@@ -136,7 +137,7 @@ end
 //////////////////////////////////////////
 For all unused interfaces, set status=down. 
 {# Unused interfaces #}
-{# add to next step #}
+{# add to next step, for  #}
 {#
 config system interface
     edit "ha"        
