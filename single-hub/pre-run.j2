@@ -7,6 +7,9 @@ config system global
         set gui-device-longitude "{{ device.longitude }}"
         set gui-device-latitude "{{ device.latitude }}"
     {% endif %}
+    {% if device.timezone is defined and device.timezone %}
+        set timezone "{{device.timezone}}"
+    {% endif %}
 end
  
 config system interface
