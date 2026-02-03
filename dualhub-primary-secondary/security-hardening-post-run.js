@@ -1,3 +1,9 @@
+{# Adopted PS team's security hardening, spec 40572 #}
+{# CIS benchmark, CIS references 2.1.3, ensure timezone is properly configured #}
+
+
+
+#}
 {#
     Those CLI includes all the security hardening collected from Advanced Service team, i.e FortiConan tool. 
     And the PS team's checking rules, which is manual. 
