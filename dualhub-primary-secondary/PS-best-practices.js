@@ -70,6 +70,15 @@ config router bgp
           route-map-out RTMAP_OUT
           unset route-map-out-preferable
         next
+        edit "172.16.1.254"  // hub's loopback IP, if two hubs, one hub, check the number
+          capability-dynamic enable
+          advertisement-interval 2
+          next-hop-self enable
+          connect-timer 2
+          route-map-in RTMAP_IN_HUB<N> // need update
+          route-map-out RTMAP_OUT
+          unset route-map-out-preferable
+        next
       end
       config neighbor-group
           edit "BRANCHES-DYNAMIC-iBGP"
