@@ -45,3 +45,53 @@ config vpn ipsec phase2-interface
     {% endif %}
   next
 end
+
+config router bgp
+  set keepalive-timer 10
+  holdtime-timer 30
+{# Hub only options #}
+  {% if device.hub_branch == "Hub" %}
+    config aggregate-address
+      edit 1
+        set prefix 172.16.1.0 255.255.255.0 // 172.16.1.0 is from overlay template
+        set summary-only enable
+      next
+    end
+  {% endif %}
+{# Branch only options #}
+    {% if device.hub_branch == "Branch" %}
+      config neighbor
+        edit "172.16.1.253"  // hub's loopback IP, if two hubs, one hub, check the number
+          capability-dynamic enable
+          advertisement-interval 2
+          next-hop-self enable
+          connect-timer 2
+          route-map-in RTMAP_IN_HUB<N> // need update
+          route-map-out RTMAP_OUT
+          unset route-map-out-preferable
+        next
+      end
+      config neighbor-group
+          edit "BRANCHES-DYNAMIC-iBGP"
+              capability-graceful-restart enable // need Olesya to confirm
+              capability-dynamic enable
+              advertisement-interval 2
+              connect-timer 2
+              route-map-in RTMAP_IN_DYN_BGP
+              route-map-out RTMAP_OUT
+              unset prefix-list-out
+        next
+      end
+    {% endif %}
+{# Hub only options #}
+    {% if device.hub_branch == "Hub" %}
+      config neighbor-group
+        edit "BRANCHES"
+          capability-dynamic enable
+          advertisement-interval 2
+          connect-timer 2
+          route-map-in RTMAP_IN_ALL_OVERLAYS
+          route-map-out RTMAP_OUT_ALL_OVERLAYS
+        next
+      end
+    {% endif %}
