@@ -1,0 +1,37 @@
+// AS team's security Hardening part II, leave it to customer to decide if they want to implement them. 
+
+Rename the default admin name:
+config system admin
+    set admin "preferred_new_name."
+end
+
+
+Change the default management port:
+config system global
+    set admin-sport 10443
+    set admin-ssh-port 1022
+end
+
+
+Configuring a trusted host for the administrator "admin" if it needs to prevent administrative login attempts from untrusted networks
+config system admin:
+    edit "admin"
+        set trusthost1 127.0.0.1/32
+    next
+end
+
+
+Adding two-factor authentication for all admin users:
+config system admin
+    edit "admin"
+        Set two-factor enable
+    next
+end
+
+
+For all unused interfaces, set the status to down: 
+config system interface
+    edit "ha"        
+        set status down
+    next
+end
