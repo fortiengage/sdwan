@@ -17,13 +17,15 @@ config vpn ipsec phase1-interface
     dpd-retryinterval 3
     exchange-fgt-device-id enable
     dhgrp 14 20 21
-{# Branch only options #}
+
+    {# Branch only options #}
     {% if device.hub_branch == "Branch" %}
       auto-discovery-shortcuts dependent
       idle-timeoutinterval 5
       keylife 14400
     {% endif %}
-{# Hub only options #}
+
+    {# Hub only options #}
     {% if device.hub_branch == "Hub" %}
       keylife 28800
     {% endif %}
@@ -34,11 +36,13 @@ config vpn ipsec phase2-interface
   edit "HUB1-VPN1"
     dhgrp 14
     replay disable
-{# Branch only options #}
+
+    {# Branch only options #}
     {% if device.hub_branch == "Branch" %}
       keylifeseconds 7200
     {% endif %}
-{# Hub only options #}
+
+    {# Hub only options #}
     {% if device.hub_branch == "Hub" %}
       keylifeseconds 14400
       keepalive enable
@@ -49,7 +53,8 @@ end
 config router bgp
   set keepalive-timer 10
   holdtime-timer 30
-{# Hub only options #}
+
+  {# Hub only options #}
   {% if device.hub_branch == "Hub" %}
     config aggregate-address
       edit 1
@@ -58,10 +63,11 @@ config router bgp
       next
     end
   {% endif %}
-{# Branch only options #}
-    {% if device.hub_branch == "Branch" %}
+
+  {# Branch only options #}
+  {% if device.hub_branch == "Branch" %}
       config neighbor
-        edit "172.16.1.253"  // hub's loopback IP, if two hubs, one hub, check the number
+        edit "172.16.1.251"  // hub's loopback IP, if two hubs, one hub, check the number
           capability-dynamic enable
           advertisement-interval 2
           next-hop-self enable
@@ -70,7 +76,7 @@ config router bgp
           route-map-out RTMAP_OUT
           unset route-map-out-preferable
         next
-        edit "172.16.1.254"  // hub's loopback IP, if two hubs, one hub, check the number
+        edit "172.16.1.252"  // hub's loopback IP, if two hubs, one hub, check the number
           capability-dynamic enable
           advertisement-interval 2
           next-hop-self enable
@@ -81,7 +87,7 @@ config router bgp
         next
       end
       config neighbor-group
-          edit "BRANCHES-DYNAMIC-iBGP"
+          edit "DYN_EDGE"    // SOT hardcoded name
               capability-graceful-restart enable // need Olesya to confirm
               capability-dynamic enable
               advertisement-interval 2
@@ -92,10 +98,11 @@ config router bgp
         next
       end
     {% endif %}
-{# Hub only options #}
-    {% if device.hub_branch == "Hub" %}
+
+  {# Hub only options #}
+  {% if device.hub_branch == "Hub" %}
       config neighbor-group
-        edit "BRANCHES"
+        edit "EDGE"                  // SOT hardcoded name
           capability-dynamic enable
           advertisement-interval 2
           connect-timer 2
@@ -104,3 +111,4 @@ config router bgp
         next
       end
     {% endif %}
+end
