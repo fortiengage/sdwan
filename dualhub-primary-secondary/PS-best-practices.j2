@@ -120,7 +120,7 @@ config router route-map
             next
         end
     next
-    edit "RTMAP_IN_HUB1"             // HUB<N>, depends on number of HUBs, the content is the same
+    edit "RTMAP_IN_HUB1"             // HUB<N>, depends on the number of HUBs, the content is the same
         config rule
             edit 10
                 set action deny
