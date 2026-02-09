@@ -314,32 +314,6 @@ config router route-map
             next
         end
     next
-    edit "RTMAP_OUT_CORE_SIDE"
-        config rule
-            edit 5
-                set action deny
-                set match-ip-address "PL_ONLY_DEFAULT"
-                unset set-ip-prefsrc
-            next
-            edit 10
-                set action deny
-                set match-ip-address "PL_RFC1918_EXACT_MATCH"
-                unset set-ip-prefsrc
-            next
-            edit 100
-                set action deny
-                unset set-ip-prefsrc
-            next
-            edit 15
-                set match-community "COMMUNITY_BRANCHES_OV1_PASS"
-                unset set-ip-prefsrc
-            next
-            edit 20
-                set match-community "COMMUNITY_BRANCHES_ALL_OV_FAIL"
-                unset set-ip-prefsrc
-            next
-        end
-    next
 end
 
 config router bgp
