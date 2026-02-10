@@ -15,326 +15,124 @@
     The naming convention is "HUBx-VPNx". 
     The following is the example.
 #}
-
-config vpn ipsec phase1-interface
-  edit "HUB1-VPN1"
-    dpd-retrycount 3
-    dpd-retryinterval 3
-    exchange-fgt-device-id enable
-    dhgrp 14 20 21
-
-    {# Branch only options #}
-    {% if device.hub_branch == "Branch" %}
-      auto-discovery-shortcuts dependent
-      idle-timeoutinterval 5
-      keylife 14400
-    {% endif %}
-
-    {# Hub only options #}
-    {% if device.hub_branch == "Hub" %}
-      keylife 28800
-    {% endif %}
-  next
-end
-
-config vpn ipsec phase2-interface
-  edit "HUB1-VPN1"
-    dhgrp 14
-    replay disable
-
-    {# Branch only options #}
-    {% if device.hub_branch == "Branch" %}
-      keylifeseconds 7200
-    {% endif %}
-
-    {# Hub only options #}
-    {% if device.hub_branch == "Hub" %}
-      keylifeseconds 14400
-      keepalive enable
-    {% endif %}
-  next
-end
-
-{% if device.hub_branch == "Branch" %}
-config router prefix-list
-    edit "ONLY_DEFAULT"
-        config rule
-            edit 1
-                set prefix 0.0.0.0 0.0.0.0
-                unset ge
-                unset le
-            next
-        end
-    next
-    edit "PL_BRANCH_LOCAL_PREFIX"
-        config rule
-            edit 1
-                set prefix 10.10.110.0 255.255.255.0
-                unset ge
-                unset le
-            next
-            edit 100
-                set action deny
-                set prefix 0.0.0.0 0.0.0.0
-                unset ge
-                unset le
-            next
-        end
-    next
-    edit "PL_LOOPBACK_SUBNET"
-        config rule
-            edit 1
-                set prefix 172.16.1.0 255.255.255.0   // need to check if this is the overlay network from SOT or overlay CSV
-                unset ge
-                unset le
-            next
-        end
-    next
-    edit "PL_RFC1918_EXACT_MATCH"
-        config rule
-            edit 10
-                set prefix 172.16.0.0 255.240.0.0 // need to cehck if this can be hardcoded? 
-                unset ge
-                unset le
-            next
-            edit 20
-                set prefix 10.0.0.0 255.0.0.0
-                unset ge
-                unset le
-            next
-            edit 30
-                set prefix 192.168.0.0 255.255.0.0
-                unset ge
-                unset le
-            next
-        end
-    next
-end
-
-config router route-map
-    edit "RTMAP_IN_DYN_BGP"
-        config rule
-            edit 10
-                set action deny
-                set match-ip-address "PL_RFC1918_EXACT_MATCH"
-                unset set-ip-prefsrc
-            next
-            edit 100
-                unset set-ip-prefsrc
-                set set-route-tag 100
-            next
-        end
-    next
-    edit "RTMAP_IN_HUB1"             // HUB<N>, depends on the number of HUBs, the content is the same
-        config rule
-            edit 10
-                set action deny
-                set match-ip-address "PL_RFC1918_EXACT_MATCH"
-                unset set-ip-prefsrc
-            next
-            edit 100
-                unset set-ip-prefsrc
-                set set-tag 1
-                set set-route-tag 1
-            next
-        end
-    next
-    edit "RTMAP_IN_HUB2"      // HUB<N>, depends on the number of HUBs, the content is the same
-        config rule
-            edit 10
-                set action deny
-                set match-ip-address "PL_RFC1918_EXACT_MATCH"
-                unset set-ip-prefsrc
-            next
-            edit 100
-                unset set-ip-prefsrc
-                set set-tag 2
-                set set-route-tag 2
-            next
-        end
-    next
-    edit "RTMAP_OUT"
-        config rule
-            edit 10
-                set set-community "65100:100"            // 65100 is the as-id, use variable from the overlay CSV,use the variable here: {{overlay_variables.as_id}}
-                unset set-ip-prefsrc
-            next
-        end
-    next
-end
-
-config router bgp
-  set keepalive-timer 10
-  holdtime-timer 30
-      config neighbor
-        edit "172.16.1.251"  // hub's loopback IP, if two hubs, one hub, check the number
-          capability-dynamic enable
-          advertisement-interval 2
-          next-hop-self enable
-          connect-timer 2
-          route-map-in RTMAP_IN_HUBN // Please check the config router route-map section above.
-          route-map-out RTMAP_OUT
-          unset route-map-out-preferable
-        next
-        edit "172.16.1.252"  // hub's loopback IP, if two hubs, one hub, check the number
-          capability-dynamic enable
-          advertisement-interval 2
-          next-hop-self enable
-          connect-timer 2
-          route-map-in RTMAP_IN_HUB2 // // Please check the config router route-map section above.
-          route-map-out RTMAP_OUT
-          unset route-map-out-preferable
-        next
-      end
-      config neighbor-group
-          edit "DYN_EDGE"    // SOT hardcoded name
-              capability-graceful-restart enable // need Olesya to confirm
-              capability-dynamic enable
-              advertisement-interval 2
-              connect-timer 2
-              route-map-in RTMAP_IN_DYN_BGP
-              route-map-out RTMAP_OUT
-              unset prefix-list-out
-        next
-      end
-end
+{#IPsec_Branch_Group#}
+{% for i in range(data.number_of_branch_groups) %}
+{% if i == 0 %}
+config adom/template/_ipsec/{{data.sd_wan_overlay_name}}_BRANCH_IPsec
+{% else %}
+config adom/template/_ipsec/{{data.sd_wan_overlay_name}}_BRANCH{{i+1}}_IPsec
 {% endif %}
-
-{% if device.hub_branch == "Hub" %}
-config router prefix-list
-    edit "LOOPBACK_RANGE"  
-        config rule
-            edit 1
-                set prefix 172.16.1.0 255.255.255.0    // need to check if this is the overlay network from SOT or overlay CSV
-                unset ge
-                unset le
+    {% for j in range(data.number_of_hubs) %}
+        {% for k in range(data.number_of_hubs_underlay) %}
+        config vpn ipsec phase1-interface
+            edit "HUB{{j+1}}-VPN{{k+1}}"
+                set interface "$(isp_intf_name_{{k+1}})"
+                set dpd-retrycount 3
+                set dpd-retryinterval 3
+                set exchange-fgt-device-id enable
+                set dhgrp 14 20 21
+                set auto-discovery-shortcuts dependent
+                set idle-timeoutinterval 5
+                set keylife 14400
             next
         end
-    next
-    edit "PL_DC_SUBNETS"
-        config rule
-            edit 1
-                set prefix 10.100.100.1 255.255.255.255
-                unset ge
-                unset le
+        config vpn ipsec phase2-interface
+            edit "HUB{{j+1}}-VPN{{k+1}}"
+                set dhgrp 14
+                set replay disable
+                set keylifeseconds 7200
             next
         end
-    next
-    edit "PL_RFC1918_EXACT_MATCH"
-        config rule
-            edit 10
-                set prefix 172.16.0.0 255.240.0.0
-                unset ge
-                unset le
-            next
-            edit 20
-                set prefix 10.0.0.0 255.0.0.0
-                unset ge
-                unset le
-            next
-            edit 30
-                set prefix 192.168.0.0 255.255.0.0
-                unset ge
-                unset le
-            next
-        end
-    next
-    edit "PL_ONLY_DEFAULT"
-        config rule
-            edit 1
-                set prefix 0.0.0.0 0.0.0.0
-                unset ge
-                unset le
-            next
-        end
-    next
-    edit "PL_AGGREGATE_10/8"
-        config rule
-            edit 1
-                set prefix 10.0.0.0 255.0.0.0
-                unset ge
-                unset le
-            next
-        end
-    next
-    edit "PL_RFC1918-FULL_RANGE"
-        config rule
-            edit 10
-                set prefix 172.16.0.0 255.240.0.0
-                unset ge
-                set le 32
-            next
-            edit 20
-                set prefix 10.0.0.0 255.0.0.0
-                unset ge
-                set le 32
-            next
-            edit 30
-                set prefix 192.168.0.0 255.255.0.0
-                unset ge
-                set le 32
-            next
-        end
-    next
+        {% endfor %}
+    {% endfor %}
 end
-
-config router route-map
-    edit "RTMAP_IN_ALL_OVERLAYS"
-        config rule
-            edit 5
-                set action deny
-                set match-ip-address "PL_ONLY_DEFAULT"
-                unset set-ip-prefsrc
-            next
-            edit 10
-                set action deny
-                set match-ip-address "PL_RFC1918_EXACT_MATCH"
-                unset set-ip-prefsrc
-            next
-            edit 100
-                unset set-ip-prefsrc
-            next
-        end
-    next
-    edit "RTMAP_OUT_ALL_OVERLAYS"
-        config rule
-            edit 5
-                set match-ip-address "LOOPBACK_RANGE"
-                set set-community "65100:1"            // 65100 is the as-id, use variable from the overlay CSV,use the variable here: {{overlay_variables.as_id}}
-                unset set-ip-prefsrc
-            next
-            edit 100
-                set action deny
-                unset set-ip-prefsrc
-            next
-            edit 3
-                set match-ip-address "PL_DC_SUBNETS"
-                set set-community "65100:1"       // 65100 is the as-id, use variable from the overlay CSV,use the variable here: {{overlay_variables.as_id}}
-                unset set-ip-prefsrc
-            next
-        end
-    next
+{% endfor %}
+ 
+{#IPsec_Hub#}
+{% for i in range(data.number_of_hubs) %}
+config adom/template/_ipsec/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_IPsec
+    {% for j in range(data.number_of_hubs_underlay) %}
+    config vpn ipsec phase1-interface
+        edit "VPN{{j+1}}"
+            set interface "{{data.hub_underlay_name[i][j]}}"
+            set dpd-retrycount 3
+            set dpd-retryinterval 3
+            set exchange-fgt-device-id enable
+            set dhgrp 14 20 21
+            set keylife 28800
+        next
+    end
+    config vpn ipsec phase2-interface
+        edit "VPN{{j+1}}"
+            set dhgrp 14
+            set replay disable
+            set keylifeseconds 14400
+            set keepalive enable
+        next
+    end
+    {% endfor %}
 end
-
-config router bgp
-  set keepalive-timer 10
-  holdtime-timer 30
-  
-  config aggregate-address
-    edit 1
-      set prefix 172.16.1.0 255.255.255.0 // 172.16.1.0, need to check if it's hardcoded or comes from the overlay template
-      set summary-only enable
-    next
-  end
-
-  config neighbor-group
-    edit "EDGE"                  // SOT hardcoded name
-      capability-dynamic enable
-      advertisement-interval 2
-      connect-timer 2
-      route-map-in RTMAP_IN_ALL_OVERLAYS
-      route-map-out RTMAP_OUT_ALL_OVERLAYS
-    next
-  end
-end
+{% endfor %}
+ 
+{#BGP_Branch_Group#}
+{% for i in range(data.number_of_branch_groups) %}
+{% if i == 0 %}
+config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_BRANCH_BGP
+{% else %}
+config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_BRANCH{{i+1}}_BGP
 {% endif %}
+    config router bgp
+        set keepalive-timer 10
+        set holdtime-timer 30
+        config neighbor
+        {% for j in range(data.number_of_hubs) %}
+            edit "{{data.hubs_hardcoded_ip_in_bgp_template[j]}}"
+                set capability-dynamic enable
+                set advertisement-interval 2
+                set next-hop-self enable
+                set connect-timer 2
+                set route-map-in RTMAP_IN_HUB{{j+1}}
+                set route-map-out RTMAP_OUT
+                unset route-map-out-preferable
+            next
+        {% endfor %}
+        end
+        config neighbor-group
+            edit "DYN_EDGE"
+                set capability-graceful-restart enable
+                set capability-dynamic enable
+                set advertisement-interval 2
+                set connect-timer 2
+                set route-map-in RTMAP_IN_DYN_BGP
+                set route-map-out RTMAP_OUT
+                unset prefix-list-out
+            next
+        end
+    end
+end
+{% endfor %}
+ 
+{#BGP_HUB#}
+{% for i in range(data.number_of_hubs) %}
+config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_BGP
+    config router bgp
+        set keepalive-timer 10
+        set holdtime-timer 30
+        config neighbor-group
+            edit "EDGE"
+                set capability-dynamic enable
+                set advertisement-interval 2
+                set connect-timer 2
+                set route-map-in RTMAP_IN_ALL_OVERLAYS
+                set route-map-out RTMAP_OUT_ALL_OVERLAYS
+            next
+        end
+        config aggregate-address
+            edit 1
+                set prefix 172.16.1.0 255.255.255.0
+                set summary-only enable
+            next
+        end
+    end
+end
+{% endfor %}
