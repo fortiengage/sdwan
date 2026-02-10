@@ -1,9 +1,9 @@
-#
-# This file includes all the CLI templates that will be reference/used in the BGP/IPsec/SDWAN templates
-# 1. router prefix-list will be used in router-map
-# 2. router-map will be used in branch and hub's BGP template
-#
-
+{#
+ # This file includes all the CLI templates that will be reference/used in the BGP/IPsec/SDWAN templates
+ # 1. router prefix-list will be used in router-map
+ # 2. router-map will be used in branch and hub's BGP template
+ #}
+ 
 config router prefix-list
     edit "ONLY_DEFAULT"
         config rule
