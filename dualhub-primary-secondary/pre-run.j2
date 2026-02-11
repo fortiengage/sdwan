@@ -13,7 +13,8 @@ config system global
 end
  
 config system interface
-    {% if device.mgmt_intf_name is defined %}
+    {# if device.mgmt_intf_name is defined and device.mgmt_intf_ip is defined #}
+    {% if device.mgmt_intf_name | default('') and device.mgmt_intf_ip | default('') %}
         edit "{{device.mgmt_intf_name}}"
             set vdom root
             set mode static
@@ -51,26 +52,25 @@ config system interface
 end
  
 config router static
-    {% if device.mgmt_intf_name is defined %}
+    {% if device.mgmt_intf_name | default('') and device.mgmt_dst_fmg_ip_networkmask | default('') and device.mgmt_dst_gateway_ip | default('') %}
         edit 1
             set dst "{{device.mgmt_dst_fmg_ip_networkmask}}"
             set gateway "{{device.mgmt_dst_gateway_ip}}"
             set device "{{device.mgmt_intf_name}}"
         next
     {% endif %}
-    
-      {% set ns2 = namespace(router_index = 2) %}
-    {% if device.hub_branch == "Hub" %}
-      {% for intf in device.isp_intf %}
-          {% if intf.gateway is defined %}
-              edit {{ns2.router_index}}
-                  set gateway "{{intf.gateway}}"
-                  set device "{{intf.name}}"
-              next
-              {% set ns2.router_index = ns2.router_index + 1 %}
-          {% endif %}
-      {% endfor %}
-    {% endif %}
+    {#
+    {% set ns = namespace(router_index = 2) %}
+    {% for intf in device.isp_intf %}
+        {% if intf.gateway is defined %}
+            edit {{ns.router_index}}
+                set gateway "{{intf.gateway}}"
+                set device "{{intf.name}}"
+            next
+            {% set ns.router_index = ns.router_index + 1 %}
+        {% endif %}
+    {% endfor %}
+    #}
 end
  
 {% if device.hub_branch == "Hub" %}
