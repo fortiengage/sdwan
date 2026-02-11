@@ -23,7 +23,8 @@ config system interface
             set role wan
         next
     {% endif %}
-    
+
+    {# Create and set WAN interfaces #}
     {% for intf in device.isp_intf %}
         {% set ns = namespace(port_str = "") %}
         {% if intf.ports is defined %}
@@ -49,6 +50,35 @@ config system interface
             set description "Underlay Interface by FENG on UTC {{ date_time }}"
         next
     {% endfor %}
+
+    {# Create and set LAN interfaces #}
+    {% for intf in device.lan_intf %}
+        {% set ns = namespace(port_str = "") %}
+        {% if intf.ports is defined %}
+            {% for port in intf.ports %}
+                {% set ns.port_str = ns.port_str + port + " " %}
+            {% endfor %}
+        {% endif %}
+        edit "{{intf.name}}"
+            set vdom "{{intf.vdom | default('root')}}"
+            set type {{intf.type}}
+            {% if ns.port_str != "" %}
+            set member {{ns.port_str | trim}}
+            {% endif %}
+            set mode {{intf.mode}}
+            {% if intf.mode == 'static' %}
+            set ip "{{intf.ip}} {{intf.network_mask}}"
+            {% endif %}
+            set role {{intf.role | default('wan')}}
+            {% if intf.type == 'vlan' %}
+            set interface "{{intf.interface}}"
+            set vlanid {{intf.vlan_id}}
+            {% endif %}
+            set role lan
+            set description "Underlay Interface by FENG on UTC {{ date_time }}"
+        next
+    {% endfor %}
+
 end
  
 config router static
