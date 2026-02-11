@@ -136,3 +136,22 @@ config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_BGP
     end
 end
 {% endfor %}
+
+{# SD-WAN #}
+config adom/wanprof/sdwan1
+  config system sdwan
+      set status enable
+      set option sdwan-overlay
+      set load-balance-mode source-dest-ip-based
+      config zone
+      end
+      config members
+      end
+      config health-check
+      end
+      config service
+      end
+      config neighbor
+      end
+  end
+end
