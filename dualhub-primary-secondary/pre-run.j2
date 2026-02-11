@@ -23,7 +23,8 @@ config system interface
             set role wan
         next
     {% endif %}
-    
+
+    {# Create and set WAN interfaces #}
     {% for intf in device.isp_intf %}
         {% set ns = namespace(port_str = "") %}
         {% if intf.ports is defined %}
