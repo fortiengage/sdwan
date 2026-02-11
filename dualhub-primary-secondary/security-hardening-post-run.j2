@@ -3,15 +3,6 @@
 #    CIS benchmark, CIS references 2.1.3, ensure timezone is properly configured.
 #    Implemented in the pre-run script by using the collected timezone per device.
 #
-# Recommendation by PS: Ensure auto firmware upgrade is disabled
-config system fortiguard
-    set auto-firmware-upgrade disable
-end
-
-# Recommendation by PS: disable FortiExplorer #
-config system console
-    set FortiExplorer disable
-end
 
 # Adopted AS/FortiConan team's security hardening, spec 39652
 # Recommendation by PS: Ensure auto firmware upgrade is disabled
