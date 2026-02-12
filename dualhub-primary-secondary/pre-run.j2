@@ -112,3 +112,14 @@ end
         next
     {% endfor %}
 {% endif %}
+
+{# Add network advertisement per device #}
+{% if device.network_advertisement | default('') %}
+config router bgp
+    {% for item in device.network_advertisement.network_prefix %}
+        edit {{loop.index}}
+            set prefix "{{item}}"
+        next
+    {% endfor %}
+end
+{% endif %}
