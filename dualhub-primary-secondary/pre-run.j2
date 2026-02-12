@@ -116,6 +116,7 @@ end
 {# Add network advertisement per device #}
 {% if device.network_advertisement | default('') %}
 config router bgp
+ config network
     {% for item in device.network_advertisement.network_prefix %}
         edit {{loop.index}}
             set prefix "{{item}}"
