@@ -114,7 +114,7 @@ end
 {% endif %}
 
 {# Add network advertisement per device #}
-{% if device.network_advertisement | default('') %}
+{% if device.hub_branch == "Branch" and device.network_advertisement | default('') %}
 config router bgp
  config network
     {% for item in device.network_advertisement.network_prefix %}
