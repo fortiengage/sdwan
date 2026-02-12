@@ -1,37 +1,44 @@
-Serial Number,PSK,hub_branch,Device Group,Name,OS Version,Device Type,Split Port,longitude,latitude,isp_intf,network_advertisement,HA,HA_Cluster_ID,HA_Cluster_Name,HA_Password,HA_Primary_Priority,HA_Secondary_SN,HA_Priority,HA_Monitoring_Intf,HA_HB_Intf,mgmt_intf_name,mgmt_intf_ip,mgmt_dst_gateway_ip,mgmt_dst_fmg_ip_networkmask,timezone
-FGT80FTK23024500,,Hub,hub_grp,hub1_lab130,7.6.4,FortiGate-80F,Y,-122.9805,49.2488,"[{ ""name"":""internal1"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.15.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.15.1.1""},
-{ ""name"":""internal2"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.16.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.16.1.1""}]",,N,,,,,,,,, wan1,10.3.134.61/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
-FGT80FTK23024501,,Hub,hub_grp,hub2_lab130,7.6.4,FortiGate-80F,Y,-79.3832,43.6532,"[{ ""name"":""internal1"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.17.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.17.1.1""},
-{ ""name"":""internal2"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.18.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.18.1.1""}]",,N,,,,,,,,, wan1,10.3.134.62/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
-FG200FT922952400,,Branch,branch_grp1,branch1_lab130,7.6.4,FortiGate-200F,Y,-87.6298,41.8781,"[{ ""name"":""port1"",  ""type"":""physical"",  ""mode"": ""dhcp""},
-{ ""name"":""port2"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.37.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.37.1.1""}]","{
-""type"":""static"",
+Serial Number,PSK,hub_branch,Device Group,Name,OS Version,Device Type,Split Port,isp_intf,lan_intf,network_advertisement,HA,HA_Cluster_ID,HA_Cluster_Name,HA_Password,HA_Primary_Priority,HA_Secondary_SN,HA_Priority,HA_Monitoring_Intf,HA_HB_Intf,longitude,latitude,mgmt_intf_name,mgmt_intf_ip,timezone
+FGT80FTK23024500,,Hub,hub_grp,hub1_lab130,7.6.4,FortiGate-80F,Y,"[{ ""name"":""internal1"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.15.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.15.1.1""},
+{ ""name"":""internal2"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.16.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.16.1.1""}]","[{ ""name"":""internal3"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.15.11.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.15.11.1""},
+{ ""name"":""internal4"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.16.11.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.16.11.1""}]","{
+""network_prefix"":[""10.10.1.0/24"", ""12.12.12.12/24"", ""13.12.12.12/24"", ""14.12.12.12/24"", ""15.12.12.12/24""]
+}",N,,,,,,,,,-122.9805,49.2488, wan1,10.3.134.61/24,Canada/Pacific
+FGT80FTK23024501,,Hub,hub_grp,hub2_lab130,7.6.4,FortiGate-80F,Y,"[{ ""name"":""internal1"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.17.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.17.1.1""},
+{ ""name"":""internal2"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.18.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.18.1.1""}]","[{ ""name"":""internal3"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.17.11.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.17.11.1""},
+{ ""name"":""internal4"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.18.11.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.18.11.1""}]","{
+""network_prefix"":[""10.10.1.0/24"", ""12.12.12.12/24"", ""13.12.12.12/24""]
+}",N,,,,,,,,,-79.3832,43.6532, wan1,10.3.134.62/24,Canada/Pacific
+FG200FT922952400,,Branch,branch_grp1,branch1_lab130,7.6.4,FortiGate-200F,Y,"[{ ""name"":""port1"",  ""type"":""physical"",  ""mode"": ""dhcp""},
+{ ""name"":""port2"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.37.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.37.1.1""}]","[{ ""name"":""port3"",  ""type"":""physical"",  ""mode"": ""dhcp""},
+{ ""name"":""port4"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.37.11.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.37.11.1""}]","{
 ""network_prefix"":[""10.10.1.0/24"", ""12.12.12.12/24""]
-}",N,,,,,,,,, mgmt,10.3.134.63/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
-FG200FT922952401,,Branch,branch_grp1,branch2_lab130,7.6.4,FortiGate-200F,Y,-97.6298,42.8781,"[{ ""name"":""port1"",  ""type"":""physical"",  ""mode"": ""dhcp""},
-{ ""name"":""port2"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.48.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.48.1.1""}]","{
-""type"":""static"",
+}",N,,,,,,,,,-87.6298,41.8781, mgmt,10.3.134.63/24,Canada/Pacific
+FG200FT922952401,,Branch,branch_grp1,branch2_lab130,7.6.4,FortiGate-200F,Y,"[{ ""name"":""port1"",  ""type"":""physical"",  ""mode"": ""dhcp""},
+{ ""name"":""port2"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.48.1.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.48.1.1""}]","[{ ""name"":""port3"",  ""type"":""physical"",  ""mode"": ""dhcp""},
+{ ""name"":""port4"",  ""type"":""physical"",  ""mode"":""static"",  ""ip"":""10.48.11.2"",  ""network_mask"":""255.255.255.0"",  ""gateway"": ""10.48.11.1""}]","{
 ""network_prefix"":[""10.10.1.0/24"", ""12.12.12.12/24""]
-}",N,,,,,,,,, mgmt,10.3.134.64/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
-FG200FT922952500,,Branch,branch_grp2,branch3_lab130,7.6.4,FortiGate-200F,Y,-111.891,40.7608,"[{ ""name"": ""agg1"", ""type"": ""aggregate"", ""mode"": ""dhcp"", ""ports"": [""port1"", ""port2""] },
-{ ""name"": ""agg2"", ""type"": ""aggregate"", ""mode"": ""static"", ""ip"":""10.66.1.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port5"", ""port6""], ""gateway"": ""10.66.1.1""}]","{
-  ""type"":""static"",
-  ""network_prefix"":[""10.10.2.0/24"", ""12.12.13.12/24""]
-}",N,,,,,,,,, mgmt,10.3.134.65/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
-FG200FT922952501,,Branch,branch_grp2,branch4_lab130,7.6.4,FortiGate-200F,Y,-112.891,41.7608,"[{ ""name"": ""agg1"", ""type"": ""aggregate"", ""mode"": ""dhcp"", ""ports"": [""port1"", ""port2""] },
-{ ""name"": ""agg2"", ""type"": ""aggregate"", ""mode"": ""static"", ""ip"":""10.76.1.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port5"", ""port6""], ""gateway"": ""10.76.1.1""}]","{
-  ""type"":""static"",
-  ""network_prefix"":[""10.10.2.0/24"", ""12.12.13.12/24""]
-}",N,,,,,,,,, mgmt,10.3.134.66/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
-FG200FT922952600,,Branch,branch_grp3,branch5_lab130,7.6.4,FortiGate-200F,Y,-100.891,40.7608,"[{ ""name"": ""red1"", ""type"": ""redundant"", ""mode"": ""dhcp"", ""ports"": [""port1"", ""port2""] },
-{ ""name"": ""red2"", ""type"": ""redundant"", ""mode"": ""static"", ""ip"":""10.77.1.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port5"", ""port6""], ""gateway"": ""10.77.1.1""}]","{
-  ""type"":""static"",
-  ""network_prefix"":[""10.10.3.0/24"", ""12.12.14.12/24""]
-}",N,,,,,,,,, mgmt,10.3.134.67/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
-FG200FT922952601,,Branch,branch_grp3,branch6_lab130,7.6.4,FortiGate-200F,Y,-102.891,41.7608,"[{ ""name"": ""red1"", ""type"": ""redundant"", ""mode"": ""dhcp"", ""ports"": [""port1"", ""port2""] },
-{ ""name"": ""red2"", ""type"": ""redundant"", ""mode"": ""static"", ""ip"":""10.79.1.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port5"", ""port6""], ""gateway"": ""10.79.1.1""}]","{
-  ""type"":""static"",
-  ""network_prefix"":[""10.10.3.0/24"", ""12.12.14.12/24""]
-}",N,,,,,,,,, mgmt,10.3.134.68/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
-FG200FT922951111,,Branch,branch_grp4,branch7_lab130,7.6.4,FortiGate-200F,Y,-115.1398,36.1699,"[{ ""name"": ""vlan1"", ""type"": ""vlan"", ""mode"": ""dhcp"", ""interface"": ""port1"", ""vlan_id"": ""100"" },
-{ ""name"": ""vlan2"", ""type"": ""vlan"", ""mode"": ""static"", ""ip"": ""10.91.1.2"", ""network_mask"": ""255.255.255.0"", ""interface"": ""port2"", ""gateway"": ""10.91.1.1"", ""vlan_id"": ""200"" }]",,Y,100,branch_ha_dummy,123456,20,FG200FT922952222,10,"port4,port5","port6,0;port7,0", mgmt,10.3.134.69/24,10.3.134.1,10.3.135.1/32,Canada/Pacific
+}",N,,,,,,,,,-97.6298,42.8781, mgmt,10.3.134.64/24,Canada/Pacific
+FG200FT922952500,,Branch,branch_grp2,branch3_lab130,7.6.4,FortiGate-200F,Y,"[{ ""name"": ""agg1"", ""type"": ""aggregate"", ""mode"": ""dhcp"", ""ports"": [""port1"", ""port2""] },
+{ ""name"": ""agg2"", ""type"": ""aggregate"", ""mode"": ""static"", ""ip"":""10.66.1.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port3"", ""port4""], ""gateway"": ""10.66.1.1""}]","[{ ""name"": ""agg3"", ""type"": ""aggregate"", ""mode"": ""dhcp"", ""ports"": [""port5"", ""port6""] },
+{ ""name"": ""agg4"", ""type"": ""aggregate"", ""mode"": ""static"", ""ip"":""10.66.11.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port7"", ""port8""], ""gateway"": ""10.66.11.1""}]","{
+ ""network_prefix"":[""10.10.2.0/24"", ""12.12.13.12/24""]
+}",N,,,,,,,,,-111.891,40.7608, mgmt,10.3.134.65/24,Canada/Pacific
+FG200FT922952501,,Branch,branch_grp2,branch4_lab130,7.6.4,FortiGate-200F,Y,"[{ ""name"": ""agg1"", ""type"": ""aggregate"", ""mode"": ""dhcp"", ""ports"": [""port1"", ""port2""] },
+{ ""name"": ""agg2"", ""type"": ""aggregate"", ""mode"": ""static"", ""ip"":""10.76.1.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port3"", ""port4""], ""gateway"": ""10.76.1.1""}]","[{ ""name"": ""agg3"", ""type"": ""aggregate"", ""mode"": ""dhcp"", ""ports"": [""port5"", ""port6""] },
+{ ""name"": ""agg4"", ""type"": ""aggregate"", ""mode"": ""static"", ""ip"":""10.76.11.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port7"", ""port8""], ""gateway"": ""10.76.11.1""}]","{
+ ""network_prefix"":[""10.10.2.0/24"", ""12.12.13.12/24"", ""13.12.13.12/24""]
+}",N,,,,,,,,,-112.891,41.7608, mgmt,10.3.134.66/24,Canada/Pacific
+FG200FT922952600,,Branch,branch_grp3,branch5_lab130,7.6.4,FortiGate-200F,Y,"[{ ""name"": ""red1"", ""type"": ""redundant"", ""mode"": ""dhcp"", ""ports"": [""port1"", ""port2""] },
+{ ""name"": ""red2"", ""type"": ""redundant"", ""mode"": ""static"", ""ip"":""10.77.1.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port3"", ""port4""], ""gateway"": ""10.77.1.1""}]","[{ ""name"": ""red3"", ""type"": ""redundant"", ""mode"": ""dhcp"", ""ports"": [""port5"", ""port6""] },
+{ ""name"": ""red4"", ""type"": ""redundant"", ""mode"": ""static"", ""ip"":""10.77.11.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port7"", ""port8""], ""gateway"": ""10.77.11.1""}]","{
+""network_prefix"":[""10.10.3.0/24"", ""12.12.14.12/24""]
+}",N,,,,,,,,,-100.891,40.7608, mgmt,10.3.134.67/24,Canada/Pacific
+FG200FT922952601,,Branch,branch_grp3,branch6_lab130,7.6.4,FortiGate-200F,Y,"[{ ""name"": ""red1"", ""type"": ""redundant"", ""mode"": ""dhcp"", ""ports"": [""port1"", ""port2""] },
+{ ""name"": ""red2"", ""type"": ""redundant"", ""mode"": ""static"", ""ip"":""10.79.1.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port3"", ""port4""], ""gateway"": ""10.79.1.1""}]","[{ ""name"": ""red3"", ""type"": ""redundant"", ""mode"": ""dhcp"", ""ports"": [""port5"", ""port6""] },
+{ ""name"": ""red4"", ""type"": ""redundant"", ""mode"": ""static"", ""ip"":""10.79.11.2"",  ""network_mask"":""255.255.255.0"", ""ports"": [""port7"", ""port8""], ""gateway"": ""10.79.11.1""}]","{
+""network_prefix"":[""10.10.3.0/24""]
+}",N,,,,,,,,,-102.891,41.7608, mgmt,10.3.134.68/24,Canada/Pacific
+FG200FT922951111,,Branch,branch_grp4,branch7_lab130,7.6.4,FortiGate-200F,Y,"[{ ""name"": ""vlan1"", ""type"": ""vlan"", ""mode"": ""dhcp"", ""interface"": ""port1"", ""vlan_id"": ""100"" },
+{ ""name"": ""vlan2"", ""type"": ""vlan"", ""mode"": ""static"", ""ip"": ""10.91.1.2"", ""network_mask"": ""255.255.255.0"", ""interface"": ""port2"", ""gateway"": ""10.91.1.1"", ""vlan_id"": ""200"" }]","[{ ""name"": ""vlan3"", ""type"": ""vlan"", ""mode"": ""dhcp"", ""interface"": ""port3"", ""vlan_id"": ""100"" },
+{ ""name"": ""vlan4"", ""type"": ""vlan"", ""mode"": ""static"", ""ip"": ""10.91.11.2"", ""network_mask"": ""255.255.255.0"", ""interface"": ""port4"", ""gateway"": ""10.91.11.1"", ""vlan_id"": ""200"" }]",,Y,100,branch_ha_dummy,123456,20,FG200FT922952222,10,"port5,port6","port7,0;port8,0",-115.1398,36.1699, mgmt,10.3.134.69/24,Canada/Pacific
