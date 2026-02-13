@@ -111,7 +111,7 @@ config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_BRANCH{{i+1}}_BGP
         end
         
         config network
-            edit 10
+            edit 1
               set prefix-name "lan-subnet-grp"
             next
         end
@@ -143,7 +143,7 @@ config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_BGP
         end
         
         config network
-            edit 10
+            edit 1
               set prefix-name "lan-subnet-grp"
             next
         end
