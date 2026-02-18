@@ -142,13 +142,13 @@ config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_BGP
                 set route-map-out RTMAP_OUT_ALL_OVERLAYS
             next
         end
-        {#
+
         config network
             edit 1
               set prefix-name "lan-subnet-grp"
             next
         end
-        #}
+
     end
 end
 {% endfor %}
