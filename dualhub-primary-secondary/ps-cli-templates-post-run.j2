@@ -1,9 +1,43 @@
 {#
- # This file includes all the CLI templates that will be reference/used in the BGP/IPsec/SDWAN templates
- # 1. router prefix-list will be used in router-map
- # 2. router-map will be used in branch and hub's BGP template
- #}
+# This file includes all the CLI templates that will be reference/used in the BGP/IPsec/SDWAN templates
+# 1. router prefix-list will be used in router-map
+# 2. router-map will be used in branch and hub's BGP template
+#}
  
+ 
+{% if network_advertisement_prefix | length > 0 %}
+config firewall address
+    {% for prefix in network_advertisement_prefix %}
+    edit "lan-subnet-{{prefix | replace(".", "-") | replace("/", "-") }}"
+        set allow-routing enable
+        set subnet {{prefix}}
+    next
+    {% endfor %}
+end
+{% endif %}
+ 
+{% if device_network_advertisement | length > 0 %}
+config firewall addrgrp
+    edit "lan-subnet-grp"
+        set allow-routing enable
+        config dynamic_mapping
+            {% for device in device_network_advertisement %}
+                {% if device.network_advertisement.network_prefix | length > 0 %}
+                edit "{{device.Name}}"-"root"
+                    {% for prefix in device.network_advertisement.network_prefix %}
+                        set member "lan-subnet-{{prefix | replace(".", "-") | replace("/", "-") }}"
+                    {% endfor %}
+                    set allow-routing enable
+                next
+                {% endif %}
+            {% endfor %}
+        end
+    next
+end
+{% endif %}
+ 
+ 
+
 config router prefix-list
     edit "ONLY_DEFAULT"
         config rule
@@ -58,7 +92,6 @@ config router prefix-list
         end
     next
 end
- 
 config router route-map
     edit "RTMAP_IN_DYN_BGP"
         config rule
@@ -98,8 +131,7 @@ config router route-map
         end
     next
 end
- 
- 
+
 config router prefix-list
     edit "LOOPBACK_RANGE"  
         config rule
@@ -129,7 +161,6 @@ config router prefix-list
         end
     next
 end
- 
 config router route-map
     edit "RTMAP_IN_ALL_OVERLAYS"
         config rule
