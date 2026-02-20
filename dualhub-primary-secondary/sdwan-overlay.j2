@@ -89,6 +89,7 @@ end
 end
 
 {# create sdwan template for hub, which will be used in 'sdwan overlay -> sdwan_template' #}
+{% if overlay_variables.hub_sdwan_template | default('') == 'enable' %}
 config adom/wanprof/sdwan-hub
 config system sdwan
     config health-check
@@ -177,6 +178,7 @@ config system sdwan
     end
 end
 end
+{% endif %}
 
 {# create static route template used in 'sdwan overlay -> router_template' #}
 config adom/template/_router_static/branches
@@ -216,7 +218,10 @@ config adom/template/_sdwan_overlay/{{overlay_variables.sdwan_sot_name}}
         {% else %}
             set advpn disable
         {% endif %}
-        set sdwan_template "sdwan1"
+        set sdwan_template "sdwan-branch"
+        {% if overlay_variables.hub_sdwan_template | default('') == 'enable' %}
+            set hub_sdwan_template "sdwan-hub"
+        {% endif %}
         set sdwan_members enable
         set sdwan_health_check enable
         set normalized-interface enable
