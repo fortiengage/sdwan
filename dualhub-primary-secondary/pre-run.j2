@@ -91,14 +91,14 @@ config router static
     {% endif %}
 
 {% if device.hub_branch == "Hub" %}
-    {% set ns = namespace(router_index = 2) %}
+    {% set ns1 = namespace(router_index = 2) %}
     {% for intf in device.isp_intf %}
         {% if intf.gateway is defined %}
-            edit {{ns.router_index}}
+            edit {{ns1.router_index}}
                 set gateway "{{intf.gateway}}"
                 set device "{{intf.name}}"
             next
-            {% set ns.router_index = ns.router_index + 1 %}
+            {% set ns1.router_index = ns1.router_index + 1 %}
         {% endif %}
     {% endfor %}
 {% endif %}
