@@ -89,7 +89,7 @@ config router static
             set device "{{device.mgmt_intf_name}}"
         next
     {% endif %}
-{#
+
 {% if device.hub_branch == "Hub" %}
     {% set ns = namespace(router_index = 2) %}
     {% for intf in device.isp_intf %}
@@ -102,7 +102,7 @@ config router static
         {% endif %}
     {% endfor %}
 {% endif %}
-#}
+
 end
  
 {% if device.hub_branch == "Hub" %}
