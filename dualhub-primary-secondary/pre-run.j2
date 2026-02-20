@@ -90,8 +90,8 @@ config router static
         next
     {% endif %}
 
-{% if device.hub_branch == "Hub" %}
     {% set ns1 = namespace(router_index = 2) %}
+{% if device.hub_branch == "Hub" %}
     {% for intf in device.isp_intf %}
         {% if intf.gateway is defined %}
             edit {{ns1.router_index}}
