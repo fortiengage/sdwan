@@ -1,5 +1,6 @@
-{# create sdwan template used in 'sdwan overlay -> sdwan_template' #}
-config adom/wanprof/sdwan1
+
+{# create sdwan template for branch used in 'sdwan overlay -> sdwan_template' #}
+config adom/wanprof/sdwan-branch
 config system sdwan
     config health-check
         edit "Default_AWS"
@@ -87,6 +88,101 @@ config system sdwan
     end
 end
 end
+
+{# create sdwan template for hub, which will be used in 'sdwan overlay -> sdwan_template' #}
+{% if overlay_variables.hub_sdwan_template | default('') == 'enable' %}
+config adom/wanprof/sdwan-hub
+config system sdwan
+    config health-check
+        edit "Default_AWS"
+            set server aws.amazon.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_DNS"
+            set system-dns enable
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_FortiGuard"
+            set server fortiguard.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_Gmail"
+            set server gmail.com
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 2
+                next
+            end
+        next
+        edit "Default_Google Search"
+            set server "www.google.com"
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+        edit "Default_Office_365"
+            set server www.office.com
+            set protocol http
+            set interval 1000
+            set probe-timeout 1000
+            set recoverytime 10
+            config sla
+                edit 1
+                    set latency-threshold 250
+                    set jitter-threshold 50
+                    set packetloss-threshold 5
+                next
+            end
+        next
+    end
+end
+end
+{% endif %}
+
+
+
 {# create static route template used in 'sdwan overlay -> router_template' #}
 config adom/template/_router_static/branches
 end
@@ -125,7 +221,10 @@ config adom/template/_sdwan_overlay/{{overlay_variables.sdwan_sot_name}} {# Fort
         {% else %}
             set advpn disable
         {% endif %}
-        set sdwan_template "sdwan1"
+        set sdwan_template "sdwan-branch"
+        {% if overlay_variables.hub_sdwan_template | default('') == 'enable' %}
+            set hub_sdwan_template "sdwan-hub"
+        {% endif %}
         set sdwan_members enable
         set sdwan_health_check enable
         set normalized-interface enable
