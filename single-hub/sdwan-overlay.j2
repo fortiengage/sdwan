@@ -202,7 +202,9 @@ end
 {% elif overlay_variables.use_case == 'SD-WAN - Dual HUB <Primary & Primary>' %}
     {% set ns.topology = 'dual-active-hub' %}
 {% endif %}
-config adom/template/_sdwan_overlay/{{overlay_variables.sdwan_sot_name}} {# FortiEngage-SDWAN-Overlay-SingleHub  #}
+
+{# create overlay template  #}
+config adom/template/_sdwan_overlay/{{overlay_variables.sdwan_sot_name}} 
     config template setting
         set description "Created by FortiEngage on UTC {{ date_time }}"
     end
