@@ -1,0 +1,212 @@
+{#
+  This script includes all the best practices from the PS team when they deploy SD-WAN projects for customers. 
+  IPsec
+  BGP
+  SD-WAN
+
+  It will need the following data from the device and the overlay template CSV: 
+  - number of hubs
+  - number of underlays
+  - as_id from the overlay template, {{overlay_variables.as_id}}
+#}
+
+{# IPsec 
+    [number of hubs] x [number of underlays] = number of phase1-interface/phase2-interface
+    The naming convention is "HUBx-VPNx". 
+    The following is the example.
+#}
+{#IPsec_Branch_Group#}
+{% for i in range(data.number_of_branch_groups) %}
+{% if i == 0 %}
+config adom/template/_ipsec/{{data.sd_wan_overlay_name}}_BRANCH_IPsec
+{% else %}
+config adom/template/_ipsec/{{data.sd_wan_overlay_name}}_BRANCH{{i+1}}_IPsec
+{% endif %}
+    {% for j in range(data.number_of_hubs) %}
+        {% for k in range(data.number_of_hubs_underlay) %}
+        config vpn ipsec phase1-interface
+            edit "HUB{{j+1}}-VPN{{k+1}}"
+                set interface "$(isp_intf_name_{{k+1}})"
+                set dpd-retrycount 3
+                set dpd-retryinterval 3
+                set exchange-fgt-device-id enable
+                set dhgrp 14 20 21
+                set auto-discovery-shortcuts dependent
+                set idle-timeoutinterval 5
+                set keylife 14400
+            next
+        end
+        config vpn ipsec phase2-interface
+            edit "HUB{{j+1}}-VPN{{k+1}}"
+                set dhgrp 14
+                set replay disable
+                set keylifeseconds 7200
+            next
+        end
+        {% endfor %}
+    {% endfor %}
+end
+{% endfor %}
+ 
+{#IPsec_Hub#}
+{% for i in range(data.number_of_hubs) %}
+config adom/template/_ipsec/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_IPsec
+    {% for j in range(data.number_of_hubs_underlay) %}
+    config vpn ipsec phase1-interface
+        edit "VPN{{j+1}}"
+            set interface "{{data.hub_underlay_name[i][j]}}"
+            set dpd-retrycount 3
+            set dpd-retryinterval 3
+            set exchange-fgt-device-id enable
+            set dhgrp 14 20 21
+            set keylife 28800
+        next
+    end
+    config vpn ipsec phase2-interface
+        edit "VPN{{j+1}}"
+            set dhgrp 14
+            set replay disable
+            set keylifeseconds 14400
+            set keepalive enable
+        next
+    end
+    {% endfor %}
+end
+{% endfor %}
+ 
+{#BGP_Branch_Group#}
+{% for i in range(data.number_of_branch_groups) %}
+{% if i == 0 %}
+config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_BRANCH_BGP
+{% else %}
+config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_BRANCH{{i+1}}_BGP
+{% endif %}
+    config router bgp
+        set keepalive-timer 10
+        set holdtime-timer 30
+        config neighbor
+        {% for j in range(data.number_of_hubs) %}
+            edit "{{data.hubs_hardcoded_ip_in_bgp_template[j]}}"
+                set capability-dynamic enable
+                set advertisement-interval 2
+                set next-hop-self enable
+                set connect-timer 2
+                set route-map-in RTMAP_IN_HUB{{j+1}}
+                set route-map-out RTMAP_OUT
+                unset route-map-out-preferable
+            next
+        {% endfor %}
+        end
+        
+        config neighbor-group
+            edit "DYN_EDGE"
+                set capability-graceful-restart enable
+                set capability-dynamic enable
+                set advertisement-interval 2
+                set connect-timer 2
+                set route-map-in RTMAP_IN_DYN_BGP
+                set route-map-out RTMAP_OUT
+                unset prefix-list-out
+            next
+        end
+
+        config network
+            edit 1
+              set prefix-name "lan-subnet-grp"
+            next
+        end
+
+    end
+end
+{% endfor %}
+ 
+{#BGP_HUB#}
+{% for i in range(data.number_of_hubs) %}
+config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_BGP
+    config router bgp
+        set keepalive-timer 10
+        set holdtime-timer 30
+        config aggregate-address
+            edit 1
+                set prefix 172.16.1.0 255.255.255.0
+                set summary-only enable
+            next
+        end
+        
+        config neighbor-group
+            edit "EDGE"
+                set capability-dynamic enable
+                set advertisement-interval 2
+                set connect-timer 2
+                set route-map-in RTMAP_IN_ALL_OVERLAYS
+                set route-map-out RTMAP_OUT_ALL_OVERLAYS
+            next
+        end
+
+        config network
+            edit 1
+              set prefix-name "lan-subnet-grp"
+            next
+        end
+
+    end
+end
+{% endfor %}
+
+{# Branch sdwan template tuning #}
+config adom/wanprof/sdwan-branch
+  config system sdwan
+      set status enable
+      set option sdwan-overlay
+      set load-balance-mode source-dest-ip-based
+      config zone
+      end
+      config members
+      end
+      config health-check
+      end
+      config service
+      end
+      config neighbor
+      end
+  end
+end
+
+{# Hub sdwan template tuning #}
+config adom/wanprof/sdwan-hub
+  config system sdwan
+      set status enable
+      set option sdwan-overlay
+      set load-balance-mode source-dest-ip-based
+      config zone
+          {% for k in range(data.number_of_hubs_underlay) %}
+          edit "WAN{{k+1}}"
+            set service-sla-tie-break fib-best-match
+            next
+          {% endfor %}
+        edit "OVERLAYS"
+          set service-sla-tie-break fib-best-match
+        next
+      end
+      config members
+          {% for k in range(data.number_of_hubs_underlay) %}
+          edit {{k+1}}
+            set interface {{data.hub_underlay_name[0][k]}}
+            set zone "WAN{{k+1}}"
+          next
+          {% endfor %}
+          {% for j in range(data.number_of_hubs_underlay) %}
+          edit {{k+j+1}}
+            set interface "VPN{{j+1}}"
+            set zone "OVERLAYS"
+          next
+          {% endfor %}
+      end
+      config health-check
+      end
+      config service
+      end
+      config neighbor
+      end
+  end
+end
