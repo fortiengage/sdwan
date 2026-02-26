@@ -196,7 +196,7 @@ config adom/wanprof/sdwan-hub
           next
           {% endfor %}
           {% for j in range(data.number_of_hubs_underlay) %}
-          edit {{k+j+1}}
+          edit {{data.number_of_hubs_underlay+j+1}}
             set interface "VPN{{j+1}}"
             set zone "OVERLAYS"
           next
