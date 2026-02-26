@@ -179,8 +179,28 @@ config adom/wanprof/sdwan-hub
       set option sdwan-overlay
       set load-balance-mode source-dest-ip-based
       config zone
+          {% for k in range(data.number_of_hubs_underlay) %}
+          edit "WAN{{k+1}}"
+            set service-sla-tie-break fib-best-match
+            next
+          {% endfor %}
+        edit "OVERLAYS"
+          set service-sla-tie-break fib-best-match
+        next
       end
       config members
+          {% for k in range(data.number_of_hubs_underlay) %}
+          edit {{k+1}}
+            set interface "$(isp_intf_name_{{k+1}})" {#{data.hub_underlay_name[0][k]}#}
+            set zone "WAN{{k+1}}"
+          next
+          {% endfor %}
+          {% for j in range(data.number_of_hubs_underlay) %}
+          edit {{data.number_of_hubs_underlay+j+1}}
+            set interface "VPN{{j+1}}"
+            set zone "OVERLAYS"
+          next
+          {% endfor %}
       end
       config health-check
       end
