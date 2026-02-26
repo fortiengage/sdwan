@@ -191,7 +191,7 @@ config adom/wanprof/sdwan-hub
       config members
           {% for k in range(data.number_of_hubs_underlay) %}
           edit {{k+1}}
-            set interface {{data.hub_underlay_name[0][k]}}
+            set interface "$(isp_intf_name_{{k+1}})" {#{data.hub_underlay_name[0][k]}#}
             set zone "WAN{{k+1}}"
           next
           {% endfor %}
