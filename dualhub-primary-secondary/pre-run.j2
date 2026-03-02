@@ -104,7 +104,8 @@ config router static
 {% endif %}
 
 end
- 
+
+{# per FMG mantis: https://mantis.fortinet.com/bug_view_page.php?bug_id=1114236, no need to create policy route anymore with ADVPN2.0 enabled.
 {% if device.hub_branch == "Hub" %}
     config router policy
     {% for intf in device.isp_intf %}
@@ -115,3 +116,4 @@ end
     {% endfor %}
     end
 {% endif %}
+#}
