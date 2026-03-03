@@ -69,6 +69,7 @@ config router static
     {% endif %}
 end
 
+{# per FMG mantis: https://mantis.fortinet.com/bug_view_page.php?bug_id=1114236, no need to create policy route anymore with ADVPN2.0 enabled.
 {% if hub_branch == "Hub" %}
     config router policy
         edit 1
@@ -81,6 +82,7 @@ end
         next
     end
 {% endif %}
+#}
 
 config system fortiguard
   set update-server-location automatic
