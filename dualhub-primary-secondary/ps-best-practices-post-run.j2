@@ -161,6 +161,9 @@ config adom/wanprof/sdwan-branch
       set load-balance-mode source-dest-ip-based
       config zone
       end
+      {# Currently, FMG doesn't support add gateway to the underlay members when the member interface is in static mode.
+         This script is to set interface and gateway correctly for each of the branch. 
+      #}
       config members
       end
       config health-check
@@ -173,6 +176,11 @@ config adom/wanprof/sdwan-branch
 end
 
 {# Hub sdwan template tuning #}
+{# Currently FMG SOT doesn't fully support SD-WAN template on hub,
+    - doesn't config zone
+    - doesn't config underlay interface in members
+    This script is to workaround it and support SD-WAN template on Hub.
+#}
 config adom/wanprof/sdwan-hub
   config system sdwan
       set status enable
