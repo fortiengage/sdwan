@@ -97,7 +97,9 @@ config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_BRANCH{{i+1}}_BGP
             next
         {% endfor %}
         end
-        {#
+        {# It needs to check if the dynamic BGP is enabled here. Only if dynamic BGP is enabled, the neighbor-group will be shown in BGP template. 
+           check overlay_variables.dynamic_bgp = 'YES', then modify the neighbor-group.
+           James is going to add the overlay varaibles and device data to the beginning of this script when install it to FMG. 
         config neighbor-group
             edit "DYN_EDGE"
                 set capability-graceful-restart enable
