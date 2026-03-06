@@ -36,8 +36,8 @@ config firewall addrgrp
 end
 {% endif %}
  
-{# Run only when doing deployment; no need to run when adding new branch; data will only be defined when doing deployment by FENG #}
-{% if data is defined %}
+{# Run only when doing deployment; no need to run when adding new branch; overlay_variables will only be defined when doing deployment by FENG #}
+{% if overlay_variables.loopback_ip is defined %}
 config router prefix-list
     edit "ONLY_DEFAULT"
         config rule
