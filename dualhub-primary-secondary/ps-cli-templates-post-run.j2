@@ -4,7 +4,6 @@
 # 2. router-map will be used in branch and hub's BGP template
 #}
  
- 
 {% if network_advertisement_prefix | length > 0 %}
 config firewall address
     {% for prefix in network_advertisement_prefix %}
@@ -16,6 +15,7 @@ config firewall address
 end
 {% endif %}
  
+{% set ns = namespace(lan_subnet = "") %}
 {% if device_network_advertisement | length > 0 %}
 config firewall addrgrp
     edit "lan-subnet-grp"
@@ -24,9 +24,11 @@ config firewall addrgrp
             {% for device in device_network_advertisement %}
                 {% if device.network_advertisement.network_prefix | length > 0 %}
                 edit "{{device.Name}}"-"root"
+                    {% set ns.lan_subnet = "" %}
                     {% for prefix in device.network_advertisement.network_prefix %}
-                        set member "lan-subnet-{{prefix | replace(".", "-") | replace("/", "-") }}"
+                        {% set ns.lan_subnet = ns.lan_subnet + "lan-subnet-" + prefix | replace(".", "-") | replace("/", "-") + " " %}
                     {% endfor %}
+                    set member {{ns.lan_subnet}}
                     set allow-routing enable
                 next
                 {% endif %}
@@ -34,7 +36,8 @@ config firewall addrgrp
         end
     next
 end
-{% endif %}
+{% endif %} 
+
  
 {# Run only when doing deployment; no need to run when adding new branch; overlay_variables will only be defined when doing deployment by FENG #}
 {% if overlay_variables.loopback_ip is defined %}
