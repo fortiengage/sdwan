@@ -232,3 +232,13 @@ config adom/wanprof/sdwan-hub
       end
   end
 end
+
+{% if overlay_variables.hub_sdwan_template == 'enable' %}
+config adom/template/_router_static/{{data.sd_wan_overlay_name}}_HUB_Router
+edit 1
+    set distance 1
+    {# set sdwan-zone "WAN1" "WAN2" "OVERLAYS" #}
+    set _seq-num 100
+    next
+end
+{% endif %}
