@@ -90,8 +90,9 @@ config router static
         next
     {% endif %}
 
+{% if overlay_variables.hub_sdwan_template == 'enable' %}
     {% set ns = namespace(router_index = 2) %}
-{% if device.hub_branch == "Hub" %}
+  {% if device.hub_branch == "Hub" %}
     {% for intf in device.isp_intf %}
         {% if intf.gateway is defined %}
             edit {{ns.router_index}}
@@ -101,6 +102,7 @@ config router static
             {% set ns.router_index = ns.router_index + 1 %}
         {% endif %}
     {% endfor %}
+  {% endif %}
 {% endif %}
 
 end
