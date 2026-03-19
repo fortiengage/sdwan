@@ -236,6 +236,7 @@ end
 {% set ns = namespace(hub_sdwan_interface_list = "") %}
 {% if overlay_variables.hub_sdwan_template | lower == 'enable' %}
 config adom/template/_router_static/{{ data.sd_wan_overlay_name }}_HUB_Router
+config router static
     edit 1
         set distance 1
         {% for i in range(data.number_of_hubs_underlay) %}
