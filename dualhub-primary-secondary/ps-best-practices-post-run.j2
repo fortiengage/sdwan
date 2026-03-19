@@ -233,17 +233,18 @@ config adom/wanprof/sdwan-hub
   end
 end
 
-{% set ns = namespace(hub_sdwan_interface_name = "") %}
-{% if overlay_variables.hub_sdwan_template == 'enable' %}
-config adom/template/_router_static/{{data.sd_wan_overlay_name}}_HUB_Router
-edit 1
-    set distance 1
-    {% for i in range(data.number_of_hubs_underlay) %}
-        {% set ns.hub_sdwan_interface_name = ns.hub_sdwan_interface_name ~ ' "WAN' ~ (i + 1) ~ '"' %}
-    {% endfor %}
-    {% set ns.hub_sdwan_interface_name = ns.hub_sdwan_interface_name ~ ' "OVERLAYS"' %}
-    {{ns.hub_sdwan_interface_name}}
-    set _seq-num 100
+{% set ns = namespace(hub_sdwan_interface_list = "") %}
+
+{% if overlay_variables.hub_sdwan_template | lower == 'enable' %}
+config adom/template/_router_static/{{ data.sd_wan_overlay_name }}_HUB_Router
+    edit 1
+        set distance 1
+        {% for i in range(data.number_of_hubs_underlay) %}
+            {% set ns.hub_sdwan_interface_list = ns.hub_sdwan_interface_list ~ '"WAN' ~ (i + 1) ~ '" ' %}
+        {% endfor %}
+        set device {{ ns.hub_sdwan_interface_list }}
+        set _seq-num 100
     next
 end
+
 {% endif %}
