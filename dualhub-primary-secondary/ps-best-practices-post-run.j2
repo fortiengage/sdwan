@@ -174,7 +174,7 @@ config adom/wanprof/sdwan-branch
           {% for k in range(data.number_of_hubs_underlay) %} {# this need to be changed with the number of underlay in the branch group #}
           edit {{k+1}}
             set interface "$(isp_intf_name_{{k+1}})" 
-            set gateway "$(isp_intf_gateway_{{k+1}})"
+            #set gateway "$(isp_intf_gateway_{{k+1}})"
             set zone "WAN{{k+1}}"
           next
           {% endfor %}
