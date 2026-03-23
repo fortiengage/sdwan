@@ -146,7 +146,7 @@ config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_BGP
             next
         end
 
-      {# Don't config network for hub, it can be customized on FortiEngage
+      {# Don't config network for hub, it can be customized on FortiEngage if the customer needs to broadcast subnet on hub.
         config network
             edit 1
               set prefix-name "lan-subnet-grp"
