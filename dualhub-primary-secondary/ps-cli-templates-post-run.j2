@@ -1,7 +1,7 @@
 {#
-# This file includes all the CLI templates that will be reference/used in the BGP/IPsec/SDWAN templates
+# This file includes all the CLI templates that will be referenced/used in the BGP/IPsec/SDWAN templates
 # 1. router prefix-list will be used in router-map
-# 2. router-map will be used in branch and hub's BGP template
+# 2. router-map will be used in the branch and hub's BGP template
 #}
  
 {% if network_advertisement_prefix | length > 0 %}
@@ -38,7 +38,13 @@ config firewall addrgrp
 end
 {% endif %} 
 
- 
+ {# This is a workaround to set a default value of branch_id, which is used for full-mesh IPsec templates. #}
+ config fmg variable
+    edit "branch_id"
+        set value "1111"
+    next
+end
+
 {# Run only when doing deployment; no need to run when adding new branch; overlay_variables will only be defined when doing deployment by FENG #}
 {% if overlay_variables.loopback_ip is defined %}
 config router prefix-list
