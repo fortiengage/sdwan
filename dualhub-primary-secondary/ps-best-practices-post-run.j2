@@ -145,19 +145,11 @@ config adom/template/router_bgp/{{data.sd_wan_overlay_name}}_HUB{{i+1}}_BGP
                 set route-map-out RTMAP_OUT_ALL_OVERLAYS
             next
         end
-
-      {# Don't config network for hub, it can be customized on FortiEngage if the customer needs to broadcast subnet on hub.
-        config network
-            edit 1
-              set prefix-name "lan-subnet-grp"
-            next
-        end
-      #}
     end
 end
 {% endfor %}
 
-{# Branch sdwan template tuning #}
+{# Branch sdwan template for tunning #}
 config adom/wanprof/sdwan-branch
   config system sdwan
       set status enable
@@ -165,19 +157,7 @@ config adom/wanprof/sdwan-branch
       set load-balance-mode source-dest-ip-based
       config zone
       end
-      {# Currently, FMG doesn't support add gateway to the underlay members when the member interface is in static mode.
-         This script is a workaround to set the interface and gateway correctly for each of the branch. 
-         FMG SOT only supports one SD-WAN template for all branch groups. 
-         If there are more than one branch group, please create an SD-WAN template per branch group by customizing this script. 
-      #}
       config members
-          {% for k in range(data.number_of_hubs_underlay) %} {# this need to be changed with the number of underlay in the branch group #}
-          edit {{k+1}}
-            set interface "$(isp_intf_name_{{k+1}})" 
-            #set gateway "$(isp_intf_gateway_{{k+1}})"
-            set zone "WAN{{k+1}}"
-          next
-          {% endfor %}
       end
       config health-check
       end
