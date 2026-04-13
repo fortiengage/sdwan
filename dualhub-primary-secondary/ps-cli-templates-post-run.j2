@@ -57,21 +57,6 @@ config router prefix-list
             next
         end
     next
-    edit "PL_BRANCH_LOCAL_PREFIX"
-        config rule
-            edit 1
-                set prefix 10.10.110.0 255.255.255.0
-                unset ge
-                unset le
-            next
-            edit 100
-                set action deny
-                set prefix 0.0.0.0 0.0.0.0
-                unset ge
-                unset le
-            next
-        end
-    next
     edit "PL_LOOPBACK_SUBNET"
         config rule
             edit 1
