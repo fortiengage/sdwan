@@ -1,0 +1,357 @@
+{#
+**# This file includes all the CLI templates that will be reference/used in the BGP/IPsec/SDWAN templates
+# 1. router prefix-list will be used in router-map
+# 2. router-map will be used in branch and hub's BGP template**
+ 
+#3 route tag address object (remi - March 17)
+
+# 4. dynamic mapping (Olesya - April 02)  will be used in fw policies (policy packages)
+# 5. policy package (Olesya - April 02)
+#}
+ 
+{% if network_advertisement_prefix | length > 0 %}
+config firewall address
+    {% for prefix in network_advertisement_prefix %}
+    edit "lan-subnet-{{prefix | replace(".", "-") | replace("/", "-") }}"
+        set allow-routing enable
+        set subnet {{prefix}}
+    next
+    {% endfor %}
+end
+{% endif %}
+ 
+{% set ns = namespace(lan_subnet = "") %}
+{% if device_network_advertisement | length > 0 %}
+config firewall addrgrp
+    edit "lan-subnet-grp"
+        set allow-routing enable
+        config dynamic_mapping
+            {% for device in device_network_advertisement %}
+                {% if device.network_advertisement.network_prefix | length > 0 %}
+                edit "{{device.Name}}"-"root"
+                    {% set ns.lan_subnet = "" %}
+                    {% for prefix in device.network_advertisement.network_prefix %}
+                        {% set ns.lan_subnet = ns.lan_subnet + "lan-subnet-" + prefix | replace(".", "-") | replace("/", "-") + " " %}
+                    {% endfor %}
+                    set member {{ns.lan_subnet}}
+                    set allow-routing enable
+                next
+                {% endif %}
+            {% endfor %}
+        end
+    next
+end
+{% endif %} 
+
+ 
+{# Run only when doing deployment; no need to run when adding new branch; overlay_variables will only be defined when doing deployment by FENG #}
+{% if overlay_variables.loopback_ip is defined %}
+config router prefix-list
+    edit "PL_ONLY_DEFAULT"
+        config rule
+            edit 1
+                set prefix 0.0.0.0 0.0.0.0
+                unset ge
+                unset le
+            next
+        end
+    next
+    edit "PL_LOOPBACK_RANGE"
+        config rule
+            edit 1
+                set prefix {{overlay_variables.loopback_ip}} {{overlay_variables.loopback_network_mask}}
+                unset ge
+                unset le
+            next
+        end
+    next
+    edit "PL_RFC1918_EXACT_MATCH"
+        config rule
+            edit 10
+                set prefix 172.16.0.0 255.240.0.0
+                unset ge
+                unset le
+            next
+            edit 20
+                set prefix 10.0.0.0 255.0.0.0
+                unset ge
+                unset le
+            next
+            edit 30
+                set prefix 192.168.0.0 255.255.0.0
+                unset ge
+                unset le
+            next
+        end
+    next
+end
+
+config router route-map
+    edit "RTMAP_IN_DYN_BGP"
+        config rule
+            edit 5
+                set action deny
+                set match-ip-address "PL_ONLY_DEFAULT"
+            next
+             edit 10
+                set action deny
+                set match-ip-address "PL_RFC1918_EXACT_MATCH"
+            next
+            edit 100
+                set set-route-tag 100
+            next
+        end
+    next
+    {% for i in range(data.number_of_hubs) %}
+    edit "RTMAP_IN_HUB{{i+1}}"
+        config rule
+            edit 10
+                set action deny
+                set match-ip-address "PL_RFC1918_EXACT_MATCH"
+            next
+            edit 100
+                set set-tag {{i+1}}
+                set set-route-tag {{i+1}}
+            next
+        end
+    next
+    {% endfor %}
+    edit "RTMAP_OUT"
+        config rule
+            edit 10
+                set set-community "{{overlay_variables.as_id}}:100"
+            next
+        end
+    next
+end
+
+
+config router route-map
+    edit "RTMAP_IN_ALL_OVERLAYS"
+        config rule
+            edit 5
+                set action deny
+                set match-ip-address "PL_ONLY_DEFAULT"
+            next
+            edit 10
+                set action deny
+                set match-ip-address "PL_RFC1918_EXACT_MATCH"
+            next
+            edit 100
+            next
+        end
+    next
+    edit "RTMAP_OUT_ALL_OVERLAYS"
+        config rule
+            edit 5
+                set set-community "{{overlay_variables.as_id}}:1"
+            next
+        end
+    next
+end
+{% endif %}
+
+
+{# Remi- March 17 #}
+ 
+ config firewall address
+    edit "ROUTE_TAG_1"
+        set type route-tag
+        set route-tag 1
+        set comment "to identify routes from hub1"
+    next
+end
+
+
+config firewall address
+    edit "ROUTE_TAG_2"
+        set type route-tag
+        set route-tag 2
+        set comment "to identify routes from hub2"
+    next
+end
+
+
+config firewall address
+    edit "ROUTE_TAG_100"
+        set type route-tag
+        set route-tag 100
+        set comment "to identify routes from remote branches over DynBGP peering"
+    next
+end
+
+
+config firewall address
+    edit "ROUTE_TAG_1000"
+        set type route-tag
+        set route-tag 1000
+        set comment "Placeholder to identify default routes from hubs"
+    next
+end
+
+config firewall address
+    edit "HC_loopback"
+        set subnet 169.254.254.0 255.255.255.0
+    next
+end
+
+config firewall address
+    edit "SDWAN_Loopback"
+        set subnet {{ overlay_variables.loopback_ip }} {{ overlay_variables.loopback_network_mask }}
+        set allow-routing enable
+        next 
+end
+
+
+config dynamic interface
+	edit "Hub_HC1"
+		set default-mapping enable
+		set defmap-intf "Hub_HC1"
+	next
+	edit "Hub_HC2"
+		set default-mapping enable
+		set defmap-intf "Hub_HC2"
+	next
+	edit "Hub_HC3"
+		set default-mapping enable
+		set defmap-intf "Hub_HC3"
+	next
+	edit "Hub_HC4"
+		set default-mapping enable
+		set defmap-intf "Hub_HC4"
+	next
+	edit "LAN_INTF"
+		set default-mapping enable
+		set defmap-intf "{{ '{{' }} lan_intf {{ '}}' }}"
+	next
+end
+
+{# Olesya FW policy 10 change #}
+
+config adom/pkg/ppkg_hub
+config firewall policy
+edit 10
+set name "Addtional Health Check and BGP "
+set action accept
+{% if overlay_variables.hub_sdwan_template == 'enable' %}
+set srcintf "OVERLAYS"
+{% else %}
+set srcintf "VPN1" "VPN2"
+{% endif %}
+set dstintf "BGP-Lo" "Hub_HC1" "Hub_HC2" "Hub_HC3" "Hub_HC4"
+set srcaddr "SDWAN_Loopback"
+set dstaddr  "HC_loopback" "SDWAN_Loopback" {# all #}
+set schedule "always"
+set logtraffic disable
+set service "ALL"
+set comments "created by FortiEngage - updated by PS"
+next
+edit 20
+set name "Inter-Overlays"
+set action accept
+{% if overlay_variables.hub_sdwan_template == 'enable' %}
+set srcintf "OVERLAYS"
+set dstintf "OVERLAYS"
+{% else %}
+set srcintf "VPN1" "VPN2"
+set dstintf "VPN1" "VPN2"
+{% endif %}
+set srcaddr "all"
+set dstaddr "all"
+set status enable
+set schedule "always"
+set service "ALL"
+set logtraffic disable
+set tcp-session-without-syn all
+set comments "created by FortiEngage - updated by PS"
+next
+
+edit 100
+set name "Overlays to LAN"
+set action accept
+{% if overlay_variables.hub_sdwan_template == 'enable' %}
+set srcintf "OVERLAYS"
+{% else %}
+set srcintf "VPN1" "VPN2"
+{% endif %}
+{# set dstintf "{{ device_data[DVMDB.name].lan_intf[0].name }}" #} {# should be variable? LAN zone? #}
+set dstintf LAN_INTF
+set srcaddr "all"
+set dstaddr "all"
+set schedule "always"
+set service "ALL"
+set logtraffic all
+set tcp-session-without-syn all
+set comments "created by PS. To be adapted case-by-case or removed"
+next
+edit 101
+set name "LAN to Overlays"
+set action accept
+{# set srcintf "{{ device_data[DVMDB.name].lan_intf[0].name }}" #} {# should be variable? LAN zone? #}
+set srcintf LAN_INTF
+{% if overlay_variables.hub_sdwan_template == 'enable' %}
+set dstintf "OVERLAYS"
+{% else %}
+set dstintf "VPN1" "VPN2"
+{% endif %}
+set srcaddr "all"
+set dstaddr "all"
+set schedule "always"
+set service "ALL"
+set logtraffic all
+set tcp-session-without-syn all
+set comments "created by PS. To be adapted case-by-case or removed"
+next
+end
+config firewall local-in-policy
+edit "1"
+set dstaddr "all"
+set service "ALL"
+set schedule "always"
+set intf "any"
+set internet-service-src enable
+set internet-service-src-name "Malicious-Malicious.Server" "Tor-Exit.Node" "Tor-Relay.Node"
+next
+end
+end
+
+
+config adom/pkg/ppkg_branch
+config firewall policy
+{#purge#}
+  edit 100
+ set name "Hub to LAN"   
+ set srcintf "HUB1" "HUB2"
+    set dstintf "any"
+    set action accept
+    set dstaddr "all"
+    set srcaddr "all"
+    set schedule "always"
+    set service "ALL"
+    set logtraffic disable
+    set comment "for initial testing only"
+  next
+    edit 101
+ set name "LAN to Hub"
+    set srcintf "any"
+    set dstintf "HUB1" "HUB2"
+    set action accept
+    set dstaddr "all"
+     set srcaddr "all"
+    set schedule "always"
+    set service "ALL"
+    set logtraffic disable
+        set comment "for initial testing only"
+  next
+end
+config firewall local-in-policy
+edit "1"
+set dstaddr "all"
+set service "ALL"
+set schedule "always"
+set intf "any"
+set internet-service-src enable
+set internet-service-src-name "Malicious-Malicious.Server" "Tor-Exit.Node" "Tor-Relay.Node"
+next
+end
+end
