@@ -209,7 +209,7 @@ config adom/template/_sdwan_overlay/{{overlay_variables.sdwan_sot_name}}
         set description "Created by FortiEngage on UTC {{ date_time }}"
     end
     config sdwan overlay
-        {% if ns.topology != "" %}
+        {% if ns.topology != "" %} {# if topology is not set, it means single hub #}
         set topology {{ns.topology}}
         {% endif %}
         set hub-number {{ns.number_of_hubs}}
