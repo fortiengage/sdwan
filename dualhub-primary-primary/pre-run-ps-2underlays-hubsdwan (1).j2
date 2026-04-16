@@ -1,0 +1,288 @@
+{#  Remi Match 16 ---  common CLI for all topologies #}
+ 
+ config system alias
+    edit "bgpsummary"
+        set command "get  router info bgp  summary"
+    next
+    edit "rtable"
+        set command "get router info routing-table all"
+    next
+    edit "vpnike"
+        set command "diagnose vpn ike gateway list"
+    next
+    edit "vpnipsec"
+        set command "diagnose vpn tunnel list"
+    next
+    edit "bgpnetwork"
+        set command "get router info bgp  network"
+    next
+    edit "vpnsummary"
+        set command "get vpn ipsec  tunnel  summary"
+    next
+end
+   
+ 
+config system settings
+    set default-voip-alg-mode kernel-helper-based
+    set gui-advanced-policy enable
+    set gui-multiple-interface-policy enable
+end
+   
+ 
+ {# --------------------------------------------- #}
+
+
+
+{% set device = device_data[Name]%}
+ 
+config system global
+    set hostname "{{ device.Name }}"
+    set alias "{{ device.Name }}"
+    {% if device.longitude is defined %}
+        set gui-device-longitude "{{ device.longitude }}"
+        set gui-device-latitude "{{ device.latitude }}"
+    {% endif %}
+    {% if device.timezone is defined and device.timezone %}
+        set timezone "{{device.timezone}}"
+    {% endif %}
+end
+ 
+config system interface
+    {# if device.mgmt_intf_name is defined and device.mgmt_intf_ip is defined #}
+    {% if device.mgmt_intf_name | default('') and device.mgmt_intf_ip | default('') %}
+        edit "{{device.mgmt_intf_name}}"
+            set vdom root
+            set mode static
+            set ip "{{device.mgmt_intf_ip}}"
+            set allowaccess ping https ssh fgfm
+            set role wan
+        next
+    {% endif %}
+
+    {# Create and set WAN interfaces #}
+    {% for intf in device.isp_intf %}
+        {% set ns = namespace(port_str = "") %}
+        {% if intf.ports is defined %}
+            {% for port in intf.ports %}
+                {% set ns.port_str = ns.port_str + port + " " %}
+            {% endfor %}
+        {% endif %}
+        edit "{{intf.name}}"
+            set vdom "{{intf.vdom | default('root')}}"
+            set type {{intf.type}}
+            {% if ns.port_str != "" %}
+            set member {{ns.port_str | trim}}
+            {% endif %}
+            set mode {{intf.mode}}
+            {% if intf.mode == 'static' %}
+            set ip "{{intf.ip}} {{intf.network_mask}}"
+            {% endif %}
+            set role {{intf.role | default('wan')}}
+            {% if intf.type == 'vlan' %}
+            set interface "{{intf.interface}}"
+             
+             {# added by remi for lab purpose - remove in production #}  
+            set allowaccess ping https
+             {# ..... #}
+            
+            set vlanid {{intf.vlan_id}}
+            {% endif %}
+            set description "Underlay Interface"
+        next
+    {% endfor %}
+
+    {# Create and set LAN interfaces #}
+    {% for intf in device.lan_intf %}
+        {% set ns = namespace(port_str = "") %}
+        {% if intf.ports is defined %}
+            {% for port in intf.ports %}
+                {% set ns.port_str = ns.port_str + port + " " %}
+            {% endfor %}
+        {% endif %}
+        edit "{{intf.name}}"
+            set vdom "{{intf.vdom | default('root')}}"
+            set type {{intf.type}}
+            {% if ns.port_str != "" %}
+            set member {{ns.port_str | trim}}
+            {% endif %}
+            set mode {{intf.mode}}
+            {% if intf.mode == 'static' %}
+            set ip "{{intf.ip}} {{intf.network_mask}}"
+            {% endif %}
+            set role {{intf.role | default('lan')}}
+            {% if intf.type == 'vlan' %}
+            set interface "{{intf.interface}}"
+            set vlanid {{intf.vlan_id}}
+            {% endif %}
+            {# set role lan #}
+            set description "LAN Interface by FENG on UTC {{ date_time }}"
+        next
+    {% endfor %}
+
+end
+ 
+config router static
+    {% if device.mgmt_intf_name | default('') and device.mgmt_dst_fmg_ip_networkmask | default('') and device.mgmt_dst_gateway_ip | default('') %}
+        edit 1
+            set dst "{{device.mgmt_dst_fmg_ip_networkmask}}"
+            set gateway "{{device.mgmt_dst_gateway_ip}}"
+            set device "{{device.mgmt_intf_name}}"
+        next
+    {% endif %}
+
+    {% set ns = namespace(router_index = 2) %}
+    {#{% if device.hub_branch == "Hub" %} #}
+  {% if overlay_variables.hub_sdwan_template == 'disable' and device.hub_branch == 'Hub' %} {# change enable to disable #}
+    {% for intf in device.isp_intf %}
+        {% if intf.gateway is defined %}
+            edit {{ns.router_index}}
+                set gateway "{{intf.gateway}}"
+                set device "{{intf.name}}"
+            next
+            {% set ns.router_index = ns.router_index + 1 %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+end
+     
+     
+{# Remi #}
+     
+{% if device.hub_branch == "Hub" %}
+
+ config system global
+    set anti-replay disable
+ end
+   
+config system settings
+    set tcp-session-without-syn enable
+end
+      
+config system interface
+edit  "Hub_HC1"
+  set vdom "root"
+  set ip 169.254.254.1/32
+  set allowaccess ping
+  set type loopback
+set description "Use this loopback for per-overlay-SLAs on the branches. Remove it if not needed."
+next
+
+edit  "Hub_HC2"
+  set vdom "root"
+  set ip 169.254.254.2/32
+  set allowaccess ping
+  set type loopback
+set description "Use this loopback for per-overlay-SLAs on the branches. Remove it if not needed"
+next
+
+edit  "Hub_HC3"
+  set vdom "root"
+  set ip 169.254.254.3/32
+  set allowaccess ping
+  set type loopback
+set description "Use this loopback for per-overlay-SLAs on the branches. Remove it if not needed"
+next
+
+edit  "Hub_HC4"
+  set vdom "root"
+  set ip 169.254.254.4/32
+  set allowaccess ping
+  set type loopback
+set description "Use this loopback for per-overlay-SLAs on the branches. Remove it if not needed"
+next
+
+end
+
+{# Olesya FW policy 10 change# #}
+config firewall address
+	edit "SDWAN_Loopback"
+		set subnet {{ overlay_variables.loopback_ip }} {{ overlay_variables.loopback_network_mask }}
+		set allow-routing enable
+	next 
+    edit "HC_loopback"
+        set subnet 169.254.254.0 255.255.255.0
+    next
+end
+
+    
+
+config firewall policy
+edit 10
+set name "Additional Health Check and BGP "
+set action accept
+{% if overlay_variables.hub_sdwan_template == 'enable'  %}
+set srcintf "OVERLAYS"
+{% else %}
+set srcintf "VPN1" "VPN2"
+{% endif %}
+set dstintf "BGP-Lo" "Hub_HC2" "Hub_HC1" "Hub_HC3" "Hub_HC4"
+set srcaddr "SDWAN_Loopback"
+set dstaddr  "HC_loopback" "SDWAN_Loopback" {# all #}
+set schedule "always"
+set logtraffic disable
+set service "ALL"
+set comments "created by FortiEngage - updated by PS"
+next
+
+edit 20
+set name "Inter-Overlays"
+set action accept
+{% if overlay_variables.hub_sdwan_template == 'enable'  %}
+set srcintf "OVERLAYS"
+set dstintf "OVERLAYS"
+{% else %}
+set srcintf "VPN1" "VPN2"
+set dstintf "VPN1" "VPN2"
+{% endif %}
+set srcaddr "all"
+set dstaddr "all"
+set status enable
+set schedule "always"
+set service "ALL"
+set logtraffic all
+set tcp-session-without-syn all
+set comments "created by FortiEngage - updated by PS"
+next
+
+edit 100
+set name "Overlays to LAN"
+set action accept
+{% if overlay_variables.hub_sdwan_template == 'enable'  %}
+set srcintf "OVERLAYS"
+ {% else %}
+ set srcintf "VPN1" "VPN2"
+{% endif %}
+set dstintf "{{ device_data[DVMDB.name].lan_intf[0].name }}" {# should be variable? LAN zone? #}
+set srcaddr "all"
+set dstaddr "all"
+set schedule "always"
+set service "ALL"
+set logtraffic all
+set tcp-session-without-syn all
+set comments "created by PS. To be adapted case-by-case or removed"
+next
+edit 101
+set name "LAN to Overlays"
+set action accept
+set srcintf "{{ device_data[DVMDB.name].lan_intf[0].name }}" {# should be variable? LAN zone? #}
+{% if overlay_variables.hub_sdwan_template == 'enable'  %}
+set dstintf "OVERLAYS"
+ {% else %}
+set dstintf "VPN1" "VPN2"
+{% endif %}
+set srcaddr "all"
+set dstaddr "all"
+set schedule "always"
+set service "ALL"
+set logtraffic all
+set tcp-session-without-syn all
+set comments "created by PS. To be adapted case-by-case or removed"
+next
+end
+
+
+{% endif %}
+
+
+{# ------------------------ #}
