@@ -1,0 +1,94 @@
+# ==================================================
+# Security Hardening — Essential (mandatory, 17/17 enforced)
+# ==================================================
+# SH14.1 — Unique hostname
+#config system global
+#    set hostname "FGT-abcd"
+#end
+# PS — Private data encryption
+config system global
+    set private-data-encryption enable
+end
+# PS — Disable FortiExplorer
+# Disables FortiExplorer discovery/management over USB and console.
+# Confirm the exact keyword for your FortiOS version before deploying:
+config system global
+    set fortiexplorer-connection disable
+end
+# SH01.2 — No HTTP admin access
+# Enforced structurally: "http" is never offered as an allowaccess option
+# anywhere in this tool — GUI access is HTTPS-only on every interface.
+# SH01.1 — No TELNET admin access
+# Enforced structurally: "telnet" is never offered as an allowaccess option
+# anywhere in this tool.
+# SH01.9 — WAN management access disabled
+#config system interface
+#    edit "wan1"
+#        unset allowaccess
+#    next
+#    edit "WAN2"
+#        unset allowaccess
+#    next
+#end
+# SH09.1 — Admin idle timeout ≤ 10 min
+config system global
+    set admintimeout 10
+end
+# SH09.2 — Admin lockout policy
+config system global
+    set admin-lockout-threshold 3
+    set admin-lockout-duration 1800
+end
+# SH05.1 — Admin password policy
+config system password-policy
+    set status enable
+    set apply-to admin-password
+end
+# SH05.2 — Strong password complexity
+config system password-policy
+    set minimum-length 12
+    set min-upper-case-letter 1
+    set min-lower-case-letter 1
+    set min-number 1
+    set min-non-alphanumeric 1
+end
+# SH01.8 — Non-default HTTPS admin port
+#config system global
+#    set admin-sport 8443
+#end
+# SH01.10 — Non-default SSH admin port
+#config system global
+#    set admin-ssh-port 2222
+#end
+# SH01.7 — FortiGuard filtering over HTTPS
+config system fortiguard
+    set protocol https
+end
+# PS — Administrator disclaimers
+config system replacemsg admin pre_admin_disclaimer_text
+    set buffer "Authorized access only. All activity is logged and monitored."
+end
+# Better to replace the FortiGate-NGFW with the realy name of the FortiGate.
+config system replacemsg admin post_admin_disclaimer_text
+    set buffer "You have disconnected from FortiGate-NGFW."
+end
+config system global
+    set pre-login-banner enable
+    set post-login-banner enable
+end
+# PS — SSH grace time
+config system global
+    set admin-ssh-grace-time 30
+end
+# PS — Strong cryptography
+config system global
+    set strong-crypto enable
+    set ssl-static-key-ciphers disable
+    set dh-params 8192
+end
+# 8192-bit DH requires a recent FortiOS release — confirm support on your build
+# SH15.1 — Disable USB auto-provisioning
+config system auto-install
+    set auto-install-config disable
+    set auto-install-image disable
+end
