@@ -11,24 +11,24 @@ config system fortiguard
 end
  
 # Recommendation by PS: disable FortiExplorer
-#config system console
-    #set FortiExplorer disable
-#end
+config system console
+    set FortiExplorer disable
+end
  
 # Enforce admin password policy
-#config system password-policy
-    #set status enable
-    #set min-lower-case-letter 1
-    #set min-upper-case-letter 1
-    #set min-non-alphanumeric 1
-    #set min-number 1
-    #set reuse-password disable
-#end
+config system password-policy
+    set status enable
+    set min-lower-case-letter 1
+    set min-upper-case-letter 1
+    set min-non-alphanumeric 1
+    set min-number 1
+    set reuse-password disable
+end
  
 # Administrator disclaimers
 config system global
-    #set pre-login-banner enable
-    #set post-login-banner enable
+    set pre-login-banner enable
+    set post-login-banner enable
 end
  
 # Failed login attempts, change it to the recommended admin lockout duration
@@ -38,7 +38,7 @@ end
  
 # Severity High: Private encryption key
 config system global
-    #set private-data-encryption enable
+    set private-data-encryption enable
 end
  
 # SSH grace time
