@@ -11,9 +11,8 @@ config system global
 end
 # PS — Disable FortiExplorer
 # Disables FortiExplorer discovery/management over USB and console.
-# Confirm the exact keyword for your FortiOS version before deploying:
-config system global
-    set fortiexplorer-connection disable
+config system console
+    set FortiExplorer disable
 end
 # SH01.2 — No HTTP admin access
 # Enforced structurally: "http" is never offered as an allowaccess option
