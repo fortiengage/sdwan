@@ -1,10 +1,10 @@
 # ==================================================
 # Security Hardening — Essential (mandatory, 17/17 enforced)
 # ==================================================
-# SH14.1 — Unique hostname
-config system global
-    set hostname "{{ device_name }}"
-end
+# SH14.1 — Unique hostname, not applicable to HA mode
+#config system global
+#    set hostname "{{ device_name }}"
+#end
 # PS — Private data encryption
 config system global
     set private-data-encryption enable
