@@ -2,9 +2,9 @@
 # Security Hardening — Essential (mandatory, 17/17 enforced)
 # ==================================================
 # SH14.1 — Unique hostname
-#config system global
-#    set hostname "FGT-abcd"
-#end
+config system global
+    set hostname "{{ device_name }}"
+end
 
 config system interface
     edit "mgmt"
