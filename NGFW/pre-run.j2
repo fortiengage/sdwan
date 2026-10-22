@@ -6,23 +6,24 @@ config system global
     set hostname "{{ device_name }}"
 end
 
+# Configure the interface to reach FMG
 config system interface
-    edit "mgmt"
+    edit "{{ intf_name }}"
         set vdom "root"
-        set mode static
-        set ip 10.3.134.63 255.255.255.0
-        set allowaccess ping https ssh fgfm
+        set mode {{ addressing_mode }}
+        set ip {{ ip_addr }} {{ subnet_mask }}
+        set allowaccess {{ allowed_protocol_access }}
         set type physical
     next
 end
 
+# static route to reach FMG
 config router static
     edit 1
-        set gateway 10.3.134.1
-        set device "mgmt"
+        set gateway {{ gateway_addr }}
+        set device "{{ intf_name }}"
     next
 end
-
 
 # PS — Private data encryption
 config system global
